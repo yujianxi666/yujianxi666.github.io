@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>正在跳转...</title>
+
+  <script>
+    // ===== 只需修改这一处 =====
+    var TARGET_URL = "https://blog.u2504830.nyat.app:35698/GameBoard/";
+    // =========================
+
+    // 自动生成 meta refresh，0 秒后跳转
+    var meta = document.createElement("meta");
+    meta.httpEquiv = "refresh";
+    meta.content = "0; url=" + TARGET_URL;
+    document.head.appendChild(meta);
+
+    // JavaScript 跳转，双保险
+    window.location.href = TARGET_URL;
+  </script>
+
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background: #f6f8fa;
+      color: #24292f;
+    }
+    .box {
+      text-align: center;
+      padding: 2rem;
+    }
+    a {
+      color: #0969da;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <p>正在跳转，如果没有自动跳转，请 <a id="manual-link" href="#">点击这里</a>。</p>
+  </div>
+
+  <script>
+    // 自动把手动链接指向同一个网址
+    document.getElementById("manual-link").href = TARGET_URL;
+  </script>
+</body>
+</html>
