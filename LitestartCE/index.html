@@ -1,0 +1,2905 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="referrer" content="strict-origin">
+    <script>
+    (function() {
+      // 主题模式：auto(跟随系统) / dark / light；在首帧前落到 <html data-theme> 上，避免闪白/闪黑
+      var mode = 'auto';
+      try {
+        var savedTheme = localStorage.getItem('ntp_theme_mode');
+        if (savedTheme) mode = JSON.parse(savedTheme);
+      } catch (e) {}
+      var isDark = mode === 'dark' || (mode !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+      var icon = isDark ? 'img/icon_d.png' : 'img/icon_l.png';
+      document.write('<link rel="icon" id="favicon" type="image/png" href="' + icon + '?r=' + Math.random() + '" />');
+    })();
+    </script>
+    <title data-i18n="pageTitle">新标签页</title>
+    <meta name="description" content="可定制的浏览器类原生起始页-简洁无需多言" />
+    <style>
+    /* 配色系统与全局 CSS 变量 */
+    :root {
+      /* 布局尺寸与字体 */
+      --header-height: 50px;
+      --font-family: 'Segoe UI', Segoe UI Midlevel, Segoe WP, Arial, sans-serif;
+      --borderRadiusMedium: 6px;
+
+      /* 1. 基础页面与背景色 */
+      --fill-color: #f7f7f7;                   /* 页面主背景色 */
+      --fill-popup-color: #ffffff;             /* 下拉菜单/弹窗主背景色 */
+      --neutral-layer-floating: #ffffff;       /* 浮动层背景色 (搜索框/图标) */
+      
+      /* 2. 前景与文字色 */
+      --neutral-foreground-rest: #262626;      /* 主文本颜色 (深灰色) */
+      --neutral-foreground-secondary: #616161; /* 次要文本颜色 */
+      --logo-color: #737373;                   /* Bing/系统 Logo 主色 */
+      --placeholder-color: #737373;            /* 输入框占位符颜色 */
+
+      /* 3. 互动与填充色  */
+      --neutral-fill-rest: rgba(0, 0, 0, 0.04);/* 按钮常规浅灰填充 */
+      --neutral-fill-hover: rgba(0, 0, 0, 0.08);/* 按钮 Hover 填充 */
+      --colorNeutralStroke1Hover: #c7c7c7;     /* 边框 Hover 颜色 */
+
+      /* 4. 强调色 */
+      --accent-foreground-rest: #000000;       /* 强调色 */
+      --accent-foreground-hover: #1b1b1b;      /* 第二强调色 */
+      --accent-foreground-invert: #ffffff;   /* 反色强调色 */
+      --btn-secondary-bg: #EEEEEE;             /* 次级按钮背景 */
+      --btn-danger-color: #d13438;             /* 危险/删除操作文字色 */
+      --btn-danger-hover: #fde8e8;             /* 危险按钮 Hover 背景 */
+
+      /* 5. 阴影系统 */
+      --shadow2: 0 0 2px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.14);
+      --shadow4: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.14);
+      --shadow16: 0 0 2px rgba(0, 0, 0, 0.12), 0 8px 16px rgba(0, 0, 0, 0.14);
+
+      /* 6. 模态框与弹窗样式 */
+      --modal-bg: #ffffff;
+      --modal-border: #e0e0e0;
+      --modal-mask: rgba(0, 0, 0, 0.4);
+      --input-bg: #F2F2F2;
+      --input-border-bottom: #8a8a8a;
+
+      /* 7. 设置面板专用颜色 */
+      --settings-panel-bg: #EEEEEE;
+      --settings-card-bg: #ffffff;
+      --settings-card-border: #e5e5e5;
+      --settings-card-hover: #f9f9f9;
+      --settings-text-primary: #1b1b1b;
+      --settings-text-secondary: #707070;
+      --settings-thumb-bg: #e1e4e8;
+      --settings-thumb-border: #c8c8c8;
+
+      /* 设置项分组小块的边界/底色：比卡片边框更深更粗，方便一眼分辨分组 */
+      --settings-group-border: #bfbfbf;
+      --settings-group-bg: #fbfbfb;
+
+      --enhanced-visibility-bg: rgba(255, 255, 255, 0.3);
+      --enhanced-visibility-bg-hover: rgba(255, 255, 255, 0.5);
+      --enhanced-visibility-logo-bg: rgba(255, 255, 255, 0.6);
+
+      /* 8. 搜索建议面板颜色 */
+      --suggestion-bg: #ffffff;
+      --suggestion-hover: #f0f0f0;
+      --suggestion-history-color: #5c2d91;
+      --suggestion-footer-color: #0078d4;
+
+      --search-box-hover-shadow: 0 0 2px rgba(0, 0, 0, 0.16), 0 2px 7px rgba(0, 0, 0, 0.22);
+    }
+
+    /* 暗色主题颜色库（由 <html data-theme="dark"> 驱动，见头部脚本：跟随系统/深色/浅色） */
+    :root[data-theme="dark"] {
+      --fill-color: #1f1f1f;
+        --fill-popup-color: #2b2b2b;
+        --neutral-layer-floating: #2b2b2b;
+        
+        --neutral-foreground-rest: #f5f5f5;
+        --neutral-foreground-secondary: #adadad;
+        --logo-color: #f5f5f5;
+        --placeholder-color: #adadad;
+
+        --neutral-fill-rest: rgba(255, 255, 255, 0.06);
+        --neutral-fill-hover: rgba(255, 255, 255, 0.12);
+        --colorNeutralStroke1Hover: #757575;
+
+        --shadow2: 0 0 2px rgba(0, 0, 0, 0.24), 0 1px 2px rgba(0, 0, 0, 0.28);
+        --shadow4: 0 0 2px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0, 0, 0, 0.3);
+        --shadow16: 0 0 2px rgba(0, 0, 0, 0.24), 0 8px 16px rgba(0, 0, 0, 0.28);
+
+        --modal-bg: #242424;
+        --modal-border: #333333;
+        --modal-mask: rgba(0, 0, 0, 0.65);
+        --input-bg: #202020;
+        --input-border-bottom: #666666;
+        --btn-danger-color: #ff6b6b;
+        --btn-danger-hover: #3d1a1a;
+
+        --accent-foreground-rest: #ffffff;       /* 强调色 */
+        --accent-foreground-hover: #E0E0E0;      /* 第二强调色 */
+        --accent-foreground-invert: #000000;   /* 反色强调色！！！ */
+        --btn-secondary-bg: #2D2D2D;             /* 次级按钮背景 */
+
+        --settings-panel-bg: #242424;
+        --settings-card-bg: #2b2b2b;
+        --settings-card-border: #323232;
+        --settings-card-hover: #353535;
+        --settings-text-primary: #e3e3e3;
+        --settings-text-secondary: #9e9e9e;
+        --settings-thumb-bg: #212121;
+        --settings-thumb-border: #3d3d3d;
+
+        /* 设置项分组小块的边界/底色：暗色下用比卡片更亮一档的灰，边界看得清 */
+        --settings-group-border: #4d4d4d;
+        --settings-group-bg: #232323;
+
+        --enhanced-visibility-bg: rgba(0, 0, 0, 0.3);
+        --enhanced-visibility-bg-hover: rgba(0, 0, 0, 0.5);
+        --enhanced-visibility-logo-bg: rgba(0, 0, 0, 0.6);
+
+        --suggestion-bg: #2b2b2b;
+        --suggestion-hover: #3d3d3d;
+        --suggestion-history-color: #b182e6;
+        --suggestion-footer-color: #4f8cf6;
+
+        --search-box-hover-shadow: 0 0 2px rgba(0, 0, 0, 0.28), 0 3px 9px rgba(0, 0, 0, 0.38);
+    }
+
+    html {
+      height: 100vh;
+    }
+
+    body {
+      margin: 0;
+      height: inherit;
+      overflow: hidden;
+      background-color: var(--fill-color);
+      color: var(--neutral-foreground-rest);
+    }
+
+    /* 壁纸背景层容器 */
+    #background-container {
+      /* 固定在视口上并常驻独立合成层：
+         设置面板里的下拉等 fixed 层出现/消失时，避免视频壁纸的合成层被丢弃重建而闪一帧黑 */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      overflow: hidden;
+      display: none;
+      pointer-events: none;
+      will-change: transform;
+    }
+
+    /* 背景图/视频 —— 默认透明，加载完成后通过 .loaded 触发渐入 */
+    /* #bg-video-freeze 是视频壁纸的"静态帧"替身（设置面板等浮层打开时顶替视频层，防止闪黑），
+       它必须和视频层吃同一套模糊/缩放，否则调模糊滑块时画面不会实时变化 */
+    #bg-video, #bg-image, #bg-video-freeze {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.2s ease-in;
+      /* 模糊程度（背景卡片里的滑块写入，默认 0 = 不模糊） */
+      filter: blur(var(--bg-blur, 0px));
+      /* 自身也固定在自己的合成层里，减少层增删带来的视频黑帧 */
+      transform: translateZ(0);
+      will-change: opacity;
+    }
+
+    /* 静态帧替身由脚本控制 display，不参与渐入，且常驻不透明 */
+    #bg-video-freeze {
+      opacity: 1;
+    }
+
+    /* 模糊会糊掉边缘像素，容器放大一点把虚边挤出可视区（未模糊时不放大，避免浪费）。
+       选择器带 #background-container 才压得住下面 #bg-video/#bg-image 的 transform */
+    #background-container.blurred #bg-video,
+    #background-container.blurred #bg-image,
+    #background-container.blurred #bg-video-freeze {
+      transform: translateZ(0) scale(1.08);
+    }
+
+    #bg-video.loaded, #bg-image.loaded {
+      opacity: 1;
+    }
+
+    /* 浅色模式遮罩：按要求关闭 —— 浅色模式下不再叠加任何白色蒙层，壁纸保持原色。
+       仅暗色模式保留压暗蒙层（见下方 :root[data-theme="dark"] 规则） */
+    #bg-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.2s ease-in;
+    }
+
+    #bg-overlay.loaded {
+      opacity: 1;
+    }
+
+    /* 暗色模式下遮罩 */
+    :root[data-theme="dark"] body.bg-enabled #bg-overlay {
+      background:
+        linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+        radial-gradient(circle at center, rgba(0,0,0,0) 40%, rgba(0,0,0,0.5) 100%);
+    }
+
+    /* 仅在开启壁纸(body.bg-enabled)时，才显示壁纸容器和遮罩 */
+    body.bg-enabled #background-container,
+    body.bg-enabled #bg-overlay {
+      display: block;
+    }
+
+    /* 浅色模式 + 有壁纸时，Logo 用深灰色 */
+    body.bg-enabled {
+      --logo-color: #737373;
+    }
+
+    /* 暗色模式 + 有壁纸时，Logo 保持白色 */
+    :root[data-theme="dark"] body.bg-enabled {
+      --logo-color: #ffffff;
+    }
+
+    /* ===== 按钮、窗口、搜索框等元素的过渡动画 =====
+   统一使用 0.06s-0.1s 的短时长，配合 ease-out/ease 缓动函数，
+   提供快速而不突兀的交互反馈。
+   transition 涵盖：background-color、border-color、box-shadow、
+   border-radius、opacity、transform 等属性。 */
+
+    body.bg-enabled[data-enhanced-visibility="true"] .header-button {
+      background-color: var(--enhanced-visibility-bg);
+      border-radius: 8px;
+      transition: background-color 0.08s ease;
+    }
+
+    body.bg-enabled[data-enhanced-visibility="true"] .header-button:hover {
+      background-color: var(--enhanced-visibility-bg-hover);
+    }
+
+    body.bg-enabled[data-enhanced-visibility="true"] #logo {
+      padding: 16px;
+      border-radius: 12px;
+      background-color: var(--enhanced-visibility-logo-bg);
+    }
+
+    body.bg-enabled[data-enhanced-visibility="true"] #time-display {
+      background-color: var(--enhanced-visibility-bg);
+      border-radius: 8px;
+      padding: 4px 10px;
+      transition: background-color 0.08s ease;
+    }
+
+    body.bg-enabled[data-enhanced-visibility="true"] #time-display:hover {
+      background-color: var(--enhanced-visibility-bg-hover);
+    }
+
+    body.bg-enabled[data-enhanced-visibility="true"] .quicklink-title {
+      background-color: var(--enhanced-visibility-logo-bg);
+      border-radius: 4px;
+      padding: 3px 5px;
+    }
+
+    body.bg-enabled[data-enhanced-visibility="true"] #fakebox:hover {
+      box-shadow: 0 0 0 3px var(--enhanced-visibility-bg-hover);
+    }
+
+    /* 开启背景时将外层容器背景设为透明，避免遮挡背景壁纸 */
+    body.bg-enabled ntp-shell {
+      background-color: transparent;
+    }
+
+    ntp-shell {
+      --inspirational-neutral-foreground-rest: var(--neutral-foreground-rest);
+      height: inherit;
+      margin: 0;
+      padding: 0;
+      min-width: 343px;
+      position: relative;
+      display: block;
+      font-family: var(--font-family), Segoe UI, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      align-items: center;
+      background-color: var(--fill-color);
+      overflow: auto;
+      z-index: 2;
+    }
+
+    /* 关闭背景时隐藏图像遮罩 */
+    body:not(.bg-enabled) ntp-shell {
+      background-image: none !important;
+    }
+
+    button {
+      border: 1px solid transparent;
+      background: none;
+      box-shadow: none;
+      outline: none;
+      cursor: pointer;
+      border-radius: 4px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+      margin: 0;
+      transition: background-color 0.08s ease;
+    }
+
+    button:hover {
+      background-color: var(--neutral-fill-rest);
+    }
+
+    button:focus-visible {
+      outline: -webkit-focus-ring-color auto 1px;
+    }
+
+    #header {
+      height: var(--header-height);
+      display: flex;
+      align-items: center;
+      padding: 0 26px 0 22px;
+      box-sizing: border-box;
+      position: absolute;
+      inset-inline-start: 0;
+      inset-inline-end: 0;
+      z-index: 20;
+      fill: var(--neutral-foreground-rest);
+    }
+
+    #header > div {
+      flex: 1;
+      display: flex;
+      margin-top: 24px;
+      position: relative;
+    }
+
+    #header-right {
+      justify-content: flex-end;
+    }
+
+    .header-button {
+      width: 40px;
+      height: 40px;
+      color: var(--neutral-foreground-rest);
+      transition: background-color 0.08s ease;
+    }
+
+    /* 弹出菜单面板通用样式 —— 展开/收起动画
+       - 初始状态：opacity:0, visibility:hidden, transform 上移 4px
+       - .active 状态：opacity:1, visibility:visible, transform 归零
+       - visibility 延迟 0.06s 切换（通过 transition-delay），
+         确保 opacity 过渡完成后再隐藏，避免闪烁
+    */
+    .popover-panel {
+      position: absolute;
+      top: var(--header-height);
+      z-index: 100;
+      box-shadow: var(--shadow16);
+      color: var(--neutral-foreground-rest);
+      background-color: var(--fill-popup-color);
+      border-radius: 8px;
+      box-sizing: border-box;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-4px);
+      transition: opacity 0.06s ease-out, transform 0.06s ease-out, visibility 0s linear 0.06s;
+    }
+
+    .popover-panel.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+      transition: opacity 0.06s ease-out, transform 0.06s ease-out, visibility 0s linear 0s;
+    }
+
+    #popover-waffle {
+      left: 22px;
+      width: 280px;
+      padding: 16px;
+    }
+
+    /* 设置弹窗样式 */
+    #popover-settings {
+      right: 26px;
+      width: 320px;
+      padding: 0;
+      background-color: var(--settings-panel-bg);
+      border: 1px solid var(--settings-card-border);
+      border-radius: 12px;
+      max-height: 85vh;
+      /* 纵向滚动交给每一页自己处理，外层只负责横向滑动 */
+      overflow: hidden;
+
+      /* 隐藏浏览器提供的滚动条 */
+      scrollbar-width: thin;
+      scrollbar-color: var(--settings-thumb-border) transparent;
+    }
+
+    /* ===== 设置面板分页（主页面 / 页面布局页）横向滑动切换 ===== */
+    .settings-pages {
+      display: flex;
+      width: 200%;
+      transition: transform 0.25s ease-out;
+    }
+
+    /* 切到「页面布局」页：整条轨道左移一页宽，旧页左移出、新页左移进入 */
+    #popover-settings[data-page="layout"] .settings-pages {
+      transform: translateX(-50%);
+    }
+
+    .settings-page {
+      width: 50%;
+      flex-shrink: 0;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-sizing: border-box;
+      scrollbar-width: thin;
+      scrollbar-color: var(--settings-thumb-border) transparent;
+    }
+
+    /* 返回按钮（页面布局页左上角） */
+    .settings-back-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      color: var(--settings-text-secondary);
+      cursor: pointer;
+      transition: background-color 0.08s ease;
+    }
+
+    .settings-back-btn:hover {
+      background-color: var(--neutral-fill-hover);
+    }
+
+    /* 布局微调：滑块行 */
+    .setting-slider-block {
+      margin-top: 8px;
+    }
+
+    .setting-slider-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    /* ===== 设置项分组小块 =====
+       比外面的大卡片再包一层：边界更粗更深 + 独立底色，让一组设置一眼可辨 */
+    .settings-block {
+      border: 1.5px solid var(--settings-group-border);
+      background-color: var(--settings-group-bg);
+      border-radius: 6px;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .settings-block + .settings-block {
+      margin-top: 8px;
+    }
+
+    .settings-block-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--settings-text-primary);
+      margin-bottom: 8px;
+    }
+
+    .settings-block-hint {
+      font-size: 11px;
+      line-height: 1.5;
+      color: var(--settings-text-secondary);
+      margin-top: 8px;
+    }
+
+    /* ===== 滑块行 + 右侧小控件（重置 / 加减） ===== */
+    .slider-label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .slider-controls {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    /* 方形圆角小按钮：重置 / 调小 / 调大 */
+    .mini-btn {
+      width: 22px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border: 1.5px solid var(--settings-group-border);
+      border-radius: 5px;
+      background-color: var(--settings-card-bg);
+      color: var(--settings-text-secondary);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background-color 0.08s ease, color 0.08s ease, border-color 0.08s ease;
+    }
+
+    .mini-btn:hover {
+      background-color: var(--settings-card-hover);
+      color: var(--settings-text-primary);
+      border-color: var(--settings-text-secondary);
+    }
+
+    .mini-btn:active {
+      background-color: var(--settings-thumb-bg);
+    }
+
+    .mini-btn svg {
+      width: 12px;
+      height: 12px;
+      display: block;
+    }
+
+    .setting-slider {
+      flex: 1;
+      min-width: 0;
+      height: 18px;
+      margin: 0;
+      accent-color: var(--accent-foreground-rest);
+      cursor: pointer;
+    }
+
+    .setting-slider-value {
+      flex-shrink: 0;
+      min-width: 38px;
+      text-align: right;
+      font-size: 12px;
+      color: var(--settings-text-secondary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* WebKit内核浏览器自定义滚动条 */
+    #popover-settings::-webkit-scrollbar,
+    .settings-page::-webkit-scrollbar {
+      width: 6px;                      /* 滚动条宽度 */
+      background: transparent;         /* 轨道透明 */
+    }
+
+    #popover-settings::-webkit-scrollbar-track,
+    .settings-page::-webkit-scrollbar-track {
+      background: transparent;         /* 轨道透明 */
+      border-radius: 10px;
+    }
+
+    #popover-settings::-webkit-scrollbar-thumb,
+    .settings-page::-webkit-scrollbar-thumb {
+      background: var(--settings-thumb-border);  /* 滑块颜色 */
+      border-radius: 10px;
+      transition: background 0.1s;
+    }
+
+    #popover-settings::-webkit-scrollbar-thumb:hover,
+    .settings-page::-webkit-scrollbar-thumb:hover {
+      background: var(--settings-text-secondary);  /* 悬停时变色 */
+    }
+
+    .settings-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 16px 12px 16px;
+    }
+
+    .settings-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--settings-text-primary);
+      margin: 0;
+    }
+
+    .settings-close-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      color: var(--settings-text-secondary);
+      cursor: pointer;
+      transition: background-color 0.08s ease;
+    }
+
+    .settings-close-btn:hover {
+      background-color: var(--neutral-fill-hover);
+    }
+
+    .settings-content {
+      padding: 0 12px 12px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* 设置卡片样式 */
+    .settings-card {
+      background-color: var(--settings-card-bg);
+      border: 1px solid var(--settings-card-border);
+      border-radius: 8px;
+      padding: 12px;
+      box-sizing: border-box;
+    }
+
+    .settings-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--settings-text-primary);
+    }
+
+    .settings-card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--settings-text-primary);
+      margin-bottom: 8px;
+    }
+
+    /* 下拉选择框 */
+    .select-box {
+      width: 100%;
+      height: 32px;
+      border-radius: 6px;
+      border: 1px solid var(--settings-card-border);
+      background-color: var(--settings-card-bg);
+      color: var(--settings-text-primary);
+      padding: 0 10px;
+      font-size: 13px;
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      transition: background-color 0.08s ease;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M2.22 4.47a.75.75 0 0 1 1.06 0L6 7.19l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L2.22 5.53a.75.75 0 0 1 0-1.06z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+    }
+
+    .select-box:not(:open):hover {
+      background-color: var(--neutral-fill-rest);
+    }
+
+    /* ===== 重写下拉菜单样式 ===== */
+
+    /* 自定义 select 外壳 —— 原生 select 透明覆盖用于接收键盘等原生事件 */
+    .custom-select-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .custom-select-wrapper .select-box {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: transparent;
+    }
+
+    /* 下拉触发器按钮 —— 显示当前选中项文本和箭头 */
+    .custom-select-display {
+      width: 100%;
+      height: 32px;
+      border-radius: 6px;
+      /* 边界加粗加深：浅色/深色下都更容易看见控件范围 */
+      border: 1.5px solid var(--settings-group-border);
+      background-color: var(--settings-card-bg);
+      color: var(--settings-text-primary);
+      padding: 0 12px 0 10px;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background-color 0.08s ease, border-color 0.08s ease;
+      user-select: none;
+      box-sizing: border-box;
+    }
+
+    .custom-select-display:hover {
+      background-color: var(--neutral-fill-rest);
+    }
+
+    .custom-select-display.active {
+      border-color: var(--accent-foreground-rest);
+    }
+
+    /* 下拉箭头旋转动画 */
+    .custom-select-arrow {
+      width: 12px;
+      height: 12px;
+      flex-shrink: 0;
+      color: var(--neutral-foreground-secondary);
+      transition: transform 0.08s ease;
+    }
+
+    .custom-select-display.active .custom-select-arrow {
+      transform: rotate(180deg);
+    }
+
+    /* 下拉面板 —— position:fixed 用于脱离父容器 overflow 裁剪
+       - 初始状态：opacity:0, visibility:hidden, transform 上移 4px
+       - .active 状态：opacity:1, visibility:visible, transform 归零
+       - 展开方向由 JS 根据空间动态决定（上/下），通过 translateY 初始方向实现动画 */
+    .custom-select-dropdown {
+      position: fixed;
+      background-color: var(--fill-popup-color);
+      border: 1px solid var(--settings-card-border);
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      z-index: 2000;
+      max-height: 260px;
+      overflow-y: auto;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-4px);
+      transition: opacity 0.08s ease-out, transform 0.08s ease-out, visibility 0s linear 0.08s;
+      /* 常驻合成层：避免每次展开/收起时创建、销毁层而干扰下方视频壁纸 */
+      will-change: opacity, transform;
+    }
+
+    .custom-select-dropdown.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+      transition: opacity 0.08s ease-out, transform 0.08s ease-out;
+    }
+
+    /* 选项样式 */
+    .custom-select-option {
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--settings-text-primary);
+      transition: background-color 0.08s ease, color 0.08s ease;
+    }
+
+    .custom-select-option:hover {
+      background-color: var(--neutral-fill-hover);
+    }
+
+    .custom-select-option.selected {
+      color: var(--accent-foreground-rest);
+      font-weight: 600;
+    }
+
+    /* 设置行 */
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 28px;
+    }
+
+    .setting-label-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--settings-text-primary);
+      font-weight: 500;
+    }
+
+    .setting-status-text {
+      font-size: 12px;
+      color: var(--settings-text-secondary);
+      margin-right: 8px;
+    }
+
+    .switch-container {
+      display: flex;
+      align-items: center;
+    }
+
+    /* 滑块开关样式 */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 36px;
+      height: 18px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      /* 开关边界加粗加深，避免在卡片底色上看不清开关位置 */
+      border: 1.5px solid var(--settings-group-border);
+      background-color: var(--settings-card-bg);
+      transition: background-color 0.08s ease, border-color 0.08s ease, left 0.2s ease;
+      border-radius: 20px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 12px;
+      width: 12px;
+      left: 2px;
+      bottom: 2px;
+      background-color: var(--settings-text-secondary);
+      transition: background-color 0.08s ease, transform 0.08s ease, filter 0.08s ease;
+      border-radius: 50%;
+    }
+
+    .slider:hover:before {
+      filter: brightness(0.75);
+    }
+
+    input:checked + .slider {
+      background-color: var(--accent-foreground-rest);
+      border-color: var(--accent-foreground-rest);
+    }
+
+    /*这是开关滑块！*/
+    input:checked + .slider:before {
+      transform: translateX(18px);
+      background-color: var(--accent-foreground-invert);
+    }
+
+    input:checked + .slider:hover:before {
+      transform: translateX(18px);
+      filter: brightness(0.75);
+    }
+
+    /* 卡片视图选择器 */
+    .layout-presets {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .preset-card {
+      border: 1px solid var(--settings-card-border);
+      background-color: var(--settings-card-bg);
+      border-radius: 6px;
+      padding: 6px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: border-color 0.08s, background-color 0.08s;
+    }
+
+    .preset-card:hover {
+      background-color: var(--settings-card-hover);
+    }
+
+    .preset-card.active {
+      border: 2px solid var(--accent-foreground-rest);
+      padding: 5px 3px;
+    }
+
+    .preset-thumb {
+      width: 100%;
+      height: 48px;
+      border-radius: 4px;
+      background-color: var(--settings-thumb-bg);
+      border: 1px solid var(--settings-thumb-border);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .preset-thumb-bar {
+      position: absolute;
+      width: 60%;
+      height: 10px;
+      background: #555;
+      border-radius: 3px;
+      z-index: 1;
+    }
+
+    .preset-thumb-box {
+      position: absolute;
+      bottom: 6px;
+      width: 60%;
+      height: 6px;
+      background: #555;
+      border-radius: 3px;
+      z-index: 1;
+    }
+
+    .preset-card-label {
+      font-size: 11px;
+      color: var(--settings-text-primary);
+      text-align: center;
+    }
+
+    /* 图标按钮 */
+    .icon-btn-text {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      height: 32px;
+      border: 1px solid var(--settings-card-border);
+      background-color: var(--settings-card-bg);
+      color: var(--settings-text-primary);
+      border-radius: 4px;
+      font-size: 13px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background-color 0.08s ease;
+    }
+
+    .icon-btn-text:hover {
+      background-color: var(--settings-card-hover);
+    }
+
+    /* 同一张卡片里并排的次要按钮（如更换图标 / 恢复原版图标） */
+    .icon-btn-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn-row .icon-btn-text {
+      flex: 1 1 0;
+      min-width: 0;
+      margin-top: 8px;
+      padding: 0 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .icon-btn-row .icon-btn-text > span {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* 底部链接样式 */
+    .settings-footer {
+      padding: 8px 16px 16px 16px;
+      font-size: 11px;
+      color: var(--settings-text-secondary);
+      line-height: 1.6;
+    }
+
+    .settings-footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 6px;
+      margin-bottom: 8px;
+    }
+
+    .settings-footer-links a {
+      color: var(--settings-text-secondary);
+      text-decoration: none;
+    }
+
+    .settings-footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    .settings-footer-text {
+      color: var(--settings-text-secondary);
+      margin: 4px 0;
+    }
+
+    #inner {
+      display: grid;
+      /* 布局微调：间距/对齐/偏移由脚本写入 --layout-* 变量（见「页面布局」页） */
+      grid-template-rows: 1fr auto var(--layout-gap-title, 72px) 46px var(--layout-gap-links, 64px) 0px auto 1fr;
+      /* 元素对齐：靠左/靠右由下面各自的 justify-self 处理；
+         这里保持居中，绝不改成 start/end —— 那会把「搜索框」一起推到行边缘，
+         而搜索框在靠左/靠右时应当停在原地 */
+      justify-items: center;
+      box-sizing: border-box;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100vh;
+      z-index: 2;
+      /* 水平/垂直偏移 */
+      transform: translate(var(--layout-offset-x, 0px), var(--layout-offset-y, 0px));
+    }
+
+    /* 靠左/靠右时：标题与快速链接向内收，落在搜索框边界里面一点。
+       用 margin 而不是 padding —— padding 只会推内容、元素自身的盒子仍从行首开始，
+       那样"左端对齐"量出来还是贴着屏幕边；margin 会把盒子本身挪进来。
+       内缩量只加在它们自己身上，搜索框完全不受影响 */
+    #logo {
+      margin-left: var(--layout-align-inset-left, 0px);
+      margin-right: var(--layout-align-inset-right, 0px);
+      justify-self: var(--layout-align-edge, center);
+    }
+
+    #logo {
+      grid-row: 2;
+      align-self: end;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      height: 48px;
+      /* 元素大小：整体等比缩放。
+         注意不能用改 height 的办法 —— 内置 logo 是带固定 width/height 属性的内联 SVG，
+         改 CSS 高度并不会让它变大，只有 transform 一定生效。
+         网格行高保持 48px 不变，所以放大缩小都不会顶动搜索框 */
+      transform: scale(var(--layout-scale-logo, 1));
+      transform-origin: var(--layout-scale-origin, center center);
+    }
+
+    #logo-text-path {
+      fill: var(--logo-color);
+    }
+
+    .google-logo-img, .baidu-logo-img {
+      height: 90px;
+      max-width: 400px;
+      object-fit: contain;
+    }
+
+    .custom-engine-logo {
+      height: 90px;
+      max-width: 400px;
+      object-fit: contain;
+    }
+
+    /* 搜索容器包装 */
+    #search-container {
+      grid-row: 4;
+      position: relative;
+      width: 760px;
+      z-index: 5;
+      /* 元素大小：整体等比缩放。缩放基点跟随对齐方式（脚本写 --layout-scale-origin）：
+         居中=中心缩放；靠左=以左端为基点；靠右=以右端为基点。
+         否则放大后会被推离对齐基准线，「左端对齐」就名不副实了 */
+      transform: scale(var(--layout-scale-search, 1));
+      transform-origin: var(--layout-scale-origin, center center);
+    }
+
+    #search-container.suggestions-open, #search-container:focus-within {
+      z-index: 15;
+    }
+
+    /* 搜索框样式 */
+    #fakebox {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      box-sizing: border-box;
+      background-color: var(--neutral-layer-floating);
+      /* 形状：圆形（原样 22px）/ 方形（小圆角 8px），由「页面布局 → 搜索框形状」写入 */
+      border-radius: var(--search-radius, 22px);
+      height: 46px;
+      gap: 7px;
+      color: var(--neutral-foreground-rest);
+      box-shadow: var(--shadow2);
+      border: 1px solid transparent;
+      user-select: none;
+      cursor: text;
+      position: relative;
+      padding: 0 14px 0 11px;
+      transition: border-radius 0.08s ease, box-shadow 0.08s ease, background-color 0.08s ease, border-color 0.08s ease, outline 0.08s ease;
+    }
+
+    #fakebox #searchbutton {
+      fill: var(--neutral-foreground-rest);
+      flex-shrink: 0;
+    }
+
+    #fakebox #placeholder {
+      flex: 1;
+      color: var(--placeholder-color);
+      font-family: var(--font-family), Segoe UI, Arial, sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 24px;
+      margin: 0;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    #search-input {
+      position: absolute;
+      left: 42px;
+      right: 14px;
+      top: 0;
+      bottom: 0;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: var(--font-family), Segoe UI, Arial, sans-serif;
+      font-size: 16px;
+      color: var(--neutral-foreground-rest);
+      opacity: 1; 
+    }
+    
+    #fakebox.has-value #placeholder {
+      display: none;
+    }
+
+    #fakebox:focus-within #search-input {
+      opacity: 1;
+    }
+
+    #fakebox:focus-within #placeholder {
+      display: none;
+    }
+
+    #fakebox:hover {
+      box-shadow: var(--search-box-hover-shadow);
+    }
+
+    /* 搜索框展开联想下拉词条面板 */
+    #search-container.suggestions-open #fakebox {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 搜索框展开联想下拉词条面板动画
+       - 初始状态：opacity:0, visibility:hidden, transform 上移 4px
+       - .suggestions-open 状态：opacity:1, visibility:visible, transform 归零
+       - visibility 延迟 0.08s 切换，确保过渡完成后再隐藏 */
+    #suggestions-box {
+      display: block;
+      position: absolute;
+      top: 46px;
+      left: 0;
+      right: 0;
+      background-color: var(--suggestion-bg);
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      border-top: 1px solid var(--modal-border);
+      overflow: hidden;
+      z-index: 100;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-4px);
+      transition: opacity 0.08s ease-out, transform 0.08s ease-out, visibility 0s linear 0.08s;
+    }
+
+    #search-container.suggestions-open #suggestions-box {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+      transition: opacity 0.08s ease-out, transform 0.08s ease-out, visibility 0s linear 0s;
+    }
+
+    .suggestion-list {
+      list-style: none;
+      margin: 0;
+      padding: 6px 0;
+    }
+
+    .suggestion-item {
+      display: flex;
+      align-items: center;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-size: 15px;
+      color: var(--neutral-foreground-rest);
+      gap: 12px;
+      transition: background-color 0.08s;
+    }
+
+    .suggestion-item:hover, .suggestion-item.selected {
+      background-color: var(--suggestion-hover);
+    }
+
+    .suggestion-item svg {
+      fill: var(--neutral-foreground-rest);
+      opacity: 0.6;
+      flex-shrink: 0;
+    }
+
+    .suggestion-item.history {
+      color: var(--suggestion-history-color);
+      font-weight: 600;
+    }
+
+    .suggestion-item.history svg {
+      fill: var(--suggestion-history-color);
+      opacity: 1;
+    }
+
+    .suggestion-text {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .suggestions-footer {
+      padding: 10px 16px 12px;
+      border-top: 1px solid var(--modal-border);
+      font-size: 13px;
+    }
+
+    .clear-history-btn {
+      color: var(--suggestion-footer-color);
+      cursor: pointer;
+      user-select: none;
+      font-weight: 500;
+    }
+
+    .clear-history-btn:hover {
+      text-decoration: underline;
+    }
+
+    /* 快速链接列表 */
+    ntp-quicklinks {
+      grid-row: 7; /* 宽度随窗口自适应 */
+      width: var(--quicklinks-content-width, 752px);
+      max-width: 100%;
+      min-height: 60px;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;             /* 2 行模式靠换行实现 */
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      overflow: visible;
+      /* 靠左/靠右时的内缩（与标题同一套变量，保证两者对齐到同一条线） */
+      margin-left: var(--layout-align-inset-left, 0px);
+      margin-right: var(--layout-align-inset-right, 0px);
+      justify-self: var(--layout-align-edge, center);
+      /* 元素大小：整体等比缩放，基点跟随对齐方式（同搜索框） */
+      transform: scale(var(--layout-scale-links, 1));
+      transform-origin: var(--layout-scale-origin, center center);
+    }
+
+    ntp-quicklinks[rows="0"] {
+      display: none;
+    }
+
+    .quicklink-item {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: var(--quicklink-item-width, 80px);
+      flex-shrink: 0;              /* 防止被 flex 压缩宽度*/
+      padding: 6px 2px;
+      box-sizing: border-box;
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--neutral-foreground-rest);
+      font-size: 12px;
+      gap: 6px;
+      transition: background-color 0.1s;
+    }
+
+    .quicklink-item:hover {
+      background-color: var(--neutral-fill-rest);
+    }
+
+    .quicklink-icon {
+      width: 38px;
+      height: 38px;
+      /* 快速链接图标形状：圆形（原样）/ 方形（小圆角），由「页面布局 → 快速链接形状」写入 */
+      border-radius: var(--quicklink-radius, 50%);
+      background-color: var(--neutral-layer-floating);
+      color: var(--neutral-foreground-rest);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      box-shadow: var(--shadow2);
+      overflow: hidden;
+      font-size: 14px;
+    }
+
+    .quicklink-icon img {
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+    }
+
+    .quicklink-title {
+      max-width: 74px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .quicklink-edit-btn {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.08s ease-in-out, background-color 0.08s;
+      background-color: rgba(0, 0, 0, 0.05);
+      fill: var(--neutral-foreground-rest);
+      z-index: 2;
+    }
+
+    :root[data-theme="dark"] .quicklink-edit-btn {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .quicklink-item:hover .quicklink-edit-btn {
+      opacity: 1;
+    }
+
+    .quicklink-edit-btn:hover {
+      background-color: var(--neutral-fill-hover);
+    }
+
+    .quicklink-add-btn {
+      cursor: pointer;
+    }
+    
+    .quicklink-add-icon {
+      background-color: var(--neutral-layer-floating);
+      border: none;
+      box-shadow: var(--shadow2);
+    }
+
+    /* 展望模式布局排布
+       —— 快捷方式不再占据 1fr 自由行（那样会脱离搜索框、随窗口高度乱飘），
+          改为紧贴搜索框下方的固定间距，跟随搜索框一起运动 */
+    body[data-layout="inspirational"] #inner {
+      grid-template-rows: minmax(78px, 15%) 46px var(--layout-gap-links, 64px) auto 1fr 12%;
+    }
+
+    body[data-layout="inspirational"] #logo {
+      display: none;
+    }
+
+    body[data-layout="inspirational"] #search-container {
+      grid-row: 2;
+    }
+
+    body[data-layout="inspirational"] ntp-quicklinks {
+      grid-row: 4;
+    }
+
+    /* 通用 Modal 模态对话框 */
+    .modal-overlay {
+      display: flex;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: var(--modal-mask);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.08s ease-out, visibility 0s linear 0.08s;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transition: opacity 0.08s ease-out, visibility 0s linear 0s;
+    }
+
+    .modal-dialog {
+      background-color: var(--modal-bg);
+      border: 1px solid var(--modal-border);
+      border-radius: 8px;
+      width: 420px;
+      max-width: 90vw;
+      padding: 24px;
+      box-sizing: border-box;
+      box-shadow: var(--shadow16);
+      color: var(--neutral-foreground-rest);
+      font-family: var(--font-family), Segoe UI, Arial, sans-serif;
+      position: relative;
+    }
+
+    /* 自定义背景弹窗 */
+    .modal-dialog-large {
+      width: 780px;
+      max-width: 92vw;
+      min-height: 380px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-radius: 12px;
+    }
+
+    .modal-header {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-close-icon {
+      cursor: pointer;
+      color: var(--settings-text-secondary);
+      border-radius: 4px;
+      padding: 4px;
+      display: flex;
+      transition: background-color 0.08s ease;
+    }
+
+    .modal-close-icon:hover {
+      background-color: var(--neutral-fill-hover);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--neutral-foreground-rest);
+    }
+
+    .input-container {
+      border-radius: 4px;
+      overflow: hidden;    /*裁切超出部分*/
+      position: relative;
+      width: 100%;
+    }
+
+    .input {
+      width: 100%;
+      height: 36px;
+      border-radius: 4px;
+      border: 1.5px solid var(--settings-card-border);
+      background-color: var(--input-bg);
+      color: var(--neutral-foreground-rest);
+      padding: 0 10px;
+      font-size: 14px;
+      outline: none;
+      box-sizing: border-box;
+      transition: background-color 0.08s, border-color 0.08s, box-shadow 0.08s;
+    }
+
+    /* 悬停变色(选中时不生效) */
+    .input:hover:not(:focus) {
+      background-color: rgba(0, 0, 0, 0.015) !important;
+    }
+
+    .input:focus {
+      border-color: var(--settings-card-border);
+    }
+
+    .input-container::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: var(--accent-foreground-rest);
+      opacity: 0;
+    }
+
+    .input-container:focus-within::after {
+      opacity: 1;
+    }
+
+    .input-container.error .input {
+      border-bottom-color: var(--btn-danger-color);
+    }
+
+    .input-container.error::after {
+      background-color: var(--btn-danger-color);
+      opacity: 1;
+    }
+
+    .error-tip {
+      font-size: 12px;
+      color: var(--btn-danger-color);
+      margin-top: 5px;
+      display: none;
+      align-items: center;
+      gap: 4px;
+      line-height: 1.3;
+      animation: slideDownError 0.15s ease-out;
+    }
+
+    .error-tip.active {
+      display: flex;
+    }
+
+    @keyframes slideDownError {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 24px;
+    }
+
+    .modal-footer-right {
+      display: flex;
+      gap: 12px;
+      margin-left: auto;
+    }
+
+    .btn {
+      height: 32px;
+      padding: 0 20px;
+      border-radius: 5px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.08s ease, filter 0.08s ease;
+    }
+
+    /* 强调按钮样式 */
+    .btn-primary {
+      background-color: var(--accent-foreground-rest);
+      color: var(--accent-foreground-invert);
+      border: 1px solid transparent;
+       
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-foreground-hover);
+      filter: none;
+    }
+
+    /* 次级按钮样式 */
+    .btn-secondary {
+      background-color: var(--btn-secondary-bg);
+      color: var(--neutral-foreground-rest);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--modal-border);
+    }
+
+    :root[data-theme="dark"] .btn-secondary {
+      background-color: #474747;
+
+      padding: 0 20px 1px 20px;
+    }
+
+    .btn-danger {
+      background-color: transparent;
+      color: var(--btn-danger-color);
+      border: 1px solid transparent;
+    }
+
+    .btn-danger:hover {
+      background-color: var(--btn-danger-hover);
+    }
+
+    /* 无填充按钮 */
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid var(--settings-card-border);
+      color: var(--neutral-foreground-rest);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--neutral-fill-hover);
+    }
+
+    /* 背景卡片样式 */
+    .wallpaper-preview-area {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      margin: 20px 0;
+    }
+
+    .wallpaper-preview-box {
+      width: 320px;
+      height: 180px;
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: var(--settings-thumb-bg);
+      border: 1px solid var(--settings-card-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .wallpaper-preview-box img,
+    .wallpaper-preview-box video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* 预览图 + 来源标签的纵向包裹容器 */
+    .wallpaper-preview-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .wallpaper-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .wallpaper-actions-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--settings-text-primary);
+    }
+
+    .file-input-hidden {
+      display: none;
+    }
+
+    /* 响应式适配
+       注：ntp-quicklinks 的宽度已交由脚本按列数计算，这里不再写死，
+       避免媒体查询档位与「实际放得下的项数」不一致而留下空档。 */
+    @media (max-width: 1267px) {
+      #search-container { width: 528px; }
+    }
+
+    @media (max-width: 955px) {
+      #search-container { width: 400px; }
+    }
+
+    @media (max-width: 643px) {
+      #search-container { width: 343px; }
+      #header { padding: 0 12px; }
+      #logo-text { width: 100px; }
+      #logo-icon { height: 32px; }
+      .wallpaper-preview-area { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (max-width: 343px) {
+      ntp-shell { min-width: auto; }
+      #search-container { width: 90%; }
+      #fakebox { height: 32px; }
+      #suggestions-box { top: 32px; }
+      #fakebox #placeholder { font-size: 12px; line-height: 16px; }
+      #fakebox svg { width: 16px; height: 16px; }
+      #logo-icon { width: 48px; height: 48px; }
+      #logo-text { display: none; }
+    }
+
+    /* 独立时间显示模块 - 与左上角菜单按钮同一行 */
+    #time-display {
+      display: none;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 2px;
+      margin-left: 6px;
+      padding: 0 4px;
+      color: var(--neutral-foreground-rest);
+      user-select: none;
+      white-space: nowrap;
+      height: 40px;
+      box-sizing: border-box;
+    }
+
+    #time-display.active {
+      display: inline-flex;
+    }
+
+    #time-display .time-value {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: 0.3px;
+    }
+
+    #time-display .time-date {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--neutral-foreground-rest);
+      line-height: 1;
+    }
+
+    /* ===== 拖拽排序样式 ===== */
+    .quicklink-item.dragging {
+      opacity: 0.35;
+      transform: scale(0.92);
+      transition: opacity 0.15s, transform 0.15s;
+    }
+
+    .quicklink-item.drag-over {
+      background-color: var(--neutral-fill-hover);
+      border-radius: 8px;
+      transform: scale(1.02);
+      transition: all 0.08s ease;
+    }
+
+    .quicklink-item.drag-over .quicklink-icon {
+      box-shadow: 0 0 0 2px var(--accent-foreground-rest);
+      transition: box-shadow 0.08s ease;
+    }
+
+    /* ===== 工具提示(Tooltip)样式 ===== */
+
+    /* 图标按钮 —— 鼠标悬停显示提示 */
+    .tooltip-icon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      color: var(--settings-text-secondary);
+      cursor: help;
+      outline: none;
+    }
+
+    .tooltip-icon:hover,
+    .tooltip-icon:focus {
+      color: var(--settings-text-primary);
+    }
+
+    /* 提示内容面板 —— position:fixed 用于脱离父容器
+       - 由 JS 动态定位到 document.body，避免被 overflow:hidden 裁剪
+       - 支持上下两种方向显示（通过 JS 添加/移除 .tooltip-below 类）
+       - 淡入淡出过渡 */
+    .tooltip-content {
+      visibility: hidden;
+      opacity: 0;
+      position: fixed;
+      background: var(--settings-card-bg);
+      color: var(--settings-text-primary);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.5;
+      padding: 8px 12px;
+      border-radius: 6px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      max-width: 260px;
+      white-space: normal;
+      word-break: normal;
+      z-index: 10000;
+      transition: opacity 0.08s ease, visibility 0.08s ease;
+      pointer-events: none;
+    }
+
+
+    /* 个人资料菜单配置 */
+    #popover-waffle {
+    left: 22px;
+    width: 340px;
+    padding: 0;
+    background-color: var(--settings-panel-bg);
+    border: 1px solid var(--settings-card-border);
+    border-radius: 12px;
+    }
+
+    .waffle-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 8px;
+    border-radius: 8px;
+    color: var(--settings-text-primary);
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.08s;
+    user-select: none;
+    background-color: transparent;
+    }
+
+    .waffle-menu-item:hover {
+    background-color: var(--neutral-fill-hover);
+    }
+
+    .waffle-menu-item svg {
+    flex-shrink: 0;
+    color: var(--settings-text-secondary);
+    width: 20px;
+    height: 20px;
+    }
+
+    /* ===== 管理配置文件：操作选择列表 ===== */
+    .manage-list-hint {
+      margin: 0 0 10px 0;
+      font-size: 13px;
+      color: var(--settings-text-secondary);
+    }
+
+    .manage-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .manage-option {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 12px 11px 22px;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      background-color: transparent;
+      color: var(--settings-text-primary);
+      font-size: 14px;
+      cursor: pointer;
+      user-select: none;
+      outline: none;
+      transition: background-color 0.08s ease, border-color 0.08s ease;
+    }
+
+    .manage-option:hover {
+      background-color: var(--neutral-fill-hover);
+    }
+
+    /* 选中态 */
+    .manage-option[aria-selected="true"] {
+      background-color: var(--neutral-fill-rest);
+    }
+
+    /* 左侧选中指示条 */
+    .manage-option::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 50%;
+      width: 3px;
+      height: 18px;
+      border-radius: 2px;
+      background-color: var(--accent-foreground-rest);
+      transform: translateY(-50%) scaleY(0);
+      transition: transform 0.1s ease;
+    }
+
+    .manage-option[aria-selected="true"]::before {
+      transform: translateY(-50%) scaleY(1);
+    }
+
+    /* 聚焦时使用外描边 */
+    .manage-option:focus-visible {
+      outline: 2px solid var(--accent-foreground-rest);
+      outline-offset: -2px;
+    }
+
+    .manage-option svg {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      color: var(--settings-text-primary);
+    }
+
+    .manage-option-label {
+      line-height: 1.25;
+    }
+
+    /* 关闭搜索栏时，隐藏搜索框但保留其在网格中的占位，但同时避免其他元素发生位移（ */
+    body[data-search-hidden="true"] #search-container {
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    /* 可用更新提示框 */
+    .update-notice {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 16px;
+      margin: 0 0 16px 0;
+      border: 1px solid var(--settings-card-border);
+      border-radius: 8px;
+      background-color: var(--neutral-fill-rest);
+    }
+
+    .update-notice-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .update-notice-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--neutral-foreground-rest);
+    }
+
+    .update-notice-version {
+      font-size: 12px;
+      color: var(--settings-text-secondary);
+    }
+
+    .update-notice .btn {
+      flex-shrink: 0;
+      height: 28px;
+      padding: 0 16px;
+      font-size: 13px;
+      text-decoration: none;
+    }
+    </style>
+</head>
+
+<body data-layout="focused">
+    <!-- 视频/图片背景容器 -->
+    <div id="background-container">
+      <video id="bg-video" autoplay loop muted playsinline></video>
+      <img id="bg-image" alt="自定义背景" />
+      <div id="bg-overlay"></div>
+    </div>
+
+    <!-- 左上角独立时间显示模块 -->
+
+    <ntp-shell elementtiming="wallpaper">
+      <!-- 顶部导航栏 -->
+      <div id="header">
+        <div id="header-left">
+          <button id="waffle" class="header-button" type="button" aria-label="LitestartCE~" title="LitestartCE~">
+            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 17a2 2 0 110 4 2 2 0 010-4zm7 0a2 2 0 110 4 2 2 0 010-4zM5 17a2 2 0 110 4 2 2 0 010-4zm7-7a2 2 0 110 4 2 2 0 010-4zm7 0a2 2 0 110 4 2 2 0 010-4zM5 10a2 2 0 110 4 2 2 0 010-4zm7-7a2 2 0 110 4 2 2 0 010-4zm7 0a2 2 0 110 4 2 2 0 010-4zM5 3a2 2 0 110 4 2 2 0 010-4z">
+              </path>
+            </svg>
+          </button>
+          <!-- 时间显示：与菜单按钮同一行 -->
+          <div id="time-display">
+            <span class="time-value"></span>
+            <span class="time-date"></span>
+          </div>
+          <!-- 左侧菜单 -->
+          <div id="popover-waffle" class="popover-panel" style="background-color: var(--settings-panel-bg); padding: 0; overflow: hidden;">
+            <div class="settings-header">
+              <h2 class="settings-title">LitestartCE</h2>
+            </div>
+            <div style="padding: 12px;">
+
+            <!-- 下方菜单项 -->
+             <!-- 管理配置文件 -->
+            <div class="waffle-menu-item" id="btn-manage-profiles" style="margin-bottom: 4px;">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="128" height="128"><path d="M1 3.25C1 2.56 1.56 2 2.249 2h.5c.69 0 1.248.56 1.248 1.25v9.495c0 .69-.559 1.25-1.248 1.25h-.5A1.25 1.25 0 0 1 1 12.744zM2.249 3a.25.25 0 0 0-.25.25v9.495c0 .138.112.25.25.25h.5a.25.25 0 0 0 .25-.25V3.249a.25.25 0 0 0-.25-.25zm2.748.25c0-.69.559-1.25 1.249-1.25h.5c.689 0 1.248.56 1.248 1.25v9.495c0 .69-.56 1.25-1.249 1.25h-.5a1.25 1.25 0 0 1-1.248-1.25zM6.246 3a.25.25 0 0 0-.25.25v9.495c0 .138.112.25.25.25h.5a.25.25 0 0 0 .249-.25V3.249a.25.25 0 0 0-.25-.25zm5.726 1.777a1.25 1.25 0 0 0-1.57-.713l-.583.204a1.25 1.25 0 0 0-.746 1.645l2.937 7.304c.249.62.94.933 1.571.713l.582-.204a1.25 1.25 0 0 0 .746-1.646zm-1.24.23a.25.25 0 0 1 .313.143l2.937 7.303a.25.25 0 0 1-.149.33l-.582.203a.25.25 0 0 1-.314-.142L10 5.54a.25.25 0 0 1 .149-.329z"/></svg>
+              <span data-i18n="manageProfiles">管理配置文件</span>
+            </div>
+             <!-- 关于 -->
+            <div class="waffle-menu-item" id="btn-about">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="128" height="128"><path d="M8.499 7.5a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0zm.25-2a.749.749 0 1 1-1.499 0a.749.749 0 0 1 1.498 0M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1M2 8a6 6 0 1 1 12 0A6 6 0 0 1 2 8"/></svg>
+              <span data-i18n="aboutTitle">关于 LitestartCE</span>
+            </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="header-right">
+          <button id="settings" class="header-button" type="button" aria-label="设置" title="设置" data-i18n-title="settingsTitle">
+            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12.01 2.25c.74 0 1.47.1 2.18.25.32.07.55.33.59.65l.17 1.53a1.38 1.38 0 001.92 1.11l1.4-.61c.3-.13.64-.06.85.17a9.8 9.8 0 012.2 3.8c.1.3 0 .63-.26.82l-1.24.92a1.38 1.38 0 000 2.22l1.24.92c.26.19.36.52.27.82a9.8 9.8 0 01-2.2 3.8.75.75 0 01-.85.17l-1.4-.62a1.38 1.38 0 00-1.93 1.12l-.17 1.52a.75.75 0 01-.58.65 9.52 9.52 0 01-4.4 0 .75.75 0 01-.57-.65l-.17-1.52a1.38 1.38 0 00-1.93-1.11l-1.4.62a.75.75 0 01-.85-.18 9.8 9.8 0 01-2.2-3.8c-.1-.3 0-.63.27-.82l1.24-.92a1.38 1.38 0 000-2.22l-1.24-.92a.75.75 0 01-.28-.82 9.8 9.8 0 012.2-3.8c.23-.23.57-.3.86-.17l1.4.62c.4.17.86.15 1.25-.08.38-.22.63-.6.68-1.04l.17-1.53a.75.75 0 01.58-.65c.72-.16 1.45-.24 2.2-.25zm0 1.5c-.45 0-.9.04-1.35.12l-.11.97a2.89 2.89 0 01-4.02 2.33l-.9-.4A8.3 8.3 0 004.28 9.1l.8.59a2.88 2.88 0 010 4.64l-.8.59a8.3 8.3 0 001.35 2.32l.9-.4a2.88 2.88 0 014.02 2.32l.1.99c.9.15 1.8.15 2.7 0l.1-.99a2.88 2.88 0 014.02-2.32l.9.4a8.3 8.3 0 001.36-2.32l-.8-.59a2.88 2.88 0 010-4.64l.8-.59a8.3 8.3 0 00-1.35-2.32l-.9.4a2.88 2.88 0 01-4.02-2.32l-.11-.98c-.45-.08-.9-.11-1.34-.12zM12 8.25a3.75 3.75 0 110 7.5 3.75 3.75 0 010-7.5zm0 1.5a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5z">
+              </path>
+            </svg>
+          </button>
+          
+          <!-- 设置弹窗面板（两页：主设置 / 页面布局，横向滑动切换） -->
+          <div id="popover-settings" class="popover-panel">
+           <div class="settings-pages">
+            <div class="settings-page settings-page-main">
+            <div class="settings-header">
+              <h2 class="settings-title" data-i18n="settingsTitle">页面设置</h2>
+              <button class="settings-close-btn" id="btn-close-settings" title="关闭" data-i18n-title="close">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M2.22 2.22a.75.75 0 0 1 1.06 0L8 6.94l4.72-4.72a.75.75 0 1 1 1.06 1.06L9.06 8l4.72 4.72a.75.75 0 1 1-1.06 1.06L8 9.06l-4.72 4.72a.75.75 0 0 1-1.06-1.06L6.94 8 2.22 3.28a.75.75 0 0 1 0-1.06z"/>
+                </svg>
+              </button>
+            </div>
+
+            <div class="settings-content">
+              <!-- 快速链接 -->
+              <div class="settings-card">
+                  <div class="settings-card-title" data-i18n="quicklinks">快速链接</div>
+                  <div class="custom-select-wrapper">
+                    <select id="select-quicklinks" class="select-box" tabindex="-1" aria-label="快速链接数量">
+                      <option value="0" data-i18n="off">关闭</option>
+                      <option value="1" data-i18n="rows1">1 行</option>
+                      <option value="2" data-i18n="rows2">2 行</option>
+                    </select>
+                    <div class="custom-select-display" data-for="select-quicklinks">
+                      <span class="custom-select-text"></span>
+                      <svg class="custom-select-arrow" viewBox="0 0 12 12" fill="none">
+                        <path d="M2.22 4.47a.75.75 0 0 1 1.06 0L6 7.19l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L2.22 5.53a.75.75 0 0 1 0-1.06z" fill="currentColor"/>
+                      </svg>
+                    </div>
+                  </div>
+              </div>
+              <div class="settings-card">
+                <div class="settings-card-title" data-i18n="searchEngine">搜索引擎</div>
+                <div class="custom-select-wrapper">
+                  <select id="select-engine" class="select-box" tabindex="-1" aria-label="搜索引擎">
+                    <option value="bing" data-i18n="bing">Bing</option>
+                    <option value="baidu" data-i18n="baidu">Baidu</option>
+                    <option value="google">Google</option>
+                    <option value="custom" data-i18n="custom">自定义</option>
+                  </select>
+                  <div class="custom-select-display" data-for="select-engine">
+                    <span class="custom-select-text"></span>
+                    <svg class="custom-select-arrow" viewBox="0 0 12 12" fill="none">
+                      <path d="M2.22 4.47a.75.75 0 0 1 1.06 0L6 7.19l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L2.22 5.53a.75.75 0 0 1 0-1.06z" fill="currentColor"/>
+                    </svg>
+                  </div>
+                </div>
+                <button id="btn-edit-engine" class="icon-btn-text" style="display:none;" type="button">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M11.013 1.427a1.75 1.75 0 0 1 2.474 0l1.086 1.086a1.75 1.75 0 0 1 0 2.474l-8.61 8.61c-.21.21-.47.364-.756.445l-3.251.93a.75.75 0 0 1-.927-.928l.93-3.25a1.75 1.75 0 0 1 .445-.758l8.61-8.609z"/></svg>
+                  <span data-i18n="editCustomEngine">编辑自定义搜索引擎</span>
+                </button>
+                <!-- 直接更换当前搜索引擎的图标 / 恢复原版图标（自定义引擎走上面的编辑弹窗） -->
+                <div id="engine-icon-actions" class="icon-btn-row">
+                  <button id="btn-change-engine-icon" class="icon-btn-text" type="button">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/><path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z"/></svg>
+                    <span data-i18n="changeEngineIcon">更换图标</span>
+                  </button>
+                  <button id="btn-reset-engine-icon" class="icon-btn-text" style="display:none;" type="button">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/><path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/></svg>
+                    <span data-i18n="resetEngineIcon">恢复原版图标</span>
+                  </button>
+                </div>
+                <input type="file" id="input-quick-engine-logo" class="file-input-hidden" accept="image/*">
+                <div id="force-bing-cn-row" class="setting-row" style="display:none; margin-top: 8px;">
+                  <div class="setting-label-group">
+                    <span data-i18n="forceBingCN">强制使用必应中国版</span>
+                    <span class="tooltip-icon" tabindex="0">
+                      <svg width="18" height="18" viewBox="0 0 1024 1024" fill="currentColor" aria-hidden="true" style="margin-top: 3px; margin-left: -2px;">
+                        <path d="M509.92 795.84c157.904 0 285.92-128.016 285.92-285.92C795.84 352 667.808 224 509.92 224 352 224 224 352 224 509.92c0 157.904 128 285.92 285.92 285.92z m0 48C325.504 843.84 176 694.32 176 509.92 176 325.504 325.504 176 509.92 176c184.416 0 333.92 149.504 333.92 333.92 0 184.416-149.504 333.92-333.92 333.92z m-2.448-400.704h16a16 16 0 0 1 16 16v201.728a16 16 0 0 1-16 16h-16a16 16 0 0 1-16-16V459.136a16 16 0 0 1 16-16z m0-100.176h16a16 16 0 0 1 16 16v23.648a16 16 0 0 1-16 16h-16a16 16 0 0 1-16-16v-23.648a16 16 0 0 1 16-16z"/>
+                      </svg>
+                      <span class="tooltip-content" data-i18n-html="forceBingCNDesc"><span class="tooltip-arrow"></span><b>开启</b>：强制使用必应中国版<br><b>关闭</b>：根据网络环境自动选择。<br>此选项可以避免代理设置导致 www.bing.com 无法自动跳转到 cn.bing.com。</span>
+                    </span>
+                  </div>
+                  <div class="switch-container">
+                    <span class="setting-status-text" id="status-force-bing-cn" data-i18n="off">关闭</span>
+                    <label class="switch">
+                      <input type="checkbox" id="toggle-force-bing-cn">
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 搜索历史记录开关 -->
+              <div class="settings-card">
+                <div class="setting-row">
+                  <div class="setting-label-group" data-i18n="saveHistory">保存搜索历史记录</div>
+                  <div class="switch-container">
+                    <span class="setting-status-text" id="status-history" data-i18n="on">打开</span>
+                    <label class="switch">
+                      <input type="checkbox" id="toggle-history-switch" checked>
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 页面布局视图选择 -->
+              <div class="settings-card">
+                <div class="settings-card-header">
+                  <span data-i18n="layout">页面布局</span>
+                </div>
+                <div class="layout-presets">
+                  <div class="preset-card" data-layout-val="inspirational" id="preset-inspirational">
+                    <div class="preset-thumb">
+                      <div class="preset-thumb-box" style="bottom: 30px"></div>
+                    </div>
+                    <span class="preset-card-label" data-i18n="inspirational">展望</span>
+                  </div>
+                  <div class="preset-card" data-layout-val="focused" id="preset-focused">
+                    <div class="preset-thumb">
+                      <div class="preset-thumb-bar" style="top: 24px"></div>
+                      <div class="preset-thumb-box" style="bottom: 26px"></div>
+                    </div>
+                    <span class="preset-card-label" data-i18n="focused">聚焦</span>
+                  </div>
+                </div>
+                <button id="btn-open-layout-modal" class="icon-btn-text" type="button">
+                  <span data-i18n="editLayout">编辑页面布局</span>
+                </button>
+              </div>
+
+              <!-- 背景设置卡片 -->
+              <div class="settings-card">
+                <div class="setting-row" style="margin-bottom: 8px;">
+                  <div class="setting-label-group" data-i18n="background">背景</div>
+                  <div class="switch-container">
+                    <span class="setting-status-text" id="status-bg" data-i18n="off">关闭</span>
+                    <label class="switch">
+                      <input type="checkbox" id="toggle-bg-switch">
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                </div>
+                <button id="btn-open-bg-modal" class="icon-btn-text" type="button">
+                  <span data-i18n="editBackground">编辑背景</span>
+                </button>
+                <div id="enhanced-visibility-row" class="setting-row" style="display:none; margin-top: 8px;">
+                  <div class="setting-label-group" data-i18n="enhancedVisibility">增强元素可见性</div>
+                  <div class="switch-container">
+                    <span class="setting-status-text" id="status-enhanced-visibility" data-i18n="off">关闭</span>
+                    <label class="switch">
+                      <input type="checkbox" id="toggle-enhanced-visibility">
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                </div>
+                <!-- 主题模式（跟随系统 / 深色 / 浅色） -->
+                <div class="settings-card-title" style="margin-top: 12px;" data-i18n="themeMode">主题模式</div>
+                <div class="custom-select-wrapper">
+                  <select id="select-theme" class="select-box" tabindex="-1" aria-label="主题模式">
+                    <option value="auto" data-i18n="themeAuto">跟随系统</option>
+                    <option value="dark" data-i18n="themeDark">深色</option>
+                    <option value="light" data-i18n="themeLight">浅色</option>
+                  </select>
+                  <div class="custom-select-display" data-for="select-theme">
+                    <span class="custom-select-text"></span>
+                    <svg class="custom-select-arrow" viewBox="0 0 12 12" fill="none">
+                      <path d="M2.22 4.47a.75.75 0 0 1 1.06 0L6 7.19l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L2.22 5.53a.75.75 0 0 1 0-1.06z" fill="currentColor"/>
+                    </svg>
+                  </div>
+                </div>
+                <!-- 背景模糊程度 -->
+                <div class="setting-slider-block">
+                  <div class="setting-label-group" data-i18n="bgBlur">背景模糊程度</div>
+                  <div class="setting-slider-line">
+                    <input type="range" class="setting-slider" id="range-bg-blur" min="0" max="24" step="1" value="0" aria-label="背景模糊程度" data-i18n-aria="bgBlur">
+                    <span class="setting-slider-value" id="value-bg-blur">0px</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 页面语言选择卡片 -->
+              <div class="settings-card">
+                <div class="settings-card-title" data-i18n="language">页面语言</div>
+                <div class="custom-select-wrapper">
+                  <select id="select-language" class="select-box" tabindex="-1" aria-label="界面语言">
+                    <option value="auto" data-i18n="langAuto">默认（跟随设备）</option>
+                    <option value="en">English</option>
+                    <option value="ja">日本語</option>
+                    <option value="ru">Русский</option>
+                    <option value="zh-CN">中文-简体</option>
+                    <option value="zh-TW">中文-繁體</option>
+                    <option value="zh-WY">华夏-文言</option>
+                  </select>
+                  <div class="custom-select-display" data-for="select-language">
+                    <span class="custom-select-text"></span>
+                    <svg class="custom-select-arrow" viewBox="0 0 12 12" fill="none">
+                      <path d="M2.22 4.47a.75.75 0 0 1 1.06 0L6 7.19l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L2.22 5.53a.75.75 0 0 1 0-1.06z" fill="currentColor"/>
+                    </svg>
+                  </div>
+                </div>
+                
+              </div>
+
+            </div>
+
+            <!-- 底部版权/链接区域 -->
+            <div class="settings-footer">
+              <div class="settings-footer-links">
+                <a href="PRIVACY_POLICY.md" data-i18n="cookieNotice">隐私与 Cookie</a> · 
+                <a href="LICENSE" data-i18n="license">开源协议</a> ·  
+                <a href="https://github.com/yujianxi666/LitestartCE/graphs/contributors?from=2026%2F5%2F23" data-i18n="contributor">贡献名单</a> · 
+                <a href="https://github.com/yujianxi666/LitestartCE/issues" data-i18n="helpFeedback">帮助&反馈</a>
+                
+              </div>
+              <div class="settings-footer-links">
+                <a href="#" id="btn-footer-version">LitestartCE 1.7.2</a>| <span data-i18n="developedBy">由</span> <a href="https://github.com/yujianxi666" target="_blank" rel="noopener">KeepHope2901</a> <span data-i18n="secondDev">二次开发</span>
+              </div>
+              <div class="settings-footer-text" style="opacity: 0.8;" data-i18n="disclaimer">
+                请注意，此网页与 Microsoft 无关。
+              </div>
+            </div>
+            </div><!-- /settings-page-main -->
+
+            <!-- ===== 第二页：页面布局（由「编辑页面布局」左移进入，原独立弹窗内容已搬入此处）===== -->
+            <div class="settings-page settings-page-layout">
+              <div class="settings-header">
+                <button class="settings-back-btn" id="btn-layout-back" title="返回" data-i18n-title="back">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M10.53 2.22a.75.75 0 0 1 0 1.06L6.81 7l3.72 3.72a.75.75 0 1 1-1.06 1.06L4.72 8.53a.75.75 0 0 1 0-1.06l4.75-4.75a.75.75 0 0 1 1.06 0z"/>
+                  </svg>
+                </button>
+                <h2 class="settings-title" data-i18n="layout">页面布局</h2>
+                <button class="settings-close-btn" id="btn-close-settings-2" title="关闭" data-i18n-title="close">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M2.22 2.22a.75.75 0 0 1 1.06 0L8 6.94l4.72-4.72a.75.75 0 1 1 1.06 1.06L9.06 8l4.72 4.72a.75.75 0 1 1-1.06 1.06L8 9.06l-4.72 4.72a.75.75 0 0 1-1.06-1.06L6.94 8 2.22 3.28a.75.75 0 0 1 0-1.06z"/>
+                  </svg>
+                </button>
+              </div>
+
+              <div class="settings-content">
+                <!-- 小块 1：搜索框位置与形状 -->
+                <div class="settings-card">
+                  <div class="settings-block">
+                    <div class="settings-block-title" data-i18n="searchBoxPosition">搜索框位置</div>
+                    <div class="custom-select-wrapper">
+                      <select id="select-layout" class="select-box" tabindex="-1" aria-label="搜索框位置">
+                        <option value="inspirational" data-i18n="layoutHanging">悬挂</option>
+                        <option value="focused" data-i18n="layoutCentered">居中</option>
+                        <option value="hidden" data-i18n="layoutHidden">关闭</option>
+                      </select>
+                      <div class="custom-select-display" data-for="select-layout">
+                        <span class="custom-select-text"></span>
+                        <svg class="custom-select-arrow" viewBox="0 0 12 12" fill="none">
+                          <path d="M2.22 4.47a.75.75 0 0 1 1.06 0L6 7.19l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L2.22 5.53a.75.75 0 0 1 0-1.06z" fill="currentColor"/>
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 搜索框形状 -->
+                  <div class="settings-block">
+                    <div class="settings-block-title" data-i18n="searchBoxShape">搜索框形状</div>
+                    <div class="custom-select-wrapper">
+                      <select id="select-search-shape" class="select-box" tabindex="-1" aria-label="搜索框形状">
+                        <option value="round" data-i18n="shapeRound">圆形</option>
+                        <option value="square" data-i18n="shapeSquare">方形</option>
+                      </select>
+                      <div class="custom-select-display" data-for="select-search-shape">
+                        <span class="custom-select-text"></span>
+                        <svg class="custom-select-arrow" viewBox="0 0 12 12" fill="none">
+                          <path d="M2.22 4.47a.75.75 0 0 1 1.06 0L6 7.19l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L2.22 5.53a.75.75 0 0 1 0-1.06z" fill="currentColor"/>
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 快速链接形状 -->
+                  <div class="settings-block">
+                    <div class="settings-block-title" data-i18n="linksShape">快速链接形状</div>
+                    <div class="custom-select-wrapper">
+                      <select id="select-links-shape" class="select-box" tabindex="-1" aria-label="快速链接形状">
+                        <option value="round" data-i18n="shapeRound">圆形</option>
+                        <option value="square" data-i18n="shapeSquare">方形</option>
+                      </select>
+                      <div class="custom-select-display" data-for="select-links-shape">
+                        <span class="custom-select-text"></span>
+                        <svg class="custom-select-arrow" viewBox="0 0 12 12" fill="none">
+                          <path d="M2.22 4.47a.75.75 0 0 1 1.06 0L6 7.19l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L2.22 5.53a.75.75 0 0 1 0-1.06z" fill="currentColor"/>
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 小块 2：显示开关 -->
+                <div class="settings-card">
+                  <div class="settings-block">
+                    <div class="setting-row" style="margin-bottom: 12px;">
+                      <div class="setting-label-group" data-i18n="showLogo">显示标题</div>
+                      <div class="switch-container">
+                        <span class="setting-status-text" id="status-logo" data-i18n="on">打开</span>
+                        <label class="switch">
+                          <input type="checkbox" id="toggle-logo-switch" checked>
+                          <span class="slider"></span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="setting-row" style="margin-bottom: 12px;">
+                      <div class="setting-label-group" data-i18n="showMenuButton">显示菜单按钮</div>
+                      <div class="switch-container">
+                        <span class="setting-status-text" id="status-menu-button" data-i18n="on">打开</span>
+                        <label class="switch">
+                          <input type="checkbox" id="toggle-menu-button-switch" checked>
+                          <span class="slider"></span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="setting-row">
+                      <div class="setting-label-group" data-i18n="showTimeCapsule">显示时间</div>
+                      <div class="switch-container">
+                        <span class="setting-status-text" id="status-time-capsule" data-i18n="off">关闭</span>
+                        <label class="switch">
+                          <input type="checkbox" id="toggle-time-capsule-switch">
+                          <span class="slider"></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 小块 3：元素排布（四个滑块 + 重置） -->
+                <div class="settings-card">
+                  <div class="settings-block">
+                    <div class="settings-block-title" data-i18n="elementSpacing">元素排布</div>
+
+                    <div class="setting-slider-block">
+                      <div class="slider-label-row">
+                        <div class="setting-label-group" data-i18n="layoutGapTitle">标题与搜索框间距</div>
+                        <button type="button" class="mini-btn" data-reset-slider="range-gap-title" title="重置为默认值" data-i18n-title="resetSlider">
+                          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/><path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/></svg>
+                        </button>
+                      </div>
+                      <div class="setting-slider-line">
+                        <input type="range" class="setting-slider" id="range-gap-title" min="0" max="200" step="4" value="72">
+                        <span class="setting-slider-value" id="value-gap-title">72px</span>
+                      </div>
+                    </div>
+
+                    <div class="setting-slider-block">
+                      <div class="slider-label-row">
+                        <div class="setting-label-group" data-i18n="layoutGapLinks">搜索框与快捷方式间距</div>
+                        <button type="button" class="mini-btn" data-reset-slider="range-gap-links" title="重置为默认值" data-i18n-title="resetSlider">
+                          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/><path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/></svg>
+                        </button>
+                      </div>
+                      <div class="setting-slider-line">
+                        <input type="range" class="setting-slider" id="range-gap-links" min="0" max="200" step="4" value="64">
+                        <span class="setting-slider-value" id="value-gap-links">64px</span>
+                      </div>
+                    </div>
+
+                    <div class="setting-slider-block">
+                      <div class="slider-label-row">
+                        <div class="setting-label-group" data-i18n="layoutOffsetX">水平偏移</div>
+                        <button type="button" class="mini-btn" data-reset-slider="range-offset-x" title="重置为默认值" data-i18n-title="resetSlider">
+                          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/><path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/></svg>
+                        </button>
+                      </div>
+                      <div class="setting-slider-line">
+                        <input type="range" class="setting-slider" id="range-offset-x" min="-400" max="400" step="4" value="0">
+                        <span class="setting-slider-value" id="value-offset-x">0px</span>
+                      </div>
+                    </div>
+
+                    <div class="setting-slider-block">
+                      <div class="slider-label-row">
+                        <div class="setting-label-group" data-i18n="layoutOffsetY">垂直偏移</div>
+                        <button type="button" class="mini-btn" data-reset-slider="range-offset-y" title="重置为默认值" data-i18n-title="resetSlider">
+                          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/><path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/></svg>
+                        </button>
+                      </div>
+                      <div class="setting-slider-line">
+                        <input type="range" class="setting-slider" id="range-offset-y" min="-240" max="240" step="4" value="0">
+                        <span class="setting-slider-value" id="value-offset-y">0px</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 小块 4：元素大小（logo / 搜索框 / 快速链接 各自缩放） -->
+                <div class="settings-card">
+                  <div class="settings-block">
+                    <div class="settings-block-title" data-i18n="elementSize">元素大小</div>
+
+                    <div class="setting-slider-block">
+                      <div class="slider-label-row">
+                        <div class="setting-label-group" data-i18n="sizeLogo">标题大小</div>
+                        <div class="slider-controls">
+                          <button type="button" class="mini-btn" data-size-step="-1" data-size-target="range-size-logo" title="调小" data-i18n-title="sizeSmaller">
+                            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 8a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 8"/></svg>
+                          </button>
+                          <button type="button" class="mini-btn" data-reset-slider="range-size-logo" title="重置为默认值" data-i18n-title="resetSlider">
+                            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/><path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/></svg>
+                          </button>
+                          <button type="button" class="mini-btn" data-size-step="1" data-size-target="range-size-logo" title="调大" data-i18n-title="sizeLarger">
+                            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8.75 2.75a.75.75 0 0 0-1.5 0V7.25H2.75a.75.75 0 0 0 0 1.5H7.25v4.5a.75.75 0 0 0 1.5 0V8.75h4.5a.75.75 0 0 0 0-1.5H8.75z"/></svg>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="setting-slider-line">
+                        <input type="range" class="setting-slider" id="range-size-logo" min="60" max="160" step="5" value="100" aria-label="标题大小" data-i18n-aria="sizeLogo">
+                        <span class="setting-slider-value" id="value-size-logo">100%</span>
+                      </div>
+                    </div>
+
+                    <div class="setting-slider-block">
+                      <div class="slider-label-row">
+                        <div class="setting-label-group" data-i18n="sizeSearch">搜索框大小</div>
+                        <div class="slider-controls">
+                          <button type="button" class="mini-btn" data-size-step="-1" data-size-target="range-size-search" title="调小" data-i18n-title="sizeSmaller">
+                            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 8a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 8"/></svg>
+                          </button>
+                          <button type="button" class="mini-btn" data-reset-slider="range-size-search" title="重置为默认值" data-i18n-title="resetSlider">
+                            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/><path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/></svg>
+                          </button>
+                          <button type="button" class="mini-btn" data-size-step="1" data-size-target="range-size-search" title="调大" data-i18n-title="sizeLarger">
+                            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8.75 2.75a.75.75 0 0 0-1.5 0V7.25H2.75a.75.75 0 0 0 0 1.5H7.25v4.5a.75.75 0 0 0 1.5 0V8.75h4.5a.75.75 0 0 0 0-1.5H8.75z"/></svg>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="setting-slider-line">
+                        <input type="range" class="setting-slider" id="range-size-search" min="60" max="160" step="5" value="100" aria-label="搜索框大小" data-i18n-aria="sizeSearch">
+                        <span class="setting-slider-value" id="value-size-search">100%</span>
+                      </div>
+                    </div>
+
+                    <div class="setting-slider-block">
+                      <div class="slider-label-row">
+                        <div class="setting-label-group" data-i18n="sizeLinks">快速链接大小</div>
+                        <div class="slider-controls">
+                          <button type="button" class="mini-btn" data-size-step="-1" data-size-target="range-size-links" title="调小" data-i18n-title="sizeSmaller">
+                            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 8a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 8"/></svg>
+                          </button>
+                          <button type="button" class="mini-btn" data-reset-slider="range-size-links" title="重置为默认值" data-i18n-title="resetSlider">
+                            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/><path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/></svg>
+                          </button>
+                          <button type="button" class="mini-btn" data-size-step="1" data-size-target="range-size-links" title="调大" data-i18n-title="sizeLarger">
+                            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8.75 2.75a.75.75 0 0 0-1.5 0V7.25H2.75a.75.75 0 0 0 0 1.5H7.25v4.5a.75.75 0 0 0 1.5 0V8.75h4.5a.75.75 0 0 0 0-1.5H8.75z"/></svg>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="setting-slider-line">
+                        <input type="range" class="setting-slider" id="range-size-links" min="60" max="160" step="5" value="100" aria-label="快速链接大小" data-i18n-aria="sizeLinks">
+                        <span class="setting-slider-value" id="value-size-links">100%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 小块 5：元素对齐 -->
+                <div class="settings-card">
+                  <div class="settings-block">
+                    <div class="settings-block-title" data-i18n="layoutAlign">元素对齐</div>
+                    <div class="custom-select-wrapper">
+                      <select id="select-layout-align" class="select-box" tabindex="-1" aria-label="元素对齐">
+                        <option value="left" data-i18n="alignLeft">左端对齐</option>
+                        <option value="center" data-i18n="alignCenter">居中</option>
+                        <option value="right" data-i18n="alignRight">右端对齐</option>
+                      </select>
+                      <div class="custom-select-display" data-for="select-layout-align">
+                        <span class="custom-select-text"></span>
+                        <svg class="custom-select-arrow" viewBox="0 0 12 12" fill="none">
+                          <path d="M2.22 4.47a.75.75 0 0 1 1.06 0L6 7.19l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L2.22 5.53a.75.75 0 0 1 0-1.06z" fill="currentColor"/>
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="settings-block-hint" data-i18n="alignHint">左端 / 右端对齐是与下方快速链接的左右边界对齐</div>
+                  </div>
+                </div>
+              </div>
+            </div><!-- /settings-page-layout -->
+           </div><!-- /settings-pages -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 主体内容区域 -->
+      <div id="inner">
+        <!-- Logo 容器 -->
+        <div id="logo"></div>
+
+        <!-- 搜索框容器 -->
+        <div id="search-container">
+          <div id="fakebox" role="searchbox" tabindex="0" aria-label="搜索或输入 Web 地址" data-i18n-aria="searchPlaceholder">
+            <svg aria-hidden="true" id="searchbutton" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 2.75a7.25 7.25 0 015.63 11.82l4.9 4.9a.75.75 0 01-.98 1.13l-.08-.07-4.9-4.9A7.25 7.25 0 1110 2.75zm0 1.5a5.75 5.75 0 100 11.5 5.75 5.75 0 000-11.5z">
+              </path>
+            </svg>
+            <div id="placeholder" aria-hidden="true" data-i18n="searchPlaceholder">
+              搜索或输入 Web 地址
+            </div>
+            <input type="text" id="search-input" aria-label="搜索输入框" autocomplete="off" data-i18n-aria="searchInput">
+          </div>
+
+          <!-- 搜索推荐与历史词条下拉菜单 -->
+          <div id="suggestions-box">
+            <ul id="suggestion-list" class="suggestion-list"></ul>
+            <div class="suggestions-footer" id="suggestions-footer">
+              <span id="clear-history-btn" class="clear-history-btn" data-i18n="clearSearchHistory">清除搜索历史记录</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 快速链接列表（全部由脚本按可用宽度动态渲染） -->
+        <ntp-quicklinks id="quicklinks" rows="0"></ntp-quicklinks>
+      </div>
+    </ntp-shell>
+
+    <!-- 自定义背景弹窗 -->
+    <div id="modal-wallpaper" class="modal-overlay">
+      <div class="modal-dialog modal-dialog-large">
+        <div>
+          <div class="modal-header">
+            <span data-i18n="customBackground">自定义背景</span>
+            <div class="modal-close-icon" id="btn-close-wallpaper-modal">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M2.22 2.22a.75.75 0 0 1 1.06 0L8 6.94l4.72-4.72a.75.75 0 1 1 1.06 1.06L9.06 8l4.72 4.72a.75.75 0 1 1-1.06 1.06L8 9.06l-4.72 4.72a.75.75 0 0 1-1.06-1.06L6.94 8 2.22 3.28a.75.75 0 0 1 0-1.06z"/>
+              </svg>
+            </div>
+          </div>
+
+    <!-- 自定义在线壁纸URL弹窗 -->
+    <div id="modal-online-wallpaper" class="modal-overlay">
+      <div class="modal-dialog">
+      <div class="modal-header" data-i18n="customOnlineWallpaper">自定义在线壁纸</div>
+        <form id="online-wallpaper-form" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="input-online-url" data-i18n="imageOrVideoUrl">图片或视频URL</label>
+          <div class="input-container" id="container-online-url">
+            <input type="text" id="input-online-url" class="input" placeholder="https://example.com/image.jpg" autocomplete="off" data-i18n-ph="enterUrl">
+          </div>
+          <div class="error-tip" id="tip-online-url">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 3a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+            </svg>
+            <span data-i18n="errorUrlReq">请输入有效URL</span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="modal-footer-right">
+            <button type="button" id="btn-online-cancel" class="btn btn-secondary" data-i18n="cancel">取消</button>
+            <button type="submit" id="btn-online-save" class="btn btn-primary" data-i18n="save">保存</button>
+          </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="wallpaper-preview-area">
+    <div class="wallpaper-preview-wrap">
+    <div class="wallpaper-preview-box" id="wallpaper-preview-container">
+      <!-- 预览渲染图片或视频 -->
+        <span id="preview-placeholder-text" style="font-size: 13px; color: var(--settings-text-secondary);" data-i18n="usingDefaultBg">正在使用默认背景</span>
+    </div>
+      <!-- 壁纸来源标签（本地图片 / Bing 每日壁纸 / 自定义链接） -->
+      <span id="wallpaper-source-label" style="font-size:11px;color:var(--settings-text-secondary);text-align:center;margin-top:6px;display:block;"></span>
+    </div>
+    <div class="wallpaper-actions">
+      <span class="wallpaper-actions-title" id="wallpaper-type-title" data-i18n="localImage">选择图片</span>
+      <input type="file" id="input-wallpaper-file" class="file-input-hidden" accept="image/*,video/*">
+      <div style="display: flex; gap: 8px;">
+        <button type="button" class="btn btn-secondary" id="btn-upload-wallpaper" data-i18n="uploadFile">选择文件</button>
+        <button type="button" class="btn btn-secondary" id="btn-remove-wallpaper" data-i18n="restoreDefault">恢复默认</button>
+      </div>
+    <!-- 使用在线内容  -->
+    <div style="margin-top: 16px; border-top: 1px solid var(--settings-card-border); padding-top: 16px;">
+      <div class="wallpaper-actions">
+        <span class="wallpaper-actions-title" data-i18n="useOnlineContent">使用在线内容</span>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" class="btn btn-secondary" id="btn-bing-wallpaper" data-i18n="bingDaily">必应每日壁纸</button>
+          <button type="button" class="btn btn-secondary" id="btn-custom-url-wallpaper" data-i18n="customUrl">自定义</button>
+        </div>
+      </div>
+    </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 底部背景控制 -->
+        <div class="setting-row" style="border-top: 1px solid var(--settings-card-border); padding-top: 16px;">
+          <div class="setting-label-group" style="font-size: 15px; font-weight: 600;" data-i18n="background">背景</div>
+          <div class="switch-container">
+            <span class="setting-status-text" id="status-bg-modal" data-i18n="off">关闭</span>
+            <label class="switch">
+              <input type="checkbox" id="toggle-bg-modal-switch">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ------编辑页面布局：已改为设置悬浮窗内的第二页（见 #popover-settings .settings-page-layout）------ -->
+
+
+    <!-- ------添加快速链接弹窗------ -->
+    <div id="modal" class="modal-overlay">
+      <div class="modal-dialog">
+        <div id="modal-title" class="modal-header" data-i18n="editShortcut">编辑快速链接</div>
+        <form id="modal-form" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="input-name" data-i18n="name">名称</label>
+            <div class="input-container" id="container-name">
+              <input type="text" id="input-name" class="input" placeholder="输入快速链接名称" autocomplete="off" data-i18n-ph="inputNamePh">
+            </div>
+            <div class="error-tip" id="tip-name">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 3a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+              </svg>
+              <span id="text-name-error" data-i18n="errorNameReq">请输入快速链接名称</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-url">URL</label>
+            <div class="input-container" id="container-url">
+              <input type="text" id="input-url" class="input" placeholder="https://example.com" autocomplete="off">
+            </div>
+            <div class="error-tip" id="tip-url">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 3a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+              </svg>
+              <span id="text-url-error" data-i18n="errorUrlReq">请输入网址</span>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" id="btn-delete" class="btn btn-danger" data-i18n="delete">删除</button>
+            <div class="modal-footer-right">
+              <button type="button" id="btn-cancel" class="btn btn-secondary" data-i18n="cancel">取消</button>
+              <button type="submit" id="btn-save" class="btn btn-primary" data-i18n="save">保存</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 自定义搜索引擎配置 Modal 对话框 -->
+    <div id="custom-engine-modal" class="modal-overlay">
+      <div class="modal-dialog">
+        <div class="modal-header" data-i18n="customEngineTitle">自定义搜索引擎</div>
+        <form id="custom-engine-form" novalidate>
+          <!-- 自定义标题图片 -->
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label class="form-label" data-i18n="customTitleImage">自定义标题图片</label>
+            <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+              <div id="engine-logo-preview" style="min-width: 120px; height: 56px; border-radius: 6px; background-color: var(--settings-thumb-bg); border: 1px solid var(--settings-card-border); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 4px; box-sizing: border-box;">
+                <span id="engine-logo-empty" style="font-size: 11px; color: var(--settings-text-secondary); text-align: center;" data-i18n="noImageSelected">未选择图片</span>
+                <img id="engine-logo-img" src="" alt="" style="max-height: 100%; max-width: 200px; object-fit: contain; display: none;">
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button type="button" class="btn btn-secondary" id="btn-upload-engine-logo" data-i18n="selectImageFile">选择图片</button>
+                <button type="button" class="btn btn-secondary" id="btn-remove-engine-logo" data-i18n="removeImage" style="display: none;">删除图片</button>
+              </div>
+              <input type="file" id="input-engine-logo-file" class="file-input-hidden" accept="image/*">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-engine-name" data-i18n="engineName">搜索引擎名称</label>
+            <div class="input-container" id="container-engine-name">
+              <input type="text" id="input-engine-name" class="input" placeholder="例如: DuckDuckGo" autocomplete="off" data-i18n-ph="engineNamePh">
+            </div>
+            <div class="error-tip" id="tip-engine-name">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 3a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+              </svg>
+              <span data-i18n="errorEngineNameReq">请输入搜索引擎名称</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-engine-url" data-i18n="engineUrl">搜索 URL (%s 替换搜索关键词)</label>
+            <div class="input-container" id="container-engine-url">
+              <input type="text" id="input-engine-url" class="input" placeholder="https://duckduckgo.com/?q=%s" autocomplete="off">
+            </div>
+            <div class="error-tip" id="tip-engine-url">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 3a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+              </svg>
+              <span id="text-engine-url-error" data-i18n="errorEngineUrlFormat">请输入搜索 URL，必须包含 %s</span>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <div class="modal-footer-right">
+              <button type="button" id="btn-engine-cancel" class="btn btn-secondary" data-i18n="cancel">取消</button>
+              <button type="submit" id="btn-engine-save" class="btn btn-primary" data-i18n="save">保存</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+    <!-- 编辑个人资料模态框 -->
+    <div id="modal-profile" class="modal-overlay">
+      <div class="modal-dialog">
+        <div class="modal-header" data-i18n="editProfile">编辑个人资料</div>
+        <form id="profile-form" novalidate>
+          <!-- 头像区域 -->
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label class="form-label" data-i18n="profileAvatar">头像</label>
+            <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+              <img id="profile-avatar-preview" src="img/profiles.png" alt="头像预览" style="width: 72px; height: 72px; border-radius: 50%; object-fit: cover; background-color: var(--settings-thumb-bg); border: 1px solid var(--settings-card-border);">
+              <div style="display: flex; gap: 8px;">
+                <button type="button" class="btn btn-secondary" id="btn-upload-avatar" data-i18n="uploadAvatar">选择头像</button>
+                <button type="button" class="btn btn-secondary" id="btn-remove-avatar" data-i18n="removeAvatar" style="display: none;">删除头像</button>
+              </div>
+              <input type="file" id="input-avatar-file" class="file-input-hidden" accept="image/*">
+            </div>
+          </div>
+
+          <!-- 姓名 -->
+          <div class="form-group">
+            <label class="form-label" for="input-profile-name" data-i18n="name">姓名</label>
+            <div class="input-container" id="container-profile-name">
+              <input type="text" id="input-profile-name" class="input" placeholder="个人" autocomplete="off">
+            </div>
+          </div>
+
+          <!-- 描述 -->
+          <div class="form-group">
+            <label class="form-label" for="input-profile-description" data-i18n="description">描述</label>
+            <div class="input-container" id="container-profile-description">
+              <input type="text" id="input-profile-description" class="input" placeholder="本地账户" autocomplete="off">
+            </div>
+          </div> 
+
+          <div class="modal-footer">
+            <div class="modal-footer-right">
+              <button type="button" id="btn-profile-cancel" class="btn btn-secondary" data-i18n="cancel">取消</button>
+              <button type="submit" id="btn-profile-save" class="btn btn-primary" data-i18n="save">保存</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+
+    <!-- 关于弹窗 -->
+    <div id="modal-about" class="modal-overlay">
+      <div class="modal-dialog">
+        <div class="modal-header" data-i18n="aboutTitle">关于 LitestartCE</div>
+        <p style="margin: 0; opacity: 0.7; font-size: 13px;" data-i18n="litever">版本 1.7.2 | 更新时间：2026-10-4</p><br>
+        
+        <!-- 可用更新提示框 -->
+        <div id="update-notice" class="update-notice" style="display: none;">
+          <div class="update-notice-info">
+            <div class="update-notice-title" data-i18n="updateAvailable">可用更新</div>
+            <div class="update-notice-version">
+              <span>LitestartCE <span id="update-version-text"></span></span>
+            </div>
+          </div>
+          <a id="update-download-btn" class="btn btn-primary" href="#" target="_blank" rel="noopener" data-i18n="download">下载</a>
+        </div>
+
+        <div style="padding: 8px 0 16px 0; color: var(--neutral-foreground-rest); font-size: 14px; line-height: 1.8;">
+          <p style="margin: 0 0 8px 0;" data-i18n="aboutDesc">一个简洁、快速的浏览器起始页。</p>
+          <p style="margin: 0 0 8px 0; opacity: 0.75; font-size: 13px;" data-i18n="aboutEdition">LitestartCE 是 Litestart 的二次开发版本</p>
+          <p style="margin: 0 0 8px 0; font-size: 13px;">
+            <span data-i18n-html="aboutUpstream">基于 <a href="https://github.com/XingYueFox/Litestart" target="_blank" rel="noopener" style="color: var(--accent-foreground-rest); ">Litestart</a></span>
+          </p>
+            <p style="margin: 0 0 4px 0;">
+            <span data-i18n="developedBy">由</span> 
+            <a href="https://github.com/yujianxi666" target="_blank" rel="noopener" style="color: var(--accent-foreground-rest); ">KeepHope2901</a>
+            <span data-i18n="secondDev">二次开发</span>
+          </p>
+
+
+          </div>
+        <div class="modal-footer">
+          <div class="modal-footer-right">
+              <button type="button" id="btn-versioninfo" class="btn btn-secondary" data-i18n="versionInfo">版本信息</button>
+            <button type="button" id="btn-about-close" class="btn btn-secondary" data-i18n="close">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 管理配置文件模态框 -->
+    <div id="modal-manage-profiles" class="modal-overlay">
+      <div class="modal-dialog">
+        <div class="modal-header" data-i18n="manageProfilesTitle">管理配置文件</div>
+        <!-- 第一步：选择要执行的操作 -->
+        <p class="manage-list-hint" data-i18n="selectOperation">选择要执行的操作</p>
+        <div class="manage-list" id="manage-profile-options" role="listbox" aria-label="管理配置文件" data-i18n-aria="manageProfilesTitle">
+          <!-- 导出配置 -->
+          <div class="manage-option" role="option" tabindex="0" data-action="export" aria-selected="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <path d="M1.5 3a.5.5 0 0 1 .5.5V12a.5.5 0 0 1-1 0V3.5a.5.5 0 0 1 .5-.5m9.146.646a.5.5 0 0 1 .708 0l3.5 3.5a.5.5 0 0 1 0 .708l-3.5 3.5a.5.5 0 0 1-.708-.708L13.293 8H4.5a.5.5 0 0 1 0-1h8.793l-2.647-2.646a.5.5 0 0 1 0-.708"/>
+            </svg>
+            <span class="manage-option-label" data-i18n="exportConfig">导出配置</span>
+          </div>
+          <!-- 恢复配置 -->
+          <div class="manage-option" role="option" tabindex="-1" data-action="import" aria-selected="false">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <path d="M13 12.5v-9a.5.5 0 0 1 .992-.09L14 3.5v9a.5.5 0 0 1-.992.09zM1.008 8.09L1 8a.5.5 0 0 1 .41-.492L1.5 7.5h8.792L7.611 4.818a.5.5 0 0 1-.058-.638l.058-.069a.5.5 0 0 1 .638-.058l.069.058l3.536 3.535a.5.5 0 0 1 .057.638l-.057.07l-3.536 3.535a.5.5 0 0 1-.765-.638l.058-.069L10.292 8.5H1.5a.5.5 0 0 1-.492-.41L1 8z"/>
+            </svg>
+            <span class="manage-option-label" data-i18n="importConfig">恢复配置</span>
+          </div>
+          <!-- 初始化 -->
+          <div class="manage-option" role="option" tabindex="-1" data-action="init" aria-selected="false">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+             <path fill="currentColor" d="M13 8a5 5 0 0 0-9.001-3h2a.5.5 0 1 1 0 1H3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 1 0v1.531a6 6 0 1 1-1.476 4.513a.5.5 0 0 1 .997-.089A5 5 0 0 0 13 8"/>
+            </svg>
+            <span class="manage-option-label" data-i18n="initConfigOption">初始化</span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="modal-footer-right">
+            <button type="button" id="btn-manage-profiles-cancel" class="btn btn-secondary" data-i18n="cancel">取消</button>
+            <button type="button" id="btn-manage-profiles-next" class="btn btn-primary" data-i18n="next">下一步</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 隐藏的文件输入框，用于导入配置 -->
+    <input type="file" id="file-input-restore" accept=".json,application/json" style="display: none;">
+
+
+    <!-- 重置确认弹窗 -->
+    <div id="modal-reset-confirm" class="modal-overlay">
+      <div class="modal-dialog">
+        <div class="modal-header" data-i18n="resetTitle">重置 LitestartCE</div>
+        <div style="padding: 8px 0 16px 0; color: var(--neutral-foreground-rest); font-size: 14px; line-height: 1.6;">
+          <p style="margin: 0;" data-i18n="resetDesc">如果你遇到了一些问题，或是对于目前的设定不满意，重置可以清除所有数据并还原 LitestartCE 为初始状态，请注意，此操作不可撤回！</p>
+        </div>
+        <div class="modal-footer">
+          <div class="modal-footer-right">
+            <button type="button" id="btn-reset-cancel" class="btn btn-secondary" data-i18n="cancel">取消</button>
+            <button type="button" id="btn-reset-confirm" class="btn btn-danger" data-i18n="confirmReset">确定</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 重置完成提示弹窗 -->
+    <div id="modal-reset-done" class="modal-overlay">
+      <div class="modal-dialog">
+        <div class="modal-header" data-i18n="resetDoneTitle">重置完成</div>
+        <div style="padding: 8px 0 16px 0; color: var(--neutral-foreground-rest); font-size: 14px; line-height: 1.6;">
+          <p style="margin: 0;" data-i18n="resetDoneDesc">所有设置已重置为初始状态，页面即将刷新。</p>
+        </div>
+        <div class="modal-footer">
+          <div class="modal-footer-right">
+            <button type="button" id="btn-reset-done-confirm" class="btn btn-primary" data-i18n="refreshNow">立即刷新</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 恢复完成提示弹窗 -->
+    <div id="modal-restore-done" class="modal-overlay">
+      <div class="modal-dialog">
+        <div class="modal-header" data-i18n="restoreDoneTitle">配置恢复完成</div>
+        <div style="padding: 8px 0 16px 0; color: var(--neutral-foreground-rest); font-size: 14px; line-height: 1.6;">
+          <p style="margin: 0;" data-i18n="restoreDoneDesc">配置已恢复，页面即将刷新以应用所有设置。</p>
+        </div>
+        <div class="modal-footer">
+          <div class="modal-footer-right">
+            <button type="button" id="btn-restore-done-confirm" class="btn btn-primary" data-i18n="refreshNow">立即刷新</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,4206 @@
+const APP_VERSION = '1.7.2';           // 发行版本（沿用上游 Litestart 的版本号，LitestartCE 为其个性化分支）
+const GITHUB_REPO = 'yujianxi666/LitestartCE';
+
+// 当前是否暗色主题：读取 <html data-theme>（由头部脚本与设置面板写入）
+function isDarkTheme() {
+  return document.documentElement.getAttribute('data-theme') === 'dark';
+}
+
+const logos = {
+  bing: `
+    <svg aria-hidden="true" id="logo-icon" width="48" height="48" viewBox="0 0 48 48">
+      <path fill="#00A4EF" d="M22.7 25.2H0v22.7h22.7V25.2Z"></path>
+      <path fill="#FFB900" d="M47.79 25.2h-22.7v22.7h22.7V25.2Z"></path>
+      <path fill="#7FBA00" d="M47.79.1h-22.7v22.7h22.7V.1Z"></path>
+      <path fill="#F25022" d="M22.7.1H0v22.7h22.7V.1Z"></path>
+    </svg>
+    <svg aria-hidden="true" id="logo-text" width="163" height="48" viewBox="0 0 163 48">
+      <path id="logo-text-path" d="M31.19 9.66v28.68H26.2v-22.5h-.1l-8.86 22.5h-3.29L4.9 15.84h-.1v22.5H.22V9.66H7.4l8.26 21.2h.1l8.67-21.2h6.77Zm4.08 2.2c0-.8.3-1.5.9-2 .6-.5 1.29-.8 2.08-.8.9 0 1.6.3 2.1.9.5.5.9 1.2.9 2 0 .79-.3 1.49-.9 1.98-.6.5-1.3.8-2.1.8-.9 0-1.49-.3-2.09-.8-.5-.7-.9-1.39-.9-2.09Zm5.37 5.87v20.6h-4.87v-20.6h4.87Zm14.74 17.12a9.16 9.16 0 0 0 4.78-1.79v4.48c-.8.5-1.7.8-2.7 1-.99.2-2.08.3-3.28.3-3.08 0-5.47-.9-7.36-2.9a9.98 9.98 0 0 1-2.9-7.26c0-3.29 1-6.07 2.9-8.16 1.89-2.1 4.68-3.19 8.26-3.19.9 0 1.8.1 2.69.3.9.3 1.69.5 2.19.8v4.67c-.7-.5-1.5-1-2.3-1.29-.79-.3-1.58-.5-2.38-.5-1.9 0-3.49.6-4.68 1.9-1.2 1.29-1.8 2.88-1.8 5.07 0 2.1.5 3.68 1.7 4.88a7.45 7.45 0 0 0 4.88 1.7ZM73.9 17.43c.4 0 .7 0 1.1.1.29.1.59.1.79.2v4.88c-.3-.2-.6-.3-1.1-.5-.5-.2-1.1-.3-1.79-.3-1.2 0-2.19.5-2.99 1.5-.8.99-1.29 2.48-1.29 4.67v10.36h-4.88V17.73h4.88V21h.1c.5-1.1 1.1-1.99 1.99-2.68.8-.6 1.9-.9 3.19-.9Zm2.09 10.95c0-3.38.9-6.07 2.88-8.06 1.9-2 4.58-2.99 8.07-2.99 3.18 0 5.67.9 7.46 2.89 1.8 1.89 2.7 4.48 2.7 7.76 0 3.29-.9 5.98-2.9 7.97-1.89 1.99-4.47 2.98-7.86 2.98-3.19 0-5.67-.9-7.57-2.78-1.89-2-2.78-4.58-2.78-7.77Zm5.07-.2c0 2.1.5 3.78 1.5 4.88a5.4 5.4 0 0 0 4.18 1.7c1.8 0 3.09-.6 4.08-1.7.9-1.1 1.4-2.79 1.4-5.08 0-2.19-.5-3.88-1.5-4.98a4.97 4.97 0 0 0-3.98-1.69c-1.8 0-3.09.6-4.08 1.8-1.2 1.19-1.6 2.88-1.6 5.07Zm23.2-4.98c0 .7.2 1.3.7 1.7.5.4 1.4.9 2.89 1.49 1.89.8 3.28 1.7 4.08 2.59.8 1 1.2 2.09 1.2 3.48 0 1.9-.7 3.49-2.3 4.68-1.5 1.2-3.48 1.8-6.07 1.8a15.8 15.8 0 0 1-5.58-1.1v-4.88c.9.6 1.9 1.1 2.9 1.5.99.3 1.88.5 2.78.5 1.1 0 1.89-.1 2.39-.5.5-.3.8-.8.8-1.5s-.3-1.3-.8-1.7c-.5-.49-1.6-.99-3.09-1.59a8.89 8.89 0 0 1-3.78-2.48 5.7 5.7 0 0 1-1.1-3.59c0-1.89.7-3.38 2.2-4.58a8.8 8.8 0 0 1 5.67-1.79c.7 0 1.6.1 2.39.3.9.1 1.69.4 2.29.6v4.58c-.7-.4-1.4-.8-2.3-1.1-.89-.3-1.69-.5-2.48-.5-.9 0-1.7.2-2.1.5-.39.5-.69.9-.69 1.6Zm10.85 5.18c0-3.38.9-6.07 2.89-8.06 2-2 4.58-2.99 8.06-2.99 3.19 0 5.68.9 7.47 2.89 1.8 1.89 2.69 4.48 2.69 7.76 0 3.29-.9 5.98-2.89 7.97-1.89 1.99-4.48 2.98-7.86 2.98-3.19 0-5.68-.9-7.57-2.78-1.8-2-2.79-4.58-2.79-7.77Zm5.08-.2c0 2.1.5 3.78 1.5 4.88a5.4 5.4 0 0 0 4.17 1.7c1.8 0 3.1-.6 4.09-1.7.9-1.1 1.4-2.79 1.4-5.08 0-2.19-.5-3.88-1.5-4.98a4.96 4.96 0 0 0-3.98-1.69c-1.8 0-3.1.6-4.09 1.8-1.1 1.19-1.59 2.88-1.59 5.07Zm32.16-6.47h-7.27v16.63h-4.88V21.7h-3.48v-3.98h3.48v-2.89c0-2.19.7-3.88 2.1-5.28a7.28 7.28 0 0 1 5.37-2.09c.6 0 1.1 0 1.6.1.49.1.89.1 1.19.3v4.18c-.1-.1-.5-.2-.9-.3-.4-.1-.9-.2-1.4-.2-.99 0-1.79.3-2.28.9-.5.7-.8 1.6-.8 2.79v2.49h7.27v-4.68l4.88-1.5v6.08h4.87v3.98h-4.87v9.66c0 1.3.2 2.19.7 2.69.49.5 1.19.8 2.18.8.3 0 .6-.1 1-.2s.7-.3 1.1-.5v3.98c-.3.2-.8.3-1.5.5-.7.1-1.4.2-2.1.2-2.08 0-3.58-.5-4.57-1.7-1-1.1-1.5-2.69-1.5-4.88V21.71h-.2Z"></path>
+    </svg>
+  `,
+  // 百度/谷歌标题图为深浅两套位图：改为按当前主题动态选图
+  // （原来用 <picture><source media="(prefers-color-scheme: dark)">，无法跟随面板里的手动主题）
+  baidu: () => `
+    <img src="img/logo/baidu_logo_${isDarkTheme() ? 'dark' : 'light'}.png" alt="Baidu Logo" class="baidu-logo-img">
+  `,
+  google: () => `
+    <img src="img/logo/google_logo_${isDarkTheme() ? 'dark' : 'light'}.png" alt="Google Logo" class="google-logo-img">
+  `,
+  custom: ``
+};
+
+// 语言字典
+const i18nData = {
+  'zh-CN': {
+    pageTitle: '新标签页',
+    settingsTitle: '页面设置',
+    close: '关闭',
+    quicklinks: '快速链接',
+    off: '关闭',
+    on: '打开',
+    rows1: '1 行',
+    rows2: '2 行',
+    showTimeCapsule: '显示时间',
+    showMenuButton: '显示菜单按钮',
+    searchEngine: '搜索引擎',
+    custom: '自定义',
+    editCustomEngine: '编辑自定义搜索引擎',
+    saveHistory: '保存搜索历史记录',
+    layout: '页面布局',
+    inspirational: '展望',
+    focused: '聚焦',
+    background: '背景',
+    editBackground: '编辑背景',
+    language: '页面语言',
+    langAuto: '默认（跟随设备）',
+    cookieNotice: '隐私与 Cookie',
+    license: '开源协议',
+    contributor: '贡献名单',
+    helpFeedback: '帮助&反馈',
+    presentedBy: '由',
+    xingyuefox: '秋山星月',
+    AomiRaku: '羽梦千景',
+    forYou: '为您呈现',
+    disclaimer: '请注意，此网页与 Microsoft 无关。',
+    aboutTitle: '关于 LitestartCE',
+    download: '下载',
+    updateAvailable: '可用更新',
+    aboutDesc: '一个简洁、快速的浏览器起始页。',
+    aboutEdition: 'LitestartCE 是 Litestart 的二次开发版本',
+    aboutUpstream: '基于 <a href="https://github.com/XingYueFox/Litestart" target="_blank" rel="noopener" style="color: var(--accent-foreground-rest); ">Litestart</a>',
+    developedBy: '由',
+    secondDev: '二次开发',
+    litever: '版本 1.7.2 | 更新时间：2026-10-4',
+    versionInfo: '版本信息',
+    and: '和',
+    searchPlaceholder: '搜索或输入 Web 地址',
+    searchInput: '搜索输入框',
+    clearSearchHistory: '清除搜索历史记录',
+    customBackground: '自定义背景',
+    usingDefaultBg: '正在使用默认背景',
+    sourceLocal: '来自本地图片',
+    sourceBingDaily: '来自 Bing 每日壁纸',
+    sourceCustomUrl: '来自自定义链接',
+    selectImage: '选择本地图片或视频',
+    uploadFile: '选择文件',
+    restoreDefault: '恢复默认',
+    editShortcut: '编辑快速链接',
+    name: '名称',
+    inputNamePh: '输入快速链接名称',
+    errorNameReq: '请输入快速链接名称',
+    errorUrlReq: '请输入网址',
+    delete: '删除',
+    cancel: '取消',
+    save: '保存',
+    customEngineTitle: '自定义搜索引擎',
+    engineName: '搜索引擎名称',
+    engineNamePh: '例如: DuckDuckGo',
+    errorEngineNameReq: '请输入搜索引擎名称',
+    engineUrl: '搜索 URL (%s 替换搜索关键词)',
+    errorEngineUrlFormat: '请输入搜索 URL，必须包含 %s',
+    useOnlineContent: '使用在线内容',
+    bingDaily: '必应每日壁纸',
+    uploadedWallpaper: '上传的背景',
+    localImage: '选择图片',
+    baidu: 'Baidu',
+    customUrl: '自定义',
+    customOnlineWallpaper: '自定义在线壁纸',
+    imageOrVideoUrl: '图片或视频URL',
+    enterUrl: '输入图片或视频URL',
+    bing: 'Bing',
+    forceBingCN: '强制使用必应中国版',
+    forceBingCNDesc: '<b>开启</b>：强制使用必应中国版<br><b>关闭</b>：根据网络环境自动选择。<br>此选项可以避免代理设置导致 www.bing.com 无法自动跳转到 cn.bing.com。',
+    enhancedVisibility: '增强元素可见性',
+    enhancedVisibilityDesc: '开启背景时给Logo和顶部按钮添加半透明背景，使其在背景图上更清晰',
+    bgBlur: '背景模糊程度',
+    changeEngineIcon: '更换图标',
+    resetEngineIcon: '恢复原版图标',
+    addlink: '添加',
+
+    // 个人资料菜单
+    accountDetails: '编辑账户信息',
+    manageProfiles: '管理配置文件',
+    initConfig: '重置',
+
+   // 编辑个人资料弹窗
+    editProfile: '编辑个人资料',
+    profileAvatar: '头像',
+    uploadAvatar: '选择头像',
+    removeAvatar: '删除头像',
+    description: '描述',
+
+    // 管理配置文件弹窗
+    manageProfilesTitle: '管理配置文件',
+    selectOperation: '选择要执行的操作',
+    exportConfig: '导出配置',
+    importConfig: '恢复配置',
+    initConfigOption: '初始化',
+    next: '下一步',
+
+    // 重置确认弹窗
+    resetTitle: '重置 LitestartCE',
+    resetDesc: '如果你遇到了一些问题，或是对于目前的设定不满意，重置可以清除所有数据并还原 LitestartCE 为初始状态，请注意，此操作不可撤回！',
+    confirmReset: '确定',
+
+    // 重置完成弹窗
+    resetDoneTitle: '重置完成',
+    resetDoneDesc: '所有设置已重置为初始状态，页面即将刷新。',
+    refreshNow: '立即刷新',
+
+    // 恢复完成弹窗
+    restoreDoneTitle: '配置恢复完成',
+    restoreDoneDesc: '配置已恢复，页面即将刷新以应用所有设置。',
+
+    // 编辑页面布局弹窗
+    layout: '页面布局',
+    editLayout: '编辑页面布局',
+    searchBoxPosition: '搜索框位置',
+    layoutHanging: '悬挂',
+    layoutCentered: '居中',
+    layoutHidden: '关闭',
+    showLogo: '显示标题',
+
+    //自定义搜索引擎图片部分
+    customTitleImage: '自定义标题图片',
+    selectImageFile: '选择图片',
+    removeImage: '删除图片',
+    noImageSelected: '未选择图片',
+
+    //页面布局页（第二页）/ 主题模式（新增）
+    back: '返回',
+    themeMode: '主题模式',
+    themeAuto: '跟随系统',
+    themeDark: '深色',
+    themeLight: '浅色',
+    elementSpacing: '元素排布',
+    layoutGapTitle: '标题与搜索框间距',
+    layoutGapLinks: '搜索框与快捷方式间距',
+    layoutOffsetX: '水平偏移',
+    layoutOffsetY: '垂直偏移',
+    layoutAlign: '元素对齐',
+    alignLeft: '左端对齐',
+    alignCenter: '居中',
+    alignRight: '右端对齐',
+    alignHint: '靠左 / 靠右时搜索框位置不变，标题与快速链接收在搜索框边界内（留出一点间距）',
+    // 搜索框形状 / 元素大小 / 滑块小按钮
+    searchBoxShape: '搜索框形状',
+    linksShape: '快速链接形状',
+    shapeRound: '圆形',
+    shapeSquare: '方形',
+    elementSize: '元素大小',
+    sizeLogo: '标题大小',
+    sizeSearch: '搜索框大小',
+    sizeLinks: '快速链接大小',
+    sizeSmaller: '调小',
+    sizeLarger: '调大',
+    resetSlider: '重置为默认值',
+  },
+  'zh-TW': {
+    pageTitle: '新分頁',
+    settingsTitle: '頁面設定',
+    close: '關閉',
+    quicklinks: '快速連結',
+    off: '關閉',
+    on: '開啟',
+    rows1: '1 行',
+    rows2: '2 行',
+    showTimeCapsule: '顯示時間',
+    showMenuButton: '顯示菜單按鈕',
+    searchEngine: '搜尋引擎',
+    custom: '自訂',
+    editCustomEngine: '編輯自訂搜尋引擎',
+    saveHistory: '儲存搜尋紀錄',
+    layout: '頁面佈局',
+    inspirational: '展望',
+    focused: '聚焦',
+    background: '背景',
+    editBackground: '編輯背景',
+    language: '頁面語言',
+    langAuto: '預設（隨設備設定）',
+    cookieNotice: '隱私與 Cookie',
+    license: '開源協議',
+    contributor: '貢獻名單',
+    helpFeedback: '說明與意見回饋',
+    presentedBy: '由',
+    xingyuefox: '秋山星月',
+    AomiRaku: '羽梦千景',
+    forYou: '為您呈現',
+    disclaimer: '請注意，此網頁與 Microsoft 無關。',
+    aboutTitle: '關於 LitestartCE',
+    download: '下載',
+    updateAvailable: '可用更新',
+    aboutDesc: '一個簡潔、快速的瀏覽器起始頁。',
+    aboutEdition: 'LitestartCE 是 Litestart 的二次開發版本',
+    aboutUpstream: '基於 <a href="https://github.com/XingYueFox/Litestart" target="_blank" rel="noopener" style="color: var(--accent-foreground-rest); ">Litestart</a>',
+    developedBy: '由',
+    secondDev: '二次開發',
+    litever: '版本 1.7.2 | 更新時間：2026-10-4',
+    versionInfo: '版本資訊',
+    and: '與',
+    searchPlaceholder: '搜尋或輸入 Web 地址',
+    searchInput: '搜尋輸入框',
+    clearSearchHistory: '清除搜尋紀錄',
+    customBackground: '自訂背景',
+    usingDefaultBg: '正在使用預設背景',
+    sourceLocal: '來自本機圖片',
+    sourceBingDaily: '來自 Bing 每日桌布',
+    sourceCustomUrl: '來自自訂連結',
+    selectImage: '選擇本機圖片或影片',
+    uploadFile: '選擇檔案',
+    restoreDefault: '恢復預設',
+    editShortcut: '編輯快速連結',
+    name: '名稱',
+    inputNamePh: '輸入快速連結名稱',
+    errorNameReq: '請輸入快速連結名稱',
+    errorUrlReq: '請輸入網址',
+    delete: '刪除',
+    cancel: '取消',
+    save: '儲存',
+    customEngineTitle: '自訂搜尋引擎',
+    engineName: '搜尋引擎名稱',
+    engineNamePh: '例如: DuckDuckGo',
+    errorEngineNameReq: '請輸入搜尋引擎名稱',
+    engineUrl: '搜尋 URL (%s 替換搜尋關鍵字)',
+    errorEngineUrlFormat: '請輸入搜尋 URL，必須包含 %s',
+    useOnlineContent: '使用線上內容',
+    bingDaily: 'Bing每日桌布',
+    uploadedWallpaper: '上傳的背景',
+    localImage: '選擇圖片',
+    baidu: 'Baidu',
+    bing: 'Bing',
+    customUrl: '自訂',
+    customOnlineWallpaper: '自訂線上桌布',
+    imageOrVideoUrl: '圖片或影片網址',
+    enterUrl: '輸入圖片或影片網址',
+    forceBingCN: '強制使用必應中國版',
+    forceBingCNDesc: '<b>開啟</b>：強制使用必應中國版<br><b>關閉</b>：根據網路環境自動選擇。<br>此選項可以避免代理設定導致 www.bing.com 無法自動跳轉到 cn.bing.com。',
+    enhancedVisibility: '增強元素可見性',
+    enhancedVisibilityDesc: '開啟背景時給Logo和頂部按鈕添加半透明背景，使其在背景圖上更清晰',
+    bgBlur: '背景模糊程度',
+    changeEngineIcon: '更換圖標',
+    resetEngineIcon: '恢復原版圖標',
+    addlink: '新增',
+    accountDetails: '編輯帳戶資訊',
+    manageProfiles: '管理設定檔',
+    initConfig: '重設',
+    editProfile: '編輯個人資料',
+    profileAvatar: '頭像',
+    uploadAvatar: '選擇頭像',
+    removeAvatar: '刪除頭像',
+    description: '描述',
+    manageProfilesTitle: '管理設定檔',
+    selectOperation: '選擇要執行的操作',
+    exportConfig: '匯出設定',
+    importConfig: '還原設定',
+    initConfigOption: '重設設定',
+    next: '下一步',
+    resetTitle: '重設 LitestartCE',
+    resetDesc: '如果你遇到了一些問題，或是對於目前的設定不滿意，重設可以清除所有數據並還原 LitestartCE 為初始狀態，請注意，此操作不可撤回！',
+    confirmReset: '確定',
+    resetDoneTitle: '重設完成',
+    resetDoneDesc: '所有設定已重設為初始狀態，頁面即將重新整理。',
+    refreshNow: '立即重新整理',
+    restoreDoneTitle: '設定還原完成',
+    restoreDoneDesc: '設定已還原，頁面即將重新整理以套用所有設定。',
+    layout: '頁面佈局',
+    editLayout: '編輯頁面佈局',
+    searchBoxPosition: '搜尋框位置',
+    layoutHanging: '懸掛',
+    layoutCentered: '居中',
+    layoutHidden: '關閉',
+    showLogo: '顯示標題',
+    customTitleImage: '自訂標題圖片',
+    selectImageFile: '選擇圖片',
+    removeImage: '刪除圖片',
+    noImageSelected: '未選擇圖片',
+    //页面布局页（第二页）/ 主题模式（新增）
+    back: '返回',
+    themeMode: '主題模式',
+    themeAuto: '跟隨系統',
+    themeDark: '深色',
+    themeLight: '淺色',
+    elementSpacing: '元素排列',
+    layoutGapTitle: '標題與搜尋框間距',
+    layoutGapLinks: '搜尋框與快速連結間距',
+    layoutOffsetX: '水平偏移',
+    layoutOffsetY: '垂直偏移',
+    layoutAlign: '元素對齊',
+    alignLeft: '左端對齊',
+    alignCenter: '居中',
+    alignRight: '右端對齊',
+    alignHint: '靠左 / 靠右時搜尋框位置不變，標題與快速連結收在搜尋框邊界內（留出一點間距）',
+    searchBoxShape: '搜尋框形狀',
+    linksShape: '快速連結形狀',
+    shapeRound: '圓形',
+    shapeSquare: '方形',
+    elementSize: '元素大小',
+    sizeLogo: '標題大小',
+    sizeSearch: '搜尋框大小',
+    sizeLinks: '快速連結大小',
+    sizeSmaller: '調小',
+    sizeLarger: '調大',
+    resetSlider: '重設為預設值',
+ },
+  'zh-WY': {
+    pageTitle: '新籤頁',
+    settingsTitle: '頁面之設',
+    close: '關',
+    quicklinks: '快速連結',
+    off: '止',
+    on: '啟',
+    rows1: '一列',
+    rows2: '二列',
+    showTimeCapsule: '顯時',
+    showMenuButton: '顯目錄',
+    searchEngine: '搜尋器',
+    custom: '自訂',
+    editCustomEngine: '訂搜器',
+    saveHistory: '搜錄',
+    layout: '佈局',
+    inspirational: '展望',
+    focused: '專注',
+    background: '底景',
+    editBackground: '修飾底景',
+    language: '頁面語',
+    langAuto: '預設（順裝置）',
+    cookieNotice: '隱私與餅儲',
+    license: '開源之約',
+    contributor: '題名錄',
+    helpFeedback: '求助與反饋',
+    presentedBy: '由',
+    xingyuefox: '秋山星月',
+    AomiRaku: '羽梦千景',
+    forYou: '呈獻',
+    disclaimer: '謹告：此頁與微軟無涉。',
+    aboutEdition: 'LitestartCE 乃 Litestart 之二次開發本',
+    aboutUpstream: '本於 <a href="https://github.com/XingYueFox/Litestart" target="_blank" rel="noopener" style="color: var(--accent-foreground-rest); ">Litestart</a>',
+    developedBy: '由',
+    secondDev: '二次開發',
+    and: '及',
+    searchPlaceholder: '或搜或鍵，惟網址依',
+    searchInput: '搜尋之框',
+    clearSearchHistory: '拭搜尋記',
+    customBackground: '自定底景',
+    usingDefaultBg: '現用默認底景',
+    sourceLocal: '來自本機圖',
+    sourceBingDaily: '來自 Bing 日圖',
+    sourceCustomUrl: '來自自訂之鏈',
+    selectImage: '擇本機圖或影',
+    uploadFile: '擇檔案',
+    restoreDefault: '復初',
+    editShortcut: '修快速連結',
+    name: '名',
+    inputNamePh: '書快速連結之名',
+    errorNameReq: '請填快速連結名',
+    errorUrlReq: '請填網址',
+    delete: '刪',
+    cancel: '止',
+    save: '儲',
+    customEngineTitle: '自定搜尋器',
+    engineName: '引擎之名',
+    engineNamePh: '例: DuckDuckGo',
+    errorEngineNameReq: '請填搜尋器名',
+    engineUrl: '搜尋 URL (%s 換字)',
+    errorEngineUrlFormat: '請填搜尋 URL，必含 %s',
+    useOnlineContent: '用網圖',
+    bingDaily: '必應日圖',
+    customUrl: '自訂',
+    customOnlineWallpaper: '自訂網圖',
+    imageOrVideoUrl: '圖影鏈',
+    enterUrl: '輸圖影鏈',
+    forceBingCN: '勒令必應專用中土之版',
+    forceBingCNDesc: '<b>啟</b>：勒令必應專用中土之版<br><b>關</b>：隨網路之勢自擇。<br>此舉可免代理令主站失其自轉之能。',
+    enhancedVisibility: '彰明諸元',
+    enhancedVisibilityDesc: '啟背景時，徽標頂鈕之下施輕翳，映於畫圖而愈晰',
+    bgBlur: '底景朦朧之度',
+    changeEngineIcon: '易其徽',
+    resetEngineIcon: '復其原徽',
+    //页面布局页（第二页）/ 主题模式（新增）
+    back: '返',
+    themeMode: '主題',
+    themeAuto: '隨機',
+    themeDark: '玄夜',
+    themeLight: '昭明',
+    elementSpacing: '諸元之布',
+    layoutGapTitle: '題與搜器之隔',
+    layoutGapLinks: '搜器與捷徑之隔',
+    layoutOffsetX: '左右之移',
+    layoutOffsetY: '上下之移',
+    layoutAlign: '諸元之齊',
+    alignLeft: '左端相齊',
+    alignCenter: '居中',
+    alignRight: '右端相齊',
+    alignHint: '左右相齊者，搜器不移，題與捷徑斂於搜器界內，各留少許之隔',
+    searchBoxShape: '搜器之形',
+    linksShape: '捷徑之形',
+    shapeRound: '圓',
+    shapeSquare: '方',
+    elementSize: '諸元大小',
+    sizeLogo: '題之大小',
+    sizeSearch: '搜器之大小',
+    sizeLinks: '捷徑之大小',
+    sizeSmaller: '縮',
+    sizeLarger: '張',
+    resetSlider: '復其初值',
+    addlink: '增',
+    accountDetails: '改易簡策，存真去偽',
+    manageProfiles: '掌檔',
+    initConfig: '重置',
+    editProfile: '修飾名帖',
+    profileAvatar: '首像',
+    uploadAvatar: '擇首像',
+    removeAvatar: '去首像',
+    description: '描述',
+    manageProfilesTitle: '掌檔',
+    selectOperation: '擇所欲行',
+    exportConfig: '出設',
+    importConfig: '入設',
+    initConfigOption: '復初',
+    next: '續',
+    resetTitle: '復初',
+    resetDesc: '倘遭困顿，或厌时制，可复初以涤万设，返 LitestartCE 于鸿蒙。然此举不可追，慎之慎之！',
+    confirmReset: '定',
+    resetDoneTitle: '妙哉！返本归元',
+    resetDoneDesc: '万设归初，新页将启，天光焕然。',
+    refreshNow: '即新',
+    restoreDoneTitle: '掌檔既復',
+    restoreDoneDesc: '旧制已归，新页将启，焕然一新。',
+  },
+  'en': {
+    pageTitle: 'New Tab',
+    settingsTitle: 'Page Settings',
+    close: 'Close',
+    quicklinks: 'Quick Links',
+    off: 'Off',
+    on: 'On',
+    rows1: '1 row',
+    rows2: '2 rows',
+    showTimeCapsule: 'Show Time',
+    showMenuButton: 'Show Menu Button',
+    searchEngine: 'Search Engine',
+    custom: 'Custom',
+    editCustomEngine: 'Edit custom search engine',
+    saveHistory: 'Save search history',
+    layout: 'Layout',
+    inspirational: 'Inspirational',
+    focused: 'Focused',
+    background: 'Background',
+    editBackground: 'Edit background',
+    language: 'Language',
+    langAuto: 'Default (System)',
+    cookieNotice: 'Privacy & Cookies',
+    license: 'License',
+    contributor: 'Contributor',
+    helpFeedback: 'Help & Feedback',
+    presentedBy: 'Presented by',
+    xingyuefox: 'XingYue_Fox',
+    AomiRaku: 'Raku Inkyetta',
+    forYou: '',
+    disclaimer: 'Note: This page is not affiliated with Microsoft.',
+    aboutTitle: 'About LitestartCE',
+    download: 'Download',
+    updateAvailable: 'Update available',
+    aboutDesc: 'A simple and fast browser start page.',
+    aboutEdition: 'LitestartCE is a second-development version of Litestart',
+    aboutUpstream: 'Based on <a href="https://github.com/XingYueFox/Litestart" target="_blank" rel="noopener" style="color: var(--accent-foreground-rest); ">Litestart</a>',
+    developedBy: 'Developed by',
+    secondDev: 'as a second development',
+    litever: 'Version 1.7.2 | Updated: 2026-10-4',
+    versionInfo: 'Version Info',
+    and: '&',
+    searchPlaceholder: 'Search the web or enter address',
+    searchInput: 'Search input',
+    clearSearchHistory: 'Clear search history',
+    customBackground: 'Custom Background',
+    usingDefaultBg: 'Using default background',
+    sourceLocal: 'From local image',
+    sourceBingDaily: 'From Bing Daily Wallpaper',
+    sourceCustomUrl: 'From custom URL',
+    selectImage: 'Select local image or video',
+    uploadFile: 'Select file',
+    restoreDefault: 'Restore default',
+    editShortcut: 'Edit quick link',
+    name: 'Name',
+    inputNamePh: 'Enter quick link name',
+    errorNameReq: 'Please enter quick link name',
+    errorUrlReq: 'Please enter URL',
+    delete: 'Delete',
+    cancel: 'Cancel',
+    save: 'Save',
+    customEngineTitle: 'Custom Search Engine',
+    engineName: 'Engine Name',
+    engineNamePh: 'e.g. DuckDuckGo',
+    errorEngineNameReq: 'Please enter engine name',
+    engineUrl: 'Search URL (%s replacing query)',
+    errorEngineUrlFormat: 'Search URL must contain %s',
+    useOnlineContent: 'Use online content',
+    bingDaily: 'Bing daily wallpaper',
+    uploadedWallpaper: 'Uploaded background',
+    localImage: 'Select image',
+    baidu: 'Baidu',
+    bing: 'Bing',
+    customUrl: 'Custom',
+    customOnlineWallpaper: 'Custom online wallpaper',
+    imageOrVideoUrl: 'Image or video URL',
+    enterUrl: 'Enter image or video URL',
+    bingCN: 'Bing',
+    forceBingCN: 'Force Bing China',
+    forceBingCNDesc: '<b>On</b>: Forces cn.bing.com<br><b>Off</b>: Automatically selects based on network conditions.<br>This option prevents proxy settings from interfering with automatic redirection of www.bing.com to cn.bing.com.',
+    enhancedVisibility: 'Enhance Element Visibility',
+    enhancedVisibilityDesc: 'Adds semi-transparent backgrounds to Logo and header buttons when background is enabled for better clarity',
+    bgBlur: 'Background blur',
+    changeEngineIcon: 'Change icon',
+    resetEngineIcon: 'Restore default icon',
+    addlink: 'Add',
+    accountDetails: 'Edit Account',
+    manageProfiles: 'Manage Profiles',
+    initConfig: 'Reset',
+    editProfile: 'Edit Profile',
+    profileAvatar: 'Avatar',
+    uploadAvatar: 'Select Avatar',
+    removeAvatar: 'Remove Avatar',
+    description: 'Description',
+    manageProfilesTitle: 'Manage Profiles',
+    selectOperation: 'Select an action',
+    exportConfig: 'Export Config',
+    importConfig: 'Import Config',
+    initConfigOption: 'Reset Config',
+    next: 'Next',
+    resetTitle: 'Reset LitestartCE',
+    resetDesc: 'If you encounter issues or are unsatisfied with current settings, resetting will clear all data and restore LitestartCE to its initial state. Note: This action cannot be undone!',
+    confirmReset: 'Confirm',
+    resetDoneTitle: 'Reset Complete',
+    resetDoneDesc: 'All settings have been reset to initial state. The page will refresh.',
+    refreshNow: 'Refresh Now',
+    restoreDoneTitle: 'Restore Complete',
+    restoreDoneDesc: 'Configuration restored. The page will refresh to apply all settings.',
+    layout: 'Layout',
+    editLayout: 'Edit Layout',
+    searchBoxPosition: 'Search Box Position',
+    layoutHanging: 'Hanging',
+    layoutCentered: 'Centered',
+    layoutHidden: 'Hidden',
+    showLogo: 'Show Title',
+    customTitleImage: 'Custom Title Image',
+    selectImageFile: 'Select Image',
+    removeImage: 'Remove Image',
+    noImageSelected: 'No Image Selected',
+    // Layout page (2nd page) / theme mode (new)
+    back: 'Back',
+    themeMode: 'Theme',
+    themeAuto: 'Follow system',
+    themeDark: 'Dark',
+    themeLight: 'Light',
+    elementSpacing: 'Element Spacing',
+    layoutGapTitle: 'Title ↔ Search Box',
+    layoutGapLinks: 'Search Box ↔ Quick Links',
+    layoutOffsetX: 'Horizontal Offset',
+    layoutOffsetY: 'Vertical Offset',
+    layoutAlign: 'Element Alignment',
+    alignLeft: 'Align left edges',
+    alignCenter: 'Center',
+    alignRight: 'Align right edges',
+    alignHint: 'Left / right keeps the search box in place and tucks the title and quick links just inside its edges',
+    searchBoxShape: 'Search box shape',
+    linksShape: 'Quick links shape',
+    shapeRound: 'Rounded',
+    shapeSquare: 'Square',
+    elementSize: 'Element size',
+    sizeLogo: 'Title size',
+    sizeSearch: 'Search box size',
+    sizeLinks: 'Quick links size',
+    sizeSmaller: 'Smaller',
+    sizeLarger: 'Larger',
+    resetSlider: 'Reset to default',
+
+  },
+  'ja': {
+    pageTitle: '新しいタブ',
+    settingsTitle: '設定',
+    close: '閉じる',
+    quicklinks: 'クイックリンク',
+    off: 'オフ',
+    on: 'オン',
+    rows1: '1 行',
+    rows2: '2 行',
+    showTimeCapsule: '時間を表示',
+    showMenuButton: 'メニューボタンを表示',
+    searchEngine: '検索エンジン',
+    custom: 'カスタム',
+    editCustomEngine: 'カスタム検索エンジンを編集',
+    saveHistory: '検索履歴を保存',
+    layout: 'レイアウト',
+    inspirational: 'シンプル',
+    focused: 'フォーカス',
+    background: '背景',
+    editBackground: '背景を編集',
+    language: '言語',
+    langAuto: 'デフォルト（システムに従う）',
+    cookieNotice: 'プライバシーとクッキー',
+    license: 'License',
+    contributor: '貢献者',
+    helpFeedback: 'ヘルプとフィードバック',
+    presentedBy: '提供:',
+    xingyuefox: 'XingYue_Fox',
+    AomiRaku: 'Raku Inkyetta',
+    forYou: '',
+    disclaimer: '注: このページは Microsoft とは関係ありません。',
+    aboutTitle: 'LitestartCE について',
+    download: 'ダウンロード',
+    updateAvailable: 'アップデートがあります',
+    aboutDesc: 'シンプルで高速なブラウザスタートページです。',
+    aboutEdition: 'LitestartCE は Litestart の二次開発版です',
+    aboutUpstream: '<a href="https://github.com/XingYueFox/Litestart" target="_blank" rel="noopener" style="color: var(--accent-foreground-rest); ">Litestart</a> をベースに',
+    developedBy: '開発:',
+    secondDev: 'による二次開発',
+    litever: 'バージョン 1.7.2 | 更新日: 2026-10-4',
+    versionInfo: 'バージョン情報',
+    and: 'と',
+    searchPlaceholder: 'Web を検索またはアドレスを入力',
+    searchInput: '検索入力ボックス',
+    clearSearchHistory: '検索履歴を消去',
+    customBackground: 'カスタム背景',
+    usingDefaultBg: 'デフォルトの背景を使用中',
+    sourceLocal: 'ローカル画像より',
+    sourceBingDaily: 'Bing 今日の壁紙より',
+    sourceCustomUrl: 'カスタムURLより',
+    selectImage: 'ローカル画像または動画を選択',
+    uploadFile: 'ファイルを選択',
+    restoreDefault: 'デフォルトに戻す',
+    editShortcut: 'クイックリンクを編集',
+    name: '名前',
+    inputNamePh: 'クイックリンク名を入力',
+    errorNameReq: 'クイックリンク名を入力してください',
+    errorUrlReq: 'URLを入力してください',
+    delete: '削除',
+    cancel: 'キャンセル',
+    save: 'OK',
+    customEngineTitle: 'カスタム検索エンジン',
+    engineName: '検索エンジン名',
+    engineNamePh: '例: DuckDuckGo',
+    errorEngineNameReq: '検索エンジン名を入力してください',
+    engineUrl: '検索 URL (%s が検索語に置換されます)',
+    errorEngineUrlFormat: '検索 URL には %s を含める必要があります',
+    useOnlineContent: 'オンラインコンテンツを使用',
+    bingDaily: 'Bingの今日の壁紙',
+    uploadedWallpaper: 'アップロードした背景',
+    localImage: '画像を選択',
+    baidu: 'Baidu',
+    bing: 'Bing',
+    customUrl: 'カスタム',
+    customOnlineWallpaper: 'カスタムオンライン壁紙',
+    imageOrVideoUrl: '画像または動画のURL',
+    enterUrl: '画像または動画のURLを入力',
+    bingCN: 'Bing',
+    forceBingCN: 'Bing中国版を強制使用',
+    forceBingCNDesc: '<b>ON</b>：cn.bing.com を強制使用<br><b>OFF</b>：ネットワーク環境に応じて自動的に選択<br>このオプションにより、プロキシ設定による www.bing.com から cn.bing.com への自動リダイレクトの妨げを防ぎます。',
+    enhancedVisibility: '要素の視認性を向上',
+    enhancedVisibilityDesc: '背景有効時にロゴとヘッダーボタンに半透明の背景を追加し、見やすくします',
+    bgBlur: '背景のぼかし',
+    changeEngineIcon: 'アイコンを変更',
+    resetEngineIcon: '既定のアイコンに戻す',
+    addlink: '追加',
+    accountDetails: 'アカウント編集',
+    manageProfiles: 'プロファイル管理',
+    initConfig: 'リセット',
+    editProfile: 'プロファイル編集',
+    profileAvatar: 'アバター',
+    uploadAvatar: 'アバターを選択',
+    removeAvatar: '削除',
+    description: '説明',
+    manageProfilesTitle: 'プロファイル管理',
+    selectOperation: '実行する操作を選択',
+    exportConfig: '設定をエクスポート',
+    importConfig: '設定をインポート',
+    initConfigOption: '設定をリセット',
+    next: '次へ',
+    resetTitle: 'LitestartCEをリセット',
+    resetDesc: '問題が発生した場合や現在の設定に満足できない場合、リセットするとすべてのデータが消去されLitestartCEが初期状態に戻ります。この操作は元に戻せません！',
+    confirmReset: 'リセット',
+    resetDoneTitle: 'リセット完了',
+    resetDoneDesc: 'すべての設定が初期状態にリセットされました。ページが更新されます。',
+    refreshNow: '今すぐ更新',
+    restoreDoneTitle: '設定の復元が完了しました',
+    restoreDoneDesc: '設定を復元しました。すべての設定を反映するためページを更新します。',
+    layout: 'レイアウト',
+    editLayout: 'レイアウトを編集',
+    searchBoxPosition: '検索ボックスの位置',
+    layoutHanging: 'ハンギング',
+    layoutCentered: '中央',
+    layoutHidden: '非表示',
+    showLogo: 'タイトルを表示',
+    customTitleImage: 'カスタムタイトル画像',
+    selectImageFile: '画像を選択',
+    removeImage: '画像を削除',
+    noImageSelected: '画像が選択されていません',
+    // レイアウトページ（2 ページ目）/ テーマ（新規）
+    back: '戻る',
+    themeMode: 'テーマ',
+    themeAuto: 'システムに従う',
+    themeDark: 'ダーク',
+    themeLight: 'ライト',
+    elementSpacing: '要素の配置',
+    layoutGapTitle: 'タイトルと検索ボックスの間隔',
+    layoutGapLinks: '検索ボックスとクイックリンクの間隔',
+    layoutOffsetX: '水平オフセット',
+    layoutOffsetY: '垂直オフセット',
+    layoutAlign: '要素の整列',
+    alignLeft: '左端を揃える',
+    alignCenter: '中央',
+    alignRight: '右端を揃える',
+    alignHint: '左端 / 右端では検索ボックスは動かず、タイトルとクイックリンクが検索ボックスの内側に少し入ります',
+    searchBoxShape: '検索ボックスの形状',
+    linksShape: 'クイックリンクの形状',
+    shapeRound: '丸型',
+    shapeSquare: '角型',
+    elementSize: '要素の大きさ',
+    sizeLogo: 'タイトルの大きさ',
+    sizeSearch: '検索ボックスの大きさ',
+    sizeLinks: 'クイックリンクの大きさ',
+    sizeSmaller: '小さく',
+    sizeLarger: '大きく',
+    resetSlider: '既定値に戻す',
+  },
+  'ru': {
+    pageTitle: 'Новая вкладка',
+    settingsTitle: 'Настройки страницы',
+    close: 'Закрыть',
+    quicklinks: 'Быстрые ссылки',
+    off: 'Выкл',
+    on: 'Вкл',
+    rows1: '1 строка',
+    rows2: '2 строки',
+    showTimeCapsule: 'Показать время',
+    showMenuButton: 'Показать кнопку меню',
+    searchEngine: 'Поисковая система',
+    custom: 'Пользовательская',
+    editCustomEngine: 'Изменить поисковую систему',
+    saveHistory: 'Сохранять историю поиска',
+    layout: 'Макет',
+    inspirational: 'Вдохновение',
+    focused: 'Фокус',
+    background: 'Фон',
+    editBackground: 'Изменить фон',
+    language: 'Язык',
+    langAuto: 'По умолчанию (системный)',
+    cookieNotice: 'Конфиденциальность и файлы cookie',
+    license: 'Лицензия',
+    contributor: 'Вкладчики',
+    helpFeedback: 'Справка и отзывы',
+    presentedBy: 'Создатель:',
+    xingyuefox: 'XingYue_Fox',
+    AomiRaku: 'Raku Inkyetta',
+    forYou: '',
+    disclaimer: 'Примечание: Эта страница не связана с Microsoft.',
+    aboutTitle: 'О LitestartCE',
+    download: 'Скачать',
+    updateAvailable: 'Доступно обновление',
+    aboutDesc: 'Простая и быстрая страница запуска браузера.',
+    aboutEdition: 'LitestartCE — версия Litestart, доработанная сторонним разработчиком',
+    aboutUpstream: 'На основе <a href="https://github.com/XingYueFox/Litestart" target="_blank" rel="noopener" style="color: var(--accent-foreground-rest); ">Litestart</a>',
+    developedBy: 'Разработал:',
+    secondDev: '— вторичная разработка',
+    litever: 'Версия 1.7.2 | Обновлено: 2026-10-4',
+    versionInfo: 'Информация о версии',
+    and: 'и',
+    searchPlaceholder: 'Введите поисковый запрос или URL',
+    searchInput: 'Поле поиска',
+    clearSearchHistory: 'Очистить историю поиска',
+    customBackground: 'Пользовательский фон',
+    usingDefaultBg: 'Используется стандартный фон',
+    sourceLocal: 'Из локального изображения',
+    sourceBingDaily: 'Из ежедневных обоев Bing',
+    sourceCustomUrl: 'Из пользовательской ссылки',
+    selectImage: 'Выберите локальное фото или видео',
+    uploadFile: 'Выбрать файл',
+    restoreDefault: 'Сбросить',
+    editShortcut: 'Изменить быструю ссылку',
+    name: 'Название',
+    inputNamePh: 'Введите название быстрой ссылки',
+    errorNameReq: 'Введите название быстрой ссылки',
+    errorUrlReq: 'Введите URL',
+    delete: 'Удалить',
+    cancel: 'Отмена',
+    save: 'Сохранить',
+    customEngineTitle: 'Пользовательский поиск',
+    engineName: 'Название',
+    engineNamePh: 'Например: DuckDuckGo',
+    errorEngineNameReq: 'Введите название',
+    engineUrl: 'URL поиска (%s вместо запроса)',
+    errorEngineUrlFormat: 'URL должен содержать %s',
+    useOnlineContent: 'Использовать онлайн-контент',
+    bingDaily: 'Ежедневные обои Bing',
+    uploadedWallpaper: 'Загруженный фон',
+    localImage: 'Выбрать изображение',
+    baidu: 'Baidu',
+    customUrl: 'Пользовательский',
+    customOnlineWallpaper: 'Пользовательские онлайн-обои',
+    imageOrVideoUrl: 'URL изображения или видео',
+    enterUrl: 'Введите URL изображения или видео',
+    bingCN: 'Bing',
+    forceBingCN: 'Принудительно использовать Bing China',
+    forceBingCNDesc: '<b>Вкл.</b>: Принудительно использует cn.bing.com<br><b>Выкл.</b>: Автоматический выбор в зависимости от сетевых условий<br>Этот параметр предотвращает проблемы с прокси, мешающие автоматическому редиректу www.bing.com на cn.bing.com.',
+    enhancedVisibility: 'Повысить видимость элементов',
+    enhancedVisibilityDesc: 'Добавляет полупрозрачный фон к логотипу и кнопкам заголовка при включенном фоне для лучшей читаемости',
+    bgBlur: 'Размытие фона',
+    changeEngineIcon: 'Сменить значок',
+    resetEngineIcon: 'Вернуть исходный значок',
+    addlink: 'Добавить',
+    accountDetails: 'Редактировать аккаунт',
+    manageProfiles: 'Управление профилями',
+    initConfig: 'Сброс',
+    editProfile: 'Редактировать профиль',
+    profileAvatar: 'Аватар',
+    uploadAvatar: 'Выбрать аватар',
+    removeAvatar: 'Удалить',
+    description: 'Описание',
+    manageProfilesTitle: 'Управление профилями',
+    selectOperation: 'Выберите действие',
+    exportConfig: 'Экспорт настроек',
+    importConfig: 'Импорт настроек',
+    initConfigOption: 'Сброс настроек',
+    next: 'Далее',
+    resetTitle: 'Сбросить LitestartCE',
+    resetDesc: 'Если у вас возникли проблемы или вы недовольны текущими настройками, сброс удалит все данные и восстановит LitestartCE в исходное состояние. Обратите внимание: это действие необратимо!',
+    confirmReset: 'Подтвердить',
+    resetDoneTitle: 'Сброс завершён',
+    resetDoneDesc: 'Все настройки сброшены до исходного состояния. Страница будет обновлена.',
+    refreshNow: 'Обновить сейчас',
+    restoreDoneTitle: 'Восстановление завершено',
+    restoreDoneDesc: 'Настройки восстановлены. Страница будет обновлена для применения всех параметров.',
+        layout: 'Макет',
+    editLayout: 'Изменить макет',
+    searchBoxPosition: 'Положение поисковой строки',
+    layoutHanging: 'Подвесной',
+    layoutCentered: 'По центру',
+    layoutHidden: 'Скрыто',
+    showLogo: 'Показать заголовок',
+    // ...
+    bing: 'Bing',
+    customTitleImage: 'Пользовательское изображение заголовка',
+    selectImageFile: 'Выбрать изображение',
+    removeImage: 'Удалить изображение',
+    noImageSelected: 'Изображение не выбрано',
+    // Страница макета (2-я страница) / тема (новое)
+    back: 'Назад',
+    themeMode: 'Тема',
+    themeAuto: 'Как в системе',
+    themeDark: 'Тёмная',
+    themeLight: 'Светлая',
+    elementSpacing: 'Расположение элементов',
+    layoutGapTitle: 'Заголовок ↔ поиск',
+    layoutGapLinks: 'Поиск ↔ быстрые ссылки',
+    layoutOffsetX: 'Горизонтальное смещение',
+    layoutOffsetY: 'Вертикальное смещение',
+    layoutAlign: 'Выравнивание элементов',
+    alignLeft: 'По левым краям',
+    alignCenter: 'По центру',
+    alignRight: 'По правым краям',
+    alignHint: 'При выравнивании по краям строка поиска остаётся на месте, а заголовок и быстрые ссылки сдвигаются чуть внутрь от её краёв',
+    searchBoxShape: 'Форма строки поиска',
+    linksShape: 'Форма быстрых ссылок',
+    shapeRound: 'Круглая',
+    shapeSquare: 'Квадратная',
+    elementSize: 'Размер элементов',
+    sizeLogo: 'Размер заголовка',
+    sizeSearch: 'Размер строки поиска',
+    sizeLinks: 'Размер быстрых ссылок',
+    sizeSmaller: 'Уменьшить',
+    sizeLarger: 'Увеличить',
+    resetSlider: 'Сбросить к значению по умолчанию',
+
+  }
+};
+
+// 根据用户语言设置和系统语言，解析并返回实际使用的语言代码
+function getResolvedLanguageCode(langConfig) {
+  if (langConfig && langConfig !== 'auto') {
+    return langConfig;
+  }
+  const sysLang = (navigator.language || navigator.userLanguage || 'zh-CN').toLowerCase();
+  if (sysLang.startsWith('zh')) {
+    if (sysLang.includes('tw') || sysLang.includes('hk') || sysLang.includes('mo')) {
+      return 'zh-TW';
+    }
+    return 'zh-CN';
+  }
+  if (sysLang.startsWith('ja')) return 'ja';
+  if (sysLang.startsWith('ru')) return 'ru';
+  if (sysLang.startsWith('en')) return 'en';
+  return 'zh-CN';
+}
+
+// 界面渲染函数
+function applyLanguage(langConfig) {
+  const langCode = getResolvedLanguageCode(langConfig);
+  const dict = i18nData[langCode] || i18nData['zh-CN'];
+  window._i18nDict = dict; // 暴露翻译表给外部作用域使用
+
+  document.documentElement.lang = langCode.startsWith('zh') ? (langCode === 'zh-TW' ? 'zh-TW' : 'zh-CN') : langCode;
+
+  // 1.替换 innerText（新增diff，内容一致时跳过重排）
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const target = dict[key];
+    // textContent 读取不触发重排；内容相同就完全跳过写入
+    if (target !== undefined && el.textContent !== target) {
+      el.textContent = target;
+    }
+  });
+
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.getAttribute('data-i18n-html');
+    if (dict[key] !== undefined) {
+      const arrow = el.querySelector('.tooltip-arrow');
+      el.innerHTML = dict[key];
+      if (arrow) {
+        el.insertBefore(arrow, el.firstChild);
+      }
+    }
+  });
+
+  // 2.替换 title 属性
+  document.querySelectorAll('[data-i18n-title]').forEach(el => {
+    const key = el.getAttribute('data-i18n-title');
+    if (dict[key] !== undefined) {
+      el.setAttribute('title', dict[key]);
+    }
+  });
+
+  // 3.替换 placeholder 属性
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const key = el.getAttribute('data-i18n-ph');
+    if (dict[key] !== undefined) {
+      el.setAttribute('placeholder', dict[key]);
+    }
+  });
+
+  // 4.替换 aria-label 属性
+  document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+    const key = el.getAttribute('data-i18n-aria');
+    if (dict[key] !== undefined) {
+      el.setAttribute('aria-label', dict[key]);
+    }
+  });
+
+  // 5.刷新特殊状态开闭文本
+  const statusHist = document.getElementById('status-history');
+  if (statusHist) {
+    const isChecked = document.getElementById('toggle-history-switch').checked;
+    statusHist.innerText = isChecked ? dict.on : dict.off;
+  }
+  
+  const statusBg = document.getElementById('status-bg');
+  if (statusBg) {
+    const isChecked = document.getElementById('toggle-bg-switch').checked;
+    statusBg.innerText = isChecked ? dict.on : dict.off;
+  }
+
+  const statusBgModal = document.getElementById('status-bg-modal');
+  if (statusBgModal) {
+    const isChecked = document.getElementById('toggle-bg-modal-switch').checked;
+    statusBgModal.innerText = isChecked ? dict.on : dict.off;
+  }
+
+  // 6.刷新时间状态文本
+  const statusTimeCapsule = document.getElementById('status-time-capsule');
+  if (statusTimeCapsule) {
+    const isChecked = document.getElementById('toggle-time-capsule-switch')?.checked || false;
+    statusTimeCapsule.innerText = isChecked ? dict.on : dict.off;
+  }
+
+  // 7.刷新菜单按钮状态文本
+  const statusMenuBtn = document.getElementById('status-menu-button');
+  if (statusMenuBtn) {
+    const isChecked = document.getElementById('toggle-menu-button-switch')?.checked ?? true;
+    statusMenuBtn.innerText = isChecked ? dict.on : dict.off;
+  }
+
+  // 8.刷新显示标题开关状态文本
+  const statusLogo = document.getElementById('status-logo');
+  if (statusLogo) {
+    const isChecked = document.getElementById('toggle-logo-switch')?.checked ?? true;
+    statusLogo.innerText = isChecked ? dict.on : dict.off;
+  }
+
+  // 9.强制使用必应中国版开关状态文本
+  const statusForceBingCN = document.getElementById('status-force-bing-cn');
+  if (statusForceBingCN) {
+    const isChecked = document.getElementById('toggle-force-bing-cn')?.checked || false;
+    statusForceBingCN.innerText = isChecked ? dict.on : dict.off;
+  }
+
+  // 10.刷新增强元素可见性状态文本
+  const statusEnhancedVisibility = document.getElementById('status-enhanced-visibility');
+  if (statusEnhancedVisibility) {
+    const isChecked = document.getElementById('toggle-enhanced-visibility')?.checked || false;
+    statusEnhancedVisibility.innerText = isChecked ? dict.on : dict.off;
+  }
+
+  // 11.刷新自定义下拉选项文本
+  refreshCustomSelects();
+
+  // 12.同步「快速链接」的“添加”按钮文案（避免整页重扫，也不必重建整个列表）
+  if (typeof syncQuicklinksLanguage === 'function') syncQuicklinksLanguage();
+
+  // ===== 工具提示(Tooltip) 初始化 =====
+
+  if (!window._tooltipInitialized) {
+    window._tooltipInitialized = true;
+
+    // 存储当前显示中的 tooltip 位置更新函数，用于滚动/缩放时重新定位
+    const activeTooltipIcons = new Set();
+
+    const tooltipReposition = () => {
+      activeTooltipIcons.forEach(fn => fn());
+    };
+    window.addEventListener('scroll', tooltipReposition, true);
+    window.addEventListener('resize', tooltipReposition);
+
+    document.querySelectorAll('.tooltip-icon').forEach(icon => {
+      const tooltip = icon.querySelector('.tooltip-content');
+      if (!tooltip) return;
+
+      // 关键：初始化时就将 tooltip 移到 body，而不是在 show 时
+      document.body.appendChild(tooltip);
+
+      let tipWidth = 0;
+      let tipHeight = 0;
+
+      // 测量 tooltip 尺寸（首次显示前调用，确保内容已渲染）
+      const measureTooltip = () => {
+        const tipRect = tooltip.getBoundingClientRect();
+        tipWidth = tipRect.width;
+        tipHeight = tipRect.height;
+      };
+
+      // 根据图标位置计算 tooltip 显示坐标
+      const position = () => {
+        if (tipWidth === 0 || tipHeight === 0) {
+          measureTooltip();
+        }
+        const rect = icon.getBoundingClientRect();
+
+        // 默认在图标上方显示
+        let left = rect.left + rect.width / 2 - tipWidth / 2;
+        let top = rect.top - tipHeight - 10;
+        let below = false;
+
+        // 如果上方空间不足（<8px），且下方空间充足，则改为下方显示
+        if (top < 8 && rect.bottom + tipHeight + 10 < window.innerHeight) {
+          top = rect.bottom + 10;
+          below = true;
+        }
+
+        // 水平方向边界约束，防止超出视口
+        left = Math.max(8, Math.min(left, window.innerWidth - tipWidth - 8));
+
+        tooltip.style.left = left + 'px';
+        tooltip.style.top = top + 'px';
+
+        // 根据显示方向切换箭头朝向
+        if (below) {
+          tooltip.classList.add('tooltip-below');
+        } else {
+          tooltip.classList.remove('tooltip-below');
+        }
+      };
+
+      const show = () => {
+        measureTooltip();
+        position();
+        tooltip.style.visibility = 'visible';
+        tooltip.style.opacity = '1';
+        activeTooltipIcons.add(position);
+      };
+
+      const hide = () => {
+        tooltip.style.visibility = 'hidden';
+        tooltip.style.opacity = '0';
+        activeTooltipIcons.delete(position);
+      };
+
+      icon.addEventListener('mouseenter', show);
+      icon.addEventListener('focus', show);
+      icon.addEventListener('click', show);
+      icon.addEventListener('mouseleave', hide);
+      icon.addEventListener('blur', hide);
+    });
+  }
+}
+
+// LocalStorage 读写封装（带 JSON 序列化与异常保护）
+const Storage = {
+  get(key, defaultValue) {
+    try {
+      const val = localStorage.getItem(key);
+      return val !== null ? JSON.parse(val) : defaultValue;
+    } catch (e) {
+      return defaultValue;
+    }
+  },
+  set(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+      return true;
+    } catch (e) {
+      if (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+        console.warn('LocalStorage 配额已满:', e);
+      } else {
+        console.warn('无法保存设置到 LocalStorage:', e);
+      }
+      return false;
+    }
+  }
+};
+
+// 通过 Canvas 将图片压缩/重编码为 JPEG Blob（限制最大宽度，避免 IndexedDB 占用过大）
+function compressImage(file, options = {}) {
+  const { maxWidth = 2560, quality = 0.85 } = options;
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > maxWidth) {
+          height = Math.round(height * (maxWidth / width));
+          width = maxWidth;
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        const mime = file.type === 'image/webp' ? 'image/webp' : 'image/jpeg';
+        canvas.toBlob(
+          (blob) => blob ? resolve(blob) : reject(new Error('图片压缩失败')),
+          mime,
+          quality
+        );
+      };
+      img.onerror = () => reject(new Error('图片加载失败'));
+      img.src = e.target.result;
+    };
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+}
+
+// 压缩自定义标题图片为 PNG DataURL（保留透明通道，适合 Logo 类图片）
+function compressLogoImage(file, options = {}) {
+  const { maxWidth = 600 } = options;
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > maxWidth) {
+          height = Math.round(height * (maxWidth / width));
+          width = maxWidth;
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        try {
+          resolve(canvas.toDataURL('image/png'));
+        } catch (err) {
+          reject(err);
+        }
+      };
+      img.onerror = () => reject(new Error('图片加载失败'));
+      img.src = e.target.result;
+    };
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+}
+
+
+// IndexedDB 封装：用 Blob 直接存壁纸二进制（配额远大于 localStorage 的 5MB，且无 base64 膨胀）
+const WallpaperDB = {
+  _db: null,
+  _initPromise: null,
+
+  init() {
+    if (this._db) return Promise.resolve(this._db);
+    if (this._initPromise) return this._initPromise;
+    this._initPromise = new Promise((resolve, reject) => {
+      // 注意：库名沿用上游的 LitestartWallpaper，改名会让老用户的已上传壁纸读不出来
+      const req = indexedDB.open('LitestartWallpaper', 1);
+      req.onupgradeneeded = (e) => {
+        e.target.result.createObjectStore('blob', { keyPath: 'key' });
+      };
+      req.onsuccess = (e) => {
+        this._db = e.target.result;
+        resolve(this._db);
+      };
+      req.onerror = () => reject(req.error);
+    });
+    return this._initPromise;
+  },
+
+  async save(blob) {
+    await this.init();
+    return new Promise((resolve, reject) => {
+      const tx = this._db.transaction('blob', 'readwrite');
+      tx.objectStore('blob').put({ key: 'current', blob });
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  },
+
+  async load() {
+    await this.init();
+    return new Promise((resolve, reject) => {
+      const tx = this._db.transaction('blob', 'readonly');
+      const req = tx.objectStore('blob').get('current');
+      req.onsuccess = () => resolve(req.result ? req.result.blob : null);
+      req.onerror = () => reject(req.error);
+    });
+  },
+
+  async remove() {
+    if (!this._db) {
+      try { await this.init(); } catch { return; }
+    }
+    return new Promise((resolve, reject) => {
+      const tx = this._db.transaction('blob', 'readwrite');
+      tx.objectStore('blob').delete('current');
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+};
+
+// 判断壁纸是否为远程资源（必应每日壁纸 或 http(s) URL）
+function isRemoteWallpaper(data) {
+  if (!data) return false;
+  return data.type === 'bing_daily' || (data.url && data.url.startsWith('http'));
+}
+
+// 释放旧的 blob: URL，避免内存泄漏（每次生成新 blob URL 前调用）
+function revokeBlobUrl(url) {
+  if (url && url.startsWith('blob:')) {
+    try { URL.revokeObjectURL(url); } catch (e) {}
+  }
+}
+
+// 壁纸统一保存入口：远程资源存 localStorage，本地 Blob 存 IndexedDB
+async function saveWallpaperData(data) {
+  if (!data) {
+    await WallpaperDB.remove().catch(() => {});
+    Storage.set('ntp_custom_wallpaper', null);
+    return true;
+  }
+
+  if (isRemoteWallpaper(data)) {
+    await WallpaperDB.remove().catch(() => {});
+    Storage.set('ntp_custom_wallpaper', data);
+    return true;
+  }
+
+  let blob;
+  if (data.blob instanceof Blob) {
+    blob = data.blob;
+  } else if (data.url && data.url.startsWith('data:')) {
+    const [meta, base64] = data.url.split(',');
+    const mime = meta.match(/:(.*?);/)[1];
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    blob = new Blob([bytes], { type: mime });
+  } else {
+    Storage.set('ntp_custom_wallpaper', data);
+    return true;
+  }
+
+  try {
+    await WallpaperDB.save(blob);
+    const meta = {
+      type: data.type,
+      source: data.source
+    };
+    Storage.set('ntp_custom_wallpaper', meta);
+    return true;
+  } catch (e) {
+    console.error('壁纸存储失败:', e);
+    return false;
+  }
+}
+
+// 壁纸统一加载入口：从 IndexedDB 取回 Blob，生成 blob: URL 给渲染层使用
+async function loadWallpaperData() {
+  const meta = Storage.get('ntp_custom_wallpaper', null);
+  if (!meta) return null;
+
+  if (isRemoteWallpaper(meta)) {
+    return meta;
+  }
+
+  try {
+    const blob = await WallpaperDB.load();
+    if (!blob) return meta;
+    return {
+      type: meta.type,
+      url: URL.createObjectURL(blob),
+      source: meta.source
+    };
+  } catch (e) {
+    console.error('壁纸读取失败:', e);
+    return meta;
+  }
+}
+
+// 解析Hostname域名
+function getDomain(urlStr) {
+  try {
+    if (!urlStr.startsWith('http://') && !urlStr.startsWith('https://')) {
+      urlStr = 'https://' + urlStr;
+    }
+    const url = new URL(urlStr);
+    return url.hostname;
+  } catch (e) {
+    return '';
+  }
+}
+
+// 获取网站缩略图
+function getFaviconUrl(urlStr) {
+  const domain = getDomain(urlStr);
+  if (!domain) return '';
+  return `https://api.xinac.net/icon/?url=${domain}`;
+}
+
+// 对用户输入进行 HTML 转义，防止 XSS
+function sanitizeInput(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/`/g, '&#96;');
+}
+
+// 反转 HTML 转义（仅还原 <>），用于显示原始文本
+function decodeInput(str) {
+  return str.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+}
+
+// ===== 重写下拉菜单(Custom Select) =====
+
+
+  // 清除下拉面板的内联样式（transform/visibility），
+  // 这些样式由 activateDropdown() 临时设置用于动画起始状态
+  function clearDropdownInlineStyles(dd) {
+    dd.style.transform = '';
+    dd.style.visibility = '';
+  }
+
+  function initCustomSelects() {
+    const displays = document.querySelectorAll('.custom-select-display');
+    displays.forEach(display => {
+      const selectId = display.getAttribute('data-for');
+      const nativeSelect = document.getElementById(selectId);
+      if (!nativeSelect) return;
+
+      const textEl = display.querySelector('.custom-select-text');
+      let dropdown = null;
+
+      // 关闭所有其他已打开的下拉（除了 exceptDisplay 对应的那个）
+      function closeAll(exceptDisplay) {
+        document.querySelectorAll('.custom-select-dropdown.active').forEach(dd => {
+          if (dd._display !== exceptDisplay) {
+            dd.classList.remove('active');
+            clearDropdownInlineStyles(dd);
+            dd._display.classList.remove('active');
+          }
+        });
+      }
+
+      // 将原生 select 的选中项文本同步到自定义显示组件
+      function updateDisplayText() {
+        const selectedOption = nativeSelect.options[nativeSelect.selectedIndex];
+        if (selectedOption) {
+          textEl.textContent = selectedOption.textContent.trim();
+        }
+      }
+
+      // 根据可用空间计算下拉面板的位置和展开方向
+      // 返回值：dropdown._openingUp = true 表示向上展开
+      function positionDropdown() {
+        if (!dropdown) return;
+        const rect = display.getBoundingClientRect();
+        dropdown.style.width = rect.width + 'px';
+
+        const dropdownHeight = dropdown.offsetHeight;
+        const spaceBelow = window.innerHeight - rect.bottom - 4;
+        const spaceAbove = rect.top - 4;
+
+        let openingUp = false;
+
+        // 优先在下方展开（空间充足时）
+        if (spaceBelow >= dropdownHeight) {
+          dropdown.style.top = rect.bottom + 4 + 'px';
+          dropdown.style.left = rect.left + 'px';
+        } else if (spaceAbove > spaceBelow && spaceAbove > 0) {
+          // 上方空间比下方大，且上方有空间，则向上展开
+          dropdown.style.top = Math.max(4, rect.top - dropdownHeight - 4) + 'px';
+          dropdown.style.left = rect.left + 'px';
+          openingUp = true;
+        } else {
+          // 空间都不足时，选择可见区域更大的方向，并夹紧到视口内
+          const belowTop = rect.bottom + 4;
+          const belowClamped = Math.min(belowTop, window.innerHeight - dropdownHeight - 4);
+          const aboveTop = rect.top - dropdownHeight - 4;
+          const aboveClamped = Math.max(4, aboveTop);
+
+          const belowVisible = window.innerHeight - belowClamped - 4;
+          const aboveVisible = aboveClamped + dropdownHeight;
+
+          if (belowVisible >= aboveVisible) {
+            dropdown.style.top = belowClamped + 'px';
+          } else {
+            dropdown.style.top = aboveClamped + 'px';
+            openingUp = true;
+          }
+          dropdown.style.left = rect.left + 'px';
+        }
+
+        dropdown._openingUp = openingUp;
+      }
+
+      // 激活下拉面板
+      function activateDropdown() {
+        const openingUp = dropdown._openingUp;
+        dropdown.style.transform = openingUp ? 'translateY(4px)' : 'translateY(-4px)';
+        dropdown.style.visibility = 'visible';
+
+        // 强制重排，让上述 transform 生效，确保 transition 起点正确
+        void dropdown.offsetHeight;
+
+        display.classList.add('active');
+        dropdown.classList.add('active');
+        dropdown.style.transform = '';
+      }
+
+      // 构建下拉面板 DOM —— 从原生 select 的 options 生成自定义选项
+      function buildDropdown() {
+        if (dropdown) dropdown.remove();
+        dropdown = document.createElement('div');
+        dropdown.className = 'custom-select-dropdown';
+        dropdown._display = display;
+        dropdown.setAttribute('data-for-select', selectId);
+
+        Array.from(nativeSelect.options).forEach((opt, index) => {
+          const optionEl = document.createElement('div');
+          optionEl.className = 'custom-select-option';
+          optionEl.textContent = opt.textContent.trim();
+          optionEl.setAttribute('data-value', opt.value);
+          if (index === nativeSelect.selectedIndex) {
+            optionEl.classList.add('selected');
+          }
+          optionEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            nativeSelect.value = opt.value;
+            nativeSelect.dispatchEvent(new Event('change', { bubbles: true }));
+            closeAll(null);
+            updateDisplayText();
+          });
+          dropdown.appendChild(optionEl);
+        });
+
+        // 挂到 body 上，脱离父容器 overflow 裁剪
+        document.body.appendChild(dropdown);
+        positionDropdown();
+      }
+
+      // 点击触发器：切换下拉的展开/收起
+      display.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (display.classList.contains('active')) {
+          closeAll(null);
+        } else {
+          closeAll(display);
+          if (!dropdown || !dropdown.isConnected) {
+            buildDropdown();
+          } else {
+            positionDropdown();
+            dropdown.querySelectorAll('.custom-select-option').forEach((optEl, i) => {
+              optEl.classList.toggle('selected', i === nativeSelect.selectedIndex);
+            });
+          }
+          activateDropdown();
+        }
+      });
+
+      // 原生 select 变化时同步 UI
+      nativeSelect.addEventListener('change', () => {
+        updateDisplayText();
+        if (dropdown) {
+          dropdown.querySelectorAll('.custom-select-option').forEach((optEl, i) => {
+            optEl.classList.toggle('selected', i === nativeSelect.selectedIndex);
+          });
+        }
+      });
+
+      updateDisplayText();
+    });
+
+    // 点击页面其他位置时关闭所有下拉
+    document.addEventListener('click', (e) => {
+      const isClickOnDropdown = e.target.closest('.custom-select-dropdown');
+      const isClickOnDisplay = e.target.closest('.custom-select-display');
+      if (!isClickOnDropdown && !isClickOnDisplay) {
+        document.querySelectorAll('.custom-select-dropdown.active').forEach(dd => {
+          dd.classList.remove('active');
+          clearDropdownInlineStyles(dd);
+          dd._display.classList.remove('active');
+        });
+      }
+    });
+
+    // ESC 键关闭所有下拉
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.custom-select-dropdown.active').forEach(dd => {
+          dd.classList.remove('active');
+          clearDropdownInlineStyles(dd);
+          dd._display.classList.remove('active');
+        });
+      }
+    });
+
+    // 滚动/窗口大小变化时重新定位下拉面板
+    // 如果触发器已不可见则直接关闭
+    function repositionOrClose() {
+      const activeDropdowns = document.querySelectorAll('.custom-select-dropdown.active');
+      if (!activeDropdowns.length) return;
+      activeDropdowns.forEach(dd => {
+        const display = dd._display;
+        if (!display || !document.body.contains(display)) {
+          dd.classList.remove('active');
+          clearDropdownInlineStyles(dd);
+          if (display) display.classList.remove('active');
+          return;
+        }
+        const rect = display.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > window.innerHeight || rect.right < 0 || rect.left > window.innerWidth) {
+          dd.classList.remove('active');
+          clearDropdownInlineStyles(dd);
+          display.classList.remove('active');
+          return;
+        }
+        dd.style.width = rect.width + 'px';
+        const dropdownHeight = dd.offsetHeight;
+        const spaceBelow = window.innerHeight - rect.bottom - 4;
+        const spaceAbove = rect.top - 4;
+
+        if (spaceBelow >= dropdownHeight) {
+          dd.style.top = rect.bottom + 4 + 'px';
+          dd.style.left = rect.left + 'px';
+        } else if (spaceAbove > spaceBelow && spaceAbove > 0) {
+          dd.style.top = Math.max(4, rect.top - dropdownHeight - 4) + 'px';
+          dd.style.left = rect.left + 'px';
+        } else {
+          const belowTop = rect.bottom + 4;
+          const belowClamped = Math.min(belowTop, window.innerHeight - dropdownHeight - 4);
+          const aboveTop = rect.top - dropdownHeight - 4;
+          const aboveClamped = Math.max(4, aboveTop);
+          const belowVisible = window.innerHeight - belowClamped - 4;
+          const aboveVisible = aboveClamped + dropdownHeight;
+          if (belowVisible >= aboveVisible) {
+            dd.style.top = belowClamped + 'px';
+          } else {
+            dd.style.top = aboveClamped + 'px';
+          }
+          dd.style.left = rect.left + 'px';
+        }
+    });
+  }
+
+  const settingsPanel = document.getElementById('popover-settings');
+  if (settingsPanel) {
+    // 捕获阶段监听：分页后真正的滚动容器是内层 .settings-page，冒泡的 scroll 不会传到面板
+    settingsPanel.addEventListener('scroll', repositionOrClose, true);
+  }
+  window.addEventListener('resize', repositionOrClose);
+  window.addEventListener('scroll', repositionOrClose, true);
+}
+
+// 重新同步自定义下拉菜单的显示文本与选项（语言切换后调用）
+function refreshCustomSelects() {
+  document.querySelectorAll('.custom-select-display').forEach(display => {
+    const selectId = display.getAttribute('data-for');
+    const nativeSelect = document.getElementById(selectId);
+    if (!nativeSelect) return;
+    const textEl = display.querySelector('.custom-select-text');
+    const selectedOption = nativeSelect.options[nativeSelect.selectedIndex];
+    if (selectedOption) {
+      textEl.textContent = selectedOption.textContent.trim();
+    }
+    const dropdown = document.querySelector('.custom-select-dropdown.active[data-for-select="' + selectId + '"]') || null;
+    if (dropdown) {
+      const options = dropdown.querySelectorAll('.custom-select-option');
+      options.forEach((optEl, i) => {
+        optEl.textContent = nativeSelect.options[i].textContent.trim();
+        optEl.classList.toggle('selected', i === nativeSelect.selectedIndex);
+      });
+    }
+  });
+}
+
+//  检查更新实现
+// 语义化版本比较：a>b 返回 1，a<b 返回 -1，相等返回 0
+// 不能用字符串比，"1.10.0" 在字符串里小于 "1.9.0"
+function compareVersions(a, b) {
+  const pa = String(a).replace(/^v/i, '').split('.').map(n => parseInt(n, 10) || 0);
+  const pb = String(b).replace(/^v/i, '').split('.').map(n => parseInt(n, 10) || 0);
+  const len = Math.max(pa.length, pb.length);
+  for (let i = 0; i < len; i++) {
+    const x = pa[i] || 0, y = pb[i] || 0;
+    if (x > y) return 1;
+    if (x < y) return -1;
+  }
+  return 0;
+}
+
+// ISO 日期 → yymmdd，如 "2026-10-03T..." → "261003"
+function formatReleaseDateCode(isoStr) {
+  if (!isoStr) return '';
+  const d = new Date(isoStr);
+  if (isNaN(d.getTime())) return '';
+  const yy = String(d.getFullYear()).slice(-2);
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return yy + mm + dd;
+}
+
+// 拉取最新 release；若仓库只有 tag 没建 release，回退到 /tags
+async function fetchLatestRelease() {
+  const headers = { 'Accept': 'application/vnd.github+json' };
+
+  let res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/releases/latest`, { headers });
+  if (res.ok) {
+    const data = await res.json();
+    return {
+      tag: data.tag_name,
+      url: data.html_url,
+      publishedAt: data.published_at
+    };
+  }
+
+  // 404：说明没有 stable release（全发成了 prerelease 或纯 tag）
+  if (res.status === 404) {
+    res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/tags`, { headers });
+    if (res.ok) {
+      const list = await res.json();
+      if (Array.isArray(list) && list.length) {
+        // /tags 接口不返回发布日期，此分支下 (261003) 会省略
+        return {
+          tag: list[0].name,
+          url: `https://github.com/${GITHUB_REPO}/releases`,
+          publishedAt: null
+        };
+      }
+    }
+  }
+
+  throw new Error('HTTP ' + res.status);
+}
+
+// 检查更新--12小时缓存
+async function checkForUpdate({ force = false } = {}) {
+  const CACHE_KEY = 'ntp_update_check';
+  const INTERVAL = 12 * 60 * 60 * 1000;
+
+  if (!force) {
+    const cached = Storage.get(CACHE_KEY, null);
+    if (cached && Date.now() - cached.checkedAt < INTERVAL) {
+      return cached.result;
+    }
+  }
+
+  try {
+    const { tag, url, publishedAt } = await fetchLatestRelease();
+    const latest = String(tag || '').replace(/^v/i, '');
+    const result = {
+      tag,
+      latest,                                        // "版本号"
+      dateCode: formatReleaseDateCode(publishedAt),  // "发布号" 或 ""
+      hasUpdate: compareVersions(latest, APP_VERSION) > 0,
+      url                                            // release 页面
+    };
+    Storage.set(CACHE_KEY, { checkedAt: Date.now(), result });
+    return result;
+  } catch (e) {
+    console.warn('检查更新失败:', e);
+    return null;   // 失败保持静默
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // DOM元素引用
+  const btnWaffle = document.getElementById('waffle');
+  const btnSettings = document.getElementById('settings');
+  const btnCloseSettings = document.getElementById('btn-close-settings');
+  const popoverWaffle = document.getElementById('popover-waffle');
+  const popoverSettings = document.getElementById('popover-settings');
+
+  const selectEngine = document.getElementById('select-engine');
+  const btnEditEngine = document.getElementById('btn-edit-engine');
+  const forceBingCNRow = document.getElementById('force-bing-cn-row');
+  const toggleForceBingCN = document.getElementById('toggle-force-bing-cn');
+  const toggleHistorySwitch = document.getElementById('toggle-history-switch');
+  const selectQuicklinks = document.getElementById('select-quicklinks');
+  const quicklinksElem = document.getElementById('quicklinks');
+  const logoContainer = document.getElementById('logo');
+  const selectLanguage = document.getElementById('select-language');
+
+  // 页面布局页（设置悬浮窗第二页）相关 DOM
+  const toggleLogoSwitch = document.getElementById('toggle-logo-switch');
+  const selectLayout = document.getElementById('select-layout');
+  const btnOpenLayoutModal = document.getElementById('btn-open-layout-modal');
+  
+  const searchContainer = document.getElementById('search-container');
+  const fakebox = document.getElementById('fakebox');
+  const searchInput = document.getElementById('search-input');
+  const suggestionList = document.getElementById('suggestion-list');
+  const suggestionsFooter = document.getElementById('suggestions-footer');
+  const clearHistoryBtn = document.getElementById('clear-history-btn');
+
+  // Modal相关DOM元素(快速链接
+  const modalOverlay = document.getElementById('modal');
+  const modalForm = document.getElementById('modal-form');
+  const inputName = document.getElementById('input-name');
+  const inputUrl = document.getElementById('input-url');
+  const containerName = document.getElementById('container-name');
+  const containerUrl = document.getElementById('container-url');
+  const tipName = document.getElementById('tip-name');
+  const tipUrl = document.getElementById('tip-url');
+
+  const btnDelete = document.getElementById('btn-delete');
+  const btnCancel = document.getElementById('btn-cancel');
+
+  // Modal相关DOM元素(自定义搜索引擎
+  const customEngineModal = document.getElementById('custom-engine-modal');
+  const customEngineForm = document.getElementById('custom-engine-form');
+  const inputEngineName = document.getElementById('input-engine-name');
+  const inputEngineUrl = document.getElementById('input-engine-url');
+  const containerEngineName = document.getElementById('container-engine-name');
+  const containerEngineUrl = document.getElementById('container-engine-url');
+  const tipEngineName = document.getElementById('tip-engine-name');
+  const tipEngineUrl = document.getElementById('tip-engine-url');
+  const btnEngineCancel = document.getElementById('btn-engine-cancel');
+
+  // 自定义标题图片相关 DOM
+  const engineLogoImg = document.getElementById('engine-logo-img');
+  const engineLogoEmpty = document.getElementById('engine-logo-empty');
+  const btnUploadEngineLogo = document.getElementById('btn-upload-engine-logo');
+  const btnRemoveEngineLogo = document.getElementById('btn-remove-engine-logo');
+  const inputEngineLogoFile = document.getElementById('input-engine-logo-file');
+  let tempEngineLogo = ''; // 弹窗内的临时标题图片（DataURL）
+
+  // 背景/壁纸控制DOM元素
+  const toggleBgSwitch = document.getElementById('toggle-bg-switch');
+  const btnOpenBgModal = document.getElementById('btn-open-bg-modal');
+  const enhancedVisibilityRow = document.getElementById('enhanced-visibility-row');
+  const toggleEnhancedVisibility = document.getElementById('toggle-enhanced-visibility');
+  
+  const modalWallpaper = document.getElementById('modal-wallpaper');
+  const btnCloseWallpaperModal = document.getElementById('btn-close-wallpaper-modal');
+  const toggleBgModalSwitch = document.getElementById('toggle-bg-modal-switch');
+  const wallpaperPreviewContainer = document.getElementById('wallpaper-preview-container');
+  const btnUploadWallpaper = document.getElementById('btn-upload-wallpaper');
+  const btnRemoveWallpaper = document.getElementById('btn-remove-wallpaper');
+  const inputWallpaperFile = document.getElementById('input-wallpaper-file');
+  const wallpaperTypeTitle = document.getElementById('wallpaper-type-title');
+  const wallpaperSourceLabel = document.getElementById('wallpaper-source-label');
+
+  const bgVideo = document.getElementById('bg-video');
+  const bgImage = document.getElementById('bg-image');
+  const bgOverlay = document.getElementById('bg-overlay');
+
+  // ===== 关于弹窗1.7.2更新 =====
+  async function refreshUpdateNotice() {
+    const notice = document.getElementById('update-notice');
+    if (!notice) return;
+    notice.style.display = 'none';   // 先隐藏，避免上次结果残留
+
+    const result = await checkForUpdate();
+    if (!result?.hasUpdate) return;
+
+    const versionText = document.getElementById('update-version-text');
+    const downloadBtn = document.getElementById('update-download-btn');
+
+    versionText.textContent = result.latest + (result.dateCode ? ` (${result.dateCode})` : '');
+    downloadBtn.href = result.url;
+    notice.style.display = 'flex';
+  }
+
+  function openAboutModal() {
+    popoverWaffle?.classList.remove('active');
+    popoverSettings?.classList.remove('active');
+    document.getElementById('modal-about')?.classList.add('active');
+    refreshUpdateNotice();   // 不 await，避免阻塞弹窗打开动画
+  }
+
+  document.getElementById('btn-about')?.addEventListener('click', openAboutModal);
+  document.getElementById('btn-footer-version')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    openAboutModal();
+  });
+
+  document.getElementById('btn-versioninfo')?.addEventListener('click', () => {
+    window.open(`https://github.com/${GITHUB_REPO}/releases`, '_blank', 'noopener');
+  });
+
+  document.getElementById('btn-about-close')?.addEventListener('click', () => {
+    document.getElementById('modal-about')?.classList.remove('active');
+  });
+
+  // 点击遮罩层关闭
+  const modalAbout = document.getElementById('modal-about');
+  modalAbout?.addEventListener('click', (e) => {
+    if (e.target === modalAbout) {
+      modalAbout.classList.remove('active');
+    }
+  });
+  //关于弹窗（结束）
+
+  if (searchInput && searchInput.value.trim() !== '') {
+  const fakebox = document.getElementById('fakebox');
+  fakebox?.classList.add('has-value');
+  }
+
+  let currentEditingId = null;
+  let draggedId = null;//拖拽实现
+  let selectedSuggestionIndex = -1;
+
+  // ===== 主题模式：跟随系统 / 深色 / 浅色 =====
+  // 结果统一写到 <html data-theme="dark|light">，CSS 的暗色变量已改为由该属性驱动
+  const selectTheme = document.getElementById('select-theme');
+  const darkSchemeMedia = window.matchMedia('(prefers-color-scheme: dark)');
+  let themeMode = Storage.get('ntp_theme_mode', 'auto');
+  if (themeMode !== 'dark' && themeMode !== 'light') themeMode = 'auto';
+
+  // 应用主题模式：更新 data-theme、标签页图标，以及需要按主题取图的标题图
+  function applyThemeMode(mode, { persist = true } = {}) {
+    themeMode = (mode === 'dark' || mode === 'light') ? mode : 'auto';
+    if (persist) Storage.set('ntp_theme_mode', themeMode);
+
+    const isDark = themeMode === 'dark' || (themeMode === 'auto' && darkSchemeMedia.matches);
+    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+
+    const link = document.getElementById('favicon');
+    if (link) {
+      link.href = (isDark ? 'img/icon_d.png' : 'img/icon_l.png') + '?r=' + Math.random();
+    }
+    // 百度/谷歌标题图为位图，需要按新主题重新取图
+    if (selectEngine) setLogo(selectEngine.value);
+  }
+
+  if (selectTheme) {
+    selectTheme.value = themeMode;
+    selectTheme.addEventListener('change', (e) => applyThemeMode(e.target.value));
+  }
+
+  // 跟随系统时，系统主题变化需要同步（手动指定深/浅色时忽略）
+  darkSchemeMedia.addEventListener('change', function () {
+    if (themeMode === 'auto') applyThemeMode('auto', { persist: false });
+  });
+
+  // 默认与自定义搜索引擎
+  let customEngineConfig = Storage.get('ntp_custom_engine_config', {
+    name: '',
+    url: ''
+  });
+
+  // 各搜索引擎的自定义图标（原版图标仍保留在 logos 表里，随时可恢复）
+  let customEngineLogos = Storage.get('ntp_engine_logos', {});
+  if (!customEngineLogos || typeof customEngineLogos !== 'object' || Array.isArray(customEngineLogos)) {
+    customEngineLogos = {};
+  }
+
+  // 搜索引擎图标相关的 DOM。必须在下面 setLogo / 初始化之前取好：
+  // updateEngineIconButtons 在初始化阶段就会被调用，而这些 const 若声明在调用点之后，
+  // 会因暂时性死区抛 ReferenceError 并中断整个 DOMContentLoaded（后面挂的监听器全部丢失）
+  const btnChangeEngineIcon = document.getElementById('btn-change-engine-icon');
+  const btnResetEngineIcon = document.getElementById('btn-reset-engine-icon');
+  const inputQuickEngineLogo = document.getElementById('input-quick-engine-logo');
+  const engineIconActions = document.getElementById('engine-icon-actions');
+
+  const engineSearchUrls = {
+    bing: 'https://www.bing.com/search?q=',
+    baidu: 'https://www.baidu.com/s?wd=',
+    google: 'https://www.google.com/search?q='
+  };
+
+  const bingCNSearchUrl = 'https://cn.bing.com/search?q=';
+
+  // 切换弹出层动画
+  function togglePopover(popoverToToggle, otherPopover) {
+    otherPopover.classList.remove('active');
+    popoverToToggle.classList.toggle('active');
+  }
+
+  btnWaffle?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    togglePopover(popoverWaffle, popoverSettings);
+  });
+
+  btnSettings?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    // 收起时重置分页：下次打开从主设置页开始
+    if (popoverSettings?.classList.contains('active')) popoverSettings.removeAttribute('data-page');
+    togglePopover(popoverSettings, popoverWaffle);
+    // 设置面板打开时，按当前语言同步快速链接的“添加”按钮文案
+    if (typeof syncQuicklinksLanguage === 'function') syncQuicklinksLanguage();
+  });
+
+  // 关闭设置悬浮窗（同时把分页复位到主设置页）
+  function closeSettingsPanel() {
+    popoverSettings?.classList.remove('active');
+    popoverSettings?.removeAttribute('data-page');
+    document.querySelectorAll('.custom-select-dropdown.active').forEach(dd => {
+      dd.classList.remove('active');
+      clearDropdownInlineStyles(dd);
+      if (dd._display) dd._display.classList.remove('active');
+    });
+  }
+
+  if (btnCloseSettings) {
+    btnCloseSettings.addEventListener('click', closeSettingsPanel);
+  }
+  // 布局页右上角的关闭按钮
+  document.getElementById('btn-close-settings-2')?.addEventListener('click', closeSettingsPanel);
+
+  document.addEventListener('click', (e) => {
+    if (!popoverWaffle?.contains(e.target) && !btnWaffle?.contains(e.target)) {
+      popoverWaffle?.classList.remove('active');
+    }
+    if (!popoverSettings?.contains(e.target) && !btnSettings?.contains(e.target)) {
+      popoverSettings?.classList.remove('active');
+      popoverSettings?.removeAttribute('data-page');  // 关闭后回到主设置页
+    }
+    if (!searchContainer?.contains(e.target)) {
+      closeSuggestions();
+    }
+  });
+
+  // 切换Logo（自定义引擎支持显示自定义标题图片）
+  function setLogo(engine) {
+    if (!logoContainer) return;
+    if (engine === 'custom') {
+      logoContainer.innerHTML = '';
+      if (customEngineConfig.logo) {
+        const img = document.createElement('img');
+        img.src = customEngineConfig.logo;
+        img.alt = '';
+        img.className = 'custom-engine-logo';
+        // 加载失败时静默清空，避免显示破图
+        img.onerror = () => { logoContainer.innerHTML = ''; };
+        logoContainer.appendChild(img);
+      }
+      return;
+    }
+    // 用户为当前引擎换过图标：优先显示自定义图标
+    const customLogo = customEngineLogos[engine];
+    if (customLogo) {
+      logoContainer.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = customLogo;
+      img.alt = '';
+      img.className = 'custom-engine-logo';
+      // 图标失效时退回原版图标，不留破图
+      img.onerror = () => {
+        img.remove();
+        setLogoDefault(engine);
+      };
+      logoContainer.appendChild(img);
+      return;
+    }
+    setLogoDefault(engine);
+  }
+
+  // 显示内置（原版）图标
+  function setLogoDefault(engine) {
+    if (!logoContainer) return;
+    if (logos[engine] !== undefined) {
+      const logoContent = logos[engine];
+      // 百度/谷歌为函数（按主题取图），其余为静态字符串
+      logoContainer.innerHTML = typeof logoContent === 'function' ? logoContent() : logoContent;
+    }
+  }
+
+  // 动态管理自定义搜索引擎编辑按钮显隐
+  function updateEngineEditButton(engine) {
+    if (btnEditEngine) {
+      btnEditEngine.style.display = engine === 'custom' ? 'inline-flex' : 'none';
+    }
+  }
+
+  // 根据当前引擎决定是否显示"强制必应中国版"选项行
+  function updateForceBingCNRow(engine) {
+    if (forceBingCNRow) {
+      forceBingCNRow.style.display = engine === 'bing' ? 'flex' : 'none';
+    }
+  }
+
+    // 时间开关相关函数
+  let timeCapsuleTimer = null;
+
+  // 更新时间显示的当前时间与日期文本
+  function updateTimeCapsule() {
+    const display = document.getElementById('time-display');
+    if (!display) return;
+    if (!display.classList.contains('active')) return;
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const timeStr = hours + ':' + minutes;
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const dateStr = year + '/' + month + '/' + day;
+
+    const timeValue = display.querySelector('.time-value');
+    const timeDate = display.querySelector('.time-date');
+    if (timeValue) timeValue.innerText = timeStr;
+    if (timeDate) timeDate.innerText = dateStr;
+  }
+
+  // 根据设置控制时间的显示/隐藏与定时器启停
+  function applyTimeCapsuleVisibility() {
+    const display = document.getElementById('time-display');
+    if (!display) return;
+    if (showTimeCapsule) {
+      display.classList.add('active');
+      updateTimeCapsule();
+      startTimeCapsuleTimer();
+    } else {
+      display.classList.remove('active');
+      stopTimeCapsuleTimer();
+    }
+  }
+
+  // 根据设置控制菜单按钮（饼图标）的显示/隐藏
+  function applyMenuButtonVisibility() {
+    const btn = document.getElementById('waffle');
+    const popover = document.getElementById('popover-waffle');
+    if (!btn) return;
+    if (showMenuButton) {
+      btn.style.display = '';
+      if (popover) popover.style.display = '';
+    } else {
+      btn.style.display = 'none';
+      if (popover) popover.classList.remove('active');
+    }
+  }
+
+  // 启动时间定时器（每分钟更新一次）
+  function startTimeCapsuleTimer() {
+    if (timeCapsuleTimer) clearInterval(timeCapsuleTimer);
+    updateTimeCapsule();
+    timeCapsuleTimer = setInterval(updateTimeCapsule, 60000);
+  }
+
+  // 停止时间定时器
+  function stopTimeCapsuleTimer() {
+    if (timeCapsuleTimer) {
+      clearInterval(timeCapsuleTimer);
+      timeCapsuleTimer = null;
+    }
+  }
+
+    // B1.读取并应用保存的页面设置/此为默认配置值
+  let savedEngine = Storage.get('ntp_engine', 'bing');
+  if (savedEngine === 'bingCN') {
+    savedEngine = 'bing';
+    Storage.set('ntp_engine', 'bing');
+    Storage.set('ntp_force_bing_cn', true);
+  }
+  const savedLayout = Storage.get('ntp_layout', 'focused');
+  const savedQuicklinksRow = Storage.get('ntp_quicklinks', '0');
+  let historyEnabled = Storage.get('ntp_history_enabled', true);
+  let searchHistory = Storage.get('ntp_search_history', []);
+  let showTimeCapsule = Storage.get('ntp_show_time_capsule', false);
+  let showMenuButton = Storage.get('ntp_show_menu_button', true);
+  let forceBingCN = Storage.get('ntp_force_bing_cn', false);
+  
+  let bgEnabled = Storage.get('ntp_bg_enabled', false);
+  let customWallpaperData = null;
+  let enhancedVisibility = Storage.get('ntp_enhanced_visibility', false);
+  let searchVisible = Storage.get('ntp_search_visible', true);
+  let showLogo = Storage.get('ntp_show_logo', true);
+
+  // ===== 背景模糊程度 =====
+  // 只改两个合成层的 filter，不碰遮罩与页面元素，因此对图片和视频壁纸都生效
+  const backgroundContainer = document.getElementById('background-container');
+  const rangeBgBlur = document.getElementById('range-bg-blur');
+  const valueBgBlur = document.getElementById('value-bg-blur');
+  const BG_BLUR_MAX = rangeBgBlur ? Number(rangeBgBlur.max) || 24 : 24;
+  let bgBlur = Number(Storage.get('ntp_bg_blur', 0));
+  if (!Number.isFinite(bgBlur)) bgBlur = 0;
+  bgBlur = Math.min(BG_BLUR_MAX, Math.max(0, Math.round(bgBlur)));
+
+  // 写入 CSS 变量；模糊时给容器加 .blurred 让背景放大一点，遮掉模糊产生的虚边
+  function applyBgBlur() {
+    document.documentElement.style.setProperty('--bg-blur', bgBlur + 'px');
+    backgroundContainer?.classList.toggle('blurred', bgBlur > 0);
+    if (valueBgBlur) valueBgBlur.textContent = bgBlur + 'px';
+  }
+  if (rangeBgBlur) rangeBgBlur.value = bgBlur;
+  applyBgBlur();
+
+  // 获取今天的日期字符串，如 "2026-09-03"，用于判断壁纸是否过期
+  function getTodayStr() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
+  // 从必应壁纸 API 拉取图片 URL、标题、版权信息
+  async function fetchBingWallpaper() {
+    try {
+      const response = await fetch('https://bing.biturl.top/?resolution=1920x1080&format=json', { cache: 'no-store' });
+      if (!response.ok) throw new Error('网络请求失败');
+      const data = await response.json();
+      let url = data.url;
+      if (url && url.startsWith('http')) {
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+          url = 'https://' + url;
+        }
+        return { url, title: data.title || '', copyright: data.copyright || '' };
+      }
+      throw new Error('返回数据无效');
+    } catch (e) {
+      console.error('自动获取必应壁纸失败:', e);
+      return null;
+    }
+  }
+
+  // 如果当前壁纸是必应每日壁纸且缓存日期不是今天，自动拉取新图替换
+  async function ensureBingDailyFresh() {
+    if (!customWallpaperData || customWallpaperData.type !== 'bing_daily') return;
+    const today = getTodayStr();
+    if (customWallpaperData.fetchDate === today) return;
+    const result = await fetchBingWallpaper();
+    if (result) {
+      revokeBlobUrl(customWallpaperData?.url);
+      customWallpaperData = {
+        type: 'bing_daily',
+        url: result.url,
+        title: result.title,
+        copyright: result.copyright,
+        fetchDate: today
+      };
+      await saveWallpaperData(customWallpaperData);
+      if (bgEnabled) {
+        renderWallpaper();
+      }
+    }
+  }
+
+  if (selectEngine) selectEngine.value = savedEngine;
+  if (selectQuicklinks) selectQuicklinks.value = savedQuicklinksRow;
+  if (toggleHistorySwitch) toggleHistorySwitch.checked = historyEnabled;
+  if (toggleForceBingCN) toggleForceBingCN.checked = forceBingCN;
+  if (toggleEnhancedVisibility) toggleEnhancedVisibility.checked = enhancedVisibility;
+
+  setLogo(savedEngine);
+  updateEngineEditButton(savedEngine);
+  updateForceBingCNRow(savedEngine);
+  updateEngineIconButtons(savedEngine);
+  // 主题与标题图/图标对齐（头部脚本已提前写入 data-theme，这里做一次兜底同步）
+  applyThemeMode(themeMode, { persist: false });
+  document.body.setAttribute('data-layout', savedLayout);
+  quicklinksElem?.setAttribute('rows', savedQuicklinksRow);
+
+  // 背景显隐及渲染逻辑
+  function applyBackgroundState() {
+    if (toggleBgSwitch) toggleBgSwitch.checked = bgEnabled;
+    if (toggleBgModalSwitch) toggleBgModalSwitch.checked = bgEnabled;
+
+    if (bgEnabled) {
+      document.body.classList.add('bg-enabled');
+      renderWallpaper();
+    } else {
+      document.body.classList.remove('bg-enabled');
+      // 关闭背景时清除 .loaded，确保下次开启能从透明渐入
+      if (bgVideo) {
+        bgVideo.classList.remove('loaded');
+        bgVideo.style.display = 'none';
+      }
+      if (bgImage) {
+        bgImage.classList.remove('loaded');
+        bgImage.style.display = 'none';
+      }
+      if (bgOverlay) {
+        bgOverlay.classList.remove('loaded');
+      }
+      if (enhancedVisibility) {
+        enhancedVisibility = false;
+        Storage.set('ntp_enhanced_visibility', false);
+        if (toggleEnhancedVisibility) toggleEnhancedVisibility.checked = false;
+      }
+    }
+
+    if (enhancedVisibilityRow) {
+      enhancedVisibilityRow.style.display = bgEnabled ? 'flex' : 'none';
+    }
+    applyEnhancedVisibility();
+  }
+
+  // 根据"增强可见性"设置与背景开关，切换 body 的 data 属性
+  function applyEnhancedVisibility() {
+    if (enhancedVisibility && bgEnabled) {
+      document.body.setAttribute('data-enhanced-visibility', 'true');
+    } else {
+      document.body.removeAttribute('data-enhanced-visibility');
+    }
+  }
+
+  // 根据当前壁纸类型返回对应的翻译 key 名
+  function getWallpaperSourceLabel() {
+    if (!customWallpaperData) return '';
+    if (customWallpaperData.type === 'bing_daily') return 'sourceBingDaily';
+    const url = customWallpaperData.url || '';
+    if (url.startsWith('data:') || url.startsWith('blob:')) return 'sourceLocal';
+    if (url.startsWith('http://') || url.startsWith('https://')) return 'sourceCustomUrl';
+    return '';
+  }
+
+  // 用当前语言的翻译表设置壁纸类型标题（替代原先写死的中文）
+  function setWallpaperTypeTitle(key) {
+    if (!wallpaperTypeTitle) return;
+    const d = window._i18nDict || {};
+    wallpaperTypeTitle.textContent = (key && d[key]) || '';
+  }
+
+  // 用当前语言的翻译表，把来源标签渲染到页面上
+  function translateSourceLabel() {
+    if (!wallpaperSourceLabel) return;
+    const key = getWallpaperSourceLabel();
+    const d = window._i18nDict || {};
+    wallpaperSourceLabel.textContent = key ? (d[key] || '') : '';
+  }
+
+  // 根据自定义壁纸数据，渲染视频/图片背景到页面和预览容器
+  // 渐入逻辑：先移除 .loaded 让元素透明 → 设置 src → 监听加载事件 → 加载完成后加 .loaded 触发 transition
+  function renderWallpaper() {
+    if (!customWallpaperData) {
+      if (bgVideo) {
+        bgVideo.style.display = 'none';
+        bgVideo.classList.remove('loaded');
+      }
+      if (bgImage) {
+        // 默认壁纸已在显示时同样直接复用，避免重复渐入导致“闪黑”
+        const sameDefault = bgImage.getAttribute('src') === 'img/background.webp' && bgImage.classList.contains('loaded');
+        if (!sameDefault) {
+        bgImage.classList.remove('loaded');
+        bgImage.style.display = 'block';
+        bgImage.src = 'img/background.webp';
+        // 默认背景加载完成后渐入
+        bgImage.addEventListener('load', function onDefLoad() {
+          bgImage.classList.add('loaded');
+          bgOverlay?.classList.add('loaded');
+          bgImage.removeEventListener('load', onDefLoad);
+        });
+        }
+      }
+      setWallpaperTypeTitle('localImage');
+      translateSourceLabel();
+      if (wallpaperPreviewContainer) {
+        wallpaperPreviewContainer.innerHTML = `<span style="font-size: 13px; color: var(--settings-text-secondary);" data-i18n="usingDefaultBg">正在使用默认背景</span>`;
+      }
+      // 预览文字为动态创建的 data-i18n 节点，需立即翻译一次；语言切换时由 applyLanguage 统一重译
+      applyLanguage(localStorage.getItem('liteStart_language') || 'auto');
+      updateVideoWallpaperFreeze();   // 非视频壁纸：收起“静态帧”层
+      return;
+    }
+
+    if (customWallpaperData.type === 'bing_daily') {
+      setWallpaperTypeTitle('bingDaily');
+    } else {
+      setWallpaperTypeTitle('uploadedWallpaper');
+    }
+
+    translateSourceLabel();
+
+    if (customWallpaperData.type === 'video') {
+      // 图片层已隐藏时不再重复写 style/class，避免无谓的样式失效牵连到视频层
+      if (bgImage && bgImage.style.display !== 'none') {
+        bgImage.style.display = 'none';
+        bgImage.classList.remove('loaded');
+      }
+      if (bgVideo) {
+        // 同一段壁纸视频已在播放时直接复用，避免先隐藏再等 canplay 造成“壁纸闪黑”
+        const sameVideo = bgVideo.getAttribute('src') === customWallpaperData.url && bgVideo.classList.contains('loaded');
+        if (sameVideo) {
+          bgVideo.style.display = 'block';
+        } else {
+        bgVideo.classList.remove('loaded');
+        bgVideo.style.display = 'block';
+        bgVideo.src = customWallpaperData.url;
+        // 视频缓冲到可播放时再渐入
+        const onCanPlay = () => {
+          bgVideo.classList.add('loaded');
+          bgOverlay?.classList.add('loaded');
+          bgVideo.removeEventListener('canplay', onCanPlay);
+          bgVideo.play().catch(() => {});
+        };
+        bgVideo.addEventListener('canplay', onCanPlay);
+        }
+      }
+
+      if (wallpaperPreviewContainer) {
+        wallpaperPreviewContainer.innerHTML = `
+          <video src="${customWallpaperData.url}" autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover;"></video>
+        `;
+      }
+    } else {
+      if (bgVideo) {
+        bgVideo.style.display = 'none';
+        bgVideo.classList.remove('loaded');
+      }
+      if (bgImage) {
+        // 同一张壁纸已在显示时直接复用：语言切换等场景会重复调用本函数，
+        // 若每次都移除 .loaded 重新渐入，壁纸会先变透明露出深色底 → 视觉上“闪黑一下”
+        const sameImage = bgImage.getAttribute('src') === customWallpaperData.url && bgImage.classList.contains('loaded');
+        if (!sameImage) {
+        bgImage.classList.remove('loaded');
+        bgImage.style.display = 'block';
+        bgImage.src = customWallpaperData.url;
+        // 图片加载完成后渐入；complete 为 true 表示浏览器缓存已命中，直接显示
+        const onLoad = () => {
+          bgImage.classList.add('loaded');
+          bgOverlay?.classList.add('loaded');
+          bgImage.removeEventListener('load', onLoad);
+        };
+        if (bgImage.complete && bgImage.naturalWidth > 0) {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              bgImage.classList.add('loaded');
+              bgOverlay?.classList.add('loaded');
+            });
+          });
+        } else {
+          bgImage.addEventListener('load', onLoad);
+        }
+        }
+      }
+
+      if (wallpaperPreviewContainer) {
+        wallpaperPreviewContainer.innerHTML = `
+          <img src="${customWallpaperData.url}" alt="背景预览" style="width:100%;height:100%;object-fit:cover;" />
+        `;
+        const previewImg = wallpaperPreviewContainer.querySelector('img');
+        previewImg.addEventListener('error', () => {
+          const errWrap = document.createElement('div');
+          errWrap.style.cssText = 'width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-top:-4px;color:rgb(255, 255, 255);';
+          const errIcon = document.createElement('div');
+          errIcon.textContent = '×';
+          errIcon.style.cssText = 'font-size:80px;font-weight:700;line-height:1;margin-top:-8px;';
+          const errLabel = document.createElement('div');
+          errLabel.textContent = 'ERROR';
+          errLabel.style.cssText = 'font-size:14px;font-weight:600;letter-spacing:2px;margin-top:4px;';
+          errWrap.appendChild(errIcon);
+          errWrap.appendChild(errLabel);
+          previewImg.replaceWith(errWrap);
+        });
+      }
+    }
+
+    // 渲染完成后同步“视频壁纸防闪黑”状态：若此刻有浮层打开，保持静态帧顶替视频层
+    updateVideoWallpaperFreeze();
+  }
+
+
+  // ===== 初始化配置已迁移 =====
+  // ===== 重置确认弹窗 =====
+  const modalResetConfirm = document.getElementById('modal-reset-confirm');
+  const btnResetCancel = document.getElementById('btn-reset-cancel');
+  const btnResetConfirm = document.getElementById('btn-reset-confirm');
+  const modalResetDone = document.getElementById('modal-reset-done');
+  const btnResetDoneConfirm = document.getElementById('btn-reset-done-confirm');
+
+  // 清除全部本地数据：ntp_* 设置项、界面语言（liteStart_*）以及 IndexedDB 中的自定义壁纸
+  async function resetAllLocalData() {
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith('ntp_') || key.startsWith('liteStart_')) {
+        localStorage.removeItem(key);
+      }
+    });
+    // 自定义壁纸的二进制存放在 IndexedDB，也需要一并清除；
+    // 个别环境（无痕/存储受限）下 IndexedDB 可能长时间无响应，最多等待 1.5s，避免卡住完成弹窗
+    await Promise.race([
+      WallpaperDB.remove().catch(() => {}),
+      new Promise(resolve => setTimeout(resolve, 1500))
+    ]);
+  }
+
+  // 取消按钮
+  btnResetCancel?.addEventListener('click', () => {
+    modalResetConfirm?.classList.remove('active');
+  });
+
+  // 确定按钮 - 执行重置（包含界面语言，刷新后回到“跟随设备”）
+  btnResetConfirm?.addEventListener('click', async () => {
+    await resetAllLocalData();
+    modalResetConfirm?.classList.remove('active');
+    // 显示完成弹窗
+    modalResetDone?.classList.add('active');
+  });
+
+  // 点击遮罩关闭重置确认弹窗
+  modalResetConfirm?.addEventListener('click', (e) => {
+    if (e.target === modalResetConfirm) {
+      modalResetConfirm.classList.remove('active');
+    }
+  });
+
+  // 完成弹窗 - 刷新页面
+  btnResetDoneConfirm?.addEventListener('click', () => {
+    window.location.reload();
+  });
+
+  // 点击遮罩刷新
+  modalResetDone?.addEventListener('click', (e) => {
+    if (e.target === modalResetDone) {
+      window.location.reload();
+    }
+  });
+  // ===== 管理配置文件 - 选择操作（导出 / 恢复 / 初始化）=====
+  const modalManageProfiles = document.getElementById('modal-manage-profiles');
+  const btnManageProfiles = document.getElementById('btn-manage-profiles');
+  const btnManageProfilesCancel = document.getElementById('btn-manage-profiles-cancel');
+  const btnManageProfilesNext = document.getElementById('btn-manage-profiles-next');
+  const manageProfileOptions = document.getElementById('manage-profile-options');
+  const fileInputRestore = document.getElementById('file-input-restore');
+  const modalRestoreDone = document.getElementById('modal-restore-done');
+  const btnRestoreDoneConfirm = document.getElementById('btn-restore-done-confirm');
+
+  // 恢复完成弹窗：点击“立即刷新”或遮罩后刷新页面以应用新设置
+  btnRestoreDoneConfirm?.addEventListener('click', () => {
+    window.location.reload();
+  });
+  modalRestoreDone?.addEventListener('click', (e) => {
+    if (e.target === modalRestoreDone) window.location.reload();
+  });
+
+  // 需要备份的设置项（由 Storage 写入的 JSON 值）
+  const CONFIG_KEYS = [
+    'ntp_engine',
+    'ntp_layout',
+    'ntp_quicklinks',
+    'ntp_quicklinks_list',
+    'ntp_history_enabled',
+    'ntp_search_history',
+    'ntp_show_time_capsule',
+    'ntp_show_menu_button',
+    'ntp_show_logo',
+    'ntp_search_visible',
+    'ntp_force_bing_cn',
+    'ntp_bg_enabled',
+    'ntp_enhanced_visibility',
+    'ntp_custom_engine_config',
+    'ntp_user_profile',
+    'ntp_custom_wallpaper',
+    // 主题模式与布局微调（间距/对齐/水平与垂直偏移）
+    'ntp_theme_mode',
+    'ntp_layout_gap_title',
+    'ntp_layout_gap_links',
+    'ntp_layout_offset_x',
+    'ntp_layout_offset_y',
+    'ntp_layout_align',
+    // 背景模糊程度 / 各搜索引擎的自定义图标
+    'ntp_bg_blur',
+    'ntp_engine_logos',
+    // 元素大小（百分比）与搜索框形状
+    'ntp_layout_scale_logo',
+    'ntp_layout_scale_search',
+    'ntp_layout_scale_links',
+    'ntp_search_shape',
+    'ntp_links_shape'
+  ];
+  // 以纯字符串保存的设置项（界面语言），导入时需要原样写回
+  const RAW_CONFIG_KEYS = ['liteStart_language'];
+  // 恢复配置时只接受 LitestartCE 自己的键，避免写入无关数据
+  const RESTORABLE_KEY_PATTERN = /^(ntp_|liteStart_)/;
+
+  const DEFAULT_MANAGE_ACTION = 'export';
+  let manageSelectedAction = DEFAULT_MANAGE_ACTION;
+
+  // 切换操作列表选中项：同步 aria-selected、tabindex 以及左侧指示条
+  function setManageSelectedAction(action) {
+    if (!action) return;
+    manageSelectedAction = action;
+    manageProfileOptions?.querySelectorAll('.manage-option').forEach(option => {
+      const selected = option.dataset.action === action;
+      option.setAttribute('aria-selected', selected ? 'true' : 'false');
+      option.tabIndex = selected ? 0 : -1;
+    });
+  }
+
+  function closeManageProfilesModal() {
+    modalManageProfiles?.classList.remove('active');
+  }
+
+  // 打开管理配置文件弹窗（默认选中“导出配置”）
+  btnManageProfiles?.addEventListener('click', () => {
+    popoverWaffle?.classList.remove('active'); // 关闭菜单
+    setManageSelectedAction(DEFAULT_MANAGE_ACTION);
+    modalManageProfiles?.classList.add('active');
+  });
+
+  // 取消按钮
+  btnManageProfilesCancel?.addEventListener('click', closeManageProfilesModal);
+
+  // 点击遮罩关闭
+  modalManageProfiles?.addEventListener('click', (e) => {
+    if (e.target === modalManageProfiles) closeManageProfilesModal();
+  });
+
+  // 鼠标点击选择操作项
+  manageProfileOptions?.addEventListener('click', (e) => {
+    const option = e.target.closest('.manage-option');
+    if (option) setManageSelectedAction(option.dataset.action);
+  });
+
+  // 键盘操作：方向键切换、回车/空格直接进入下一步
+  manageProfileOptions?.addEventListener('keydown', (e) => {
+    const options = Array.from(manageProfileOptions.querySelectorAll('.manage-option'));
+    const current = e.target.closest?.('.manage-option');
+    const index = options.indexOf(current);
+    if (index === -1) return;
+
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      runManageProfilesAction();
+      return;
+    }
+
+    let nextIndex;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+      nextIndex = (index + 1) % options.length;
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      nextIndex = (index - 1 + options.length) % options.length;
+    } else if (e.key === 'Home') {
+      nextIndex = 0;
+    } else if (e.key === 'End') {
+      nextIndex = options.length - 1;
+    } else {
+      return;
+    }
+
+    e.preventDefault();
+    setManageSelectedAction(options[nextIndex].dataset.action);
+    options[nextIndex].focus();
+  });
+
+  // 下一步：按所选操作执行
+  btnManageProfilesNext?.addEventListener('click', runManageProfilesAction);
+
+  function runManageProfilesAction() {
+    if (manageSelectedAction === 'import') {
+      closeManageProfilesModal();
+      // 紧接着用户点击同步触发，保证能唤起文件选择框
+      fileInputRestore?.click();
+    } else if (manageSelectedAction === 'init') {
+      closeManageProfilesModal();
+      // 初始化需要二次确认，沿用原有确认弹窗
+      modalResetConfirm?.classList.add('active');
+    } else {
+      exportConfigFile();
+      closeManageProfilesModal();
+    }
+  }
+
+  // 导出配置
+  function exportConfigFile() {
+    const data = {};
+    CONFIG_KEYS.forEach(key => {
+      const val = localStorage.getItem(key);
+      if (val === null) return;
+      try {
+        data[key] = JSON.parse(val);
+      } catch (e) {
+        data[key] = val;
+      }
+    });
+    RAW_CONFIG_KEYS.forEach(key => {
+      const val = localStorage.getItem(key);
+      if (val !== null) data[key] = val; // 语言等纯字符串设置原样导出
+    });
+
+    const jsonStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const dateStr = new Date().toISOString().slice(0, 10);
+    a.download = `LitestartCE_Backup_${dateStr}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // 文件选择后的处理（恢复配置）
+  fileInputRestore?.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const data = JSON.parse(event.target.result);
+        // 检查是否是有效的配置文件（至少包含一个可恢复的设置项）
+        if (!data || typeof data !== 'object' || Array.isArray(data)) {
+          throw new Error('无效的配置文件格式');
+        }
+
+        const keys = Object.keys(data).filter(key => RESTORABLE_KEY_PATTERN.test(key));
+        if (keys.length === 0) {
+          throw new Error('配置文件中没有可恢复的设置');
+        }
+
+        // 写入 localStorage
+        keys.forEach(key => {
+          if (RAW_CONFIG_KEYS.includes(key)) {
+            localStorage.setItem(key, String(data[key]));
+          } else {
+            localStorage.setItem(key, JSON.stringify(data[key]));
+          }
+        });
+
+        // 恢复完成：弹出应用内提示弹窗（由用户点击“立即刷新”后再刷新，不使用浏览器原生提示）
+        modalRestoreDone?.classList.add('active');
+      } catch (err) {
+        alert('配置文件格式错误，请确保选择的是正确的 JSON 备份文件。');
+        console.error('导入配置失败:', err);
+      }
+    };
+    reader.readAsText(file);
+
+    // 重置文件输入，允许重复选择同一文件
+    fileInputRestore.value = '';
+  });
+  
+  // ===== 视频壁纸防“闪黑” =====
+  // 全屏播放的 <video> 会被浏览器提升为硬件覆盖层(overlay)；设置面板里的下拉、弹窗等
+  // UI 层出现/消失时，浏览器要在“覆盖层 ↔ 普通合成”之间来回切换，切换瞬间就会黑一帧。
+  // 处理办法：只要有浮层打开，就把视频层换成同一帧的静态画面（视频仍在后台播放），
+  // 浮层关闭后立刻换回，这样在交互期间完全没有视频层参与合成，黑帧无从出现。
+  const videoFreezeCanvas = document.createElement('canvas');
+  videoFreezeCanvas.id = 'bg-video-freeze';
+  videoFreezeCanvas.setAttribute('aria-hidden', 'true');
+  videoFreezeCanvas.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;display:none;';
+  bgOverlay?.parentNode?.insertBefore(videoFreezeCanvas, bgOverlay);
+
+  // 把视频当前帧按 object-fit: cover 的方式画进画布
+  function freezeVideoWallpaper() {
+    if (!bgVideo || !bgVideo.videoWidth || !bgVideo.classList.contains('loaded')) return;
+    const vw = bgVideo.videoWidth;
+    const vh = bgVideo.videoHeight;
+    const cw = bgVideo.clientWidth || window.innerWidth;
+    const ch = bgVideo.clientHeight || window.innerHeight;
+    if (!cw || !ch) return;
+
+    if (videoFreezeCanvas.width !== cw || videoFreezeCanvas.height !== ch) {
+      videoFreezeCanvas.width = cw;
+      videoFreezeCanvas.height = ch;
+    }
+    const cctx = videoFreezeCanvas.getContext('2d');
+    if (!cctx) return;
+    const scale = Math.max(cw / vw, ch / vh);
+    const dw = vw * scale;
+    const dh = vh * scale;
+    cctx.drawImage(bgVideo, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
+
+    videoFreezeCanvas.style.display = 'block';
+    bgVideo.style.display = 'none';   // 移除视频层；视频未被暂停，恢复时即当前进度
+  }
+
+  // 浮层全部关闭后恢复视频层
+  function unfreezeVideoWallpaper() {
+    videoFreezeCanvas.style.display = 'none';
+    if (customWallpaperData && customWallpaperData.type === 'video' && bgEnabled) {
+      bgVideo.style.display = 'block';
+    }
+  }
+
+  // 只要任意浮层（设置面板 / 左侧菜单 / 任意弹窗）处于打开状态就冻结视频壁纸
+  function updateVideoWallpaperFreeze() {
+    if (!customWallpaperData || customWallpaperData.type !== 'video' || !bgEnabled) {
+      unfreezeVideoWallpaper();
+      return;
+    }
+    const anyPopupOpen = !!document.querySelector(
+      '#popover-settings.active, #popover-waffle.active, .modal-overlay.active'
+    );
+    if (anyPopupOpen) freezeVideoWallpaper();
+    else unfreezeVideoWallpaper();
+  }
+
+  // 监听浮层开关（class 变化）来冻结/恢复
+  const popupFreezeObserver = new MutationObserver(updateVideoWallpaperFreeze);
+  [popoverSettings, popoverWaffle, ...document.querySelectorAll('.modal-overlay')].forEach(el => {
+    if (el) popupFreezeObserver.observe(el, { attributes: true, attributeFilter: ['class'] });
+  });
+
+  // 初始化：异步加载壁纸（可能需要从 IndexedDB 取 Blob），再渲染
+  (async () => {
+    customWallpaperData = await loadWallpaperData();
+    applyBackgroundState();
+    ensureBingDailyFresh();
+  })();
+
+  // 背景开关同步响应
+  toggleBgSwitch?.addEventListener('change', (e) => {
+    bgEnabled = e.target.checked;
+    Storage.set('ntp_bg_enabled', bgEnabled);
+    applyBackgroundState();
+    if (bgEnabled) ensureBingDailyFresh();
+    applyLanguage(localStorage.getItem('liteStart_language') || 'auto');
+  });
+
+  toggleBgModalSwitch?.addEventListener('change', (e) => {
+    bgEnabled = e.target.checked;
+    Storage.set('ntp_bg_enabled', bgEnabled);
+    applyBackgroundState();
+    if (bgEnabled) ensureBingDailyFresh();
+    applyLanguage(localStorage.getItem('liteStart_language') || 'auto');
+  });
+
+  toggleEnhancedVisibility?.addEventListener('change', (e) => {
+    enhancedVisibility = e.target.checked;
+    Storage.set('ntp_enhanced_visibility', enhancedVisibility);
+    applyEnhancedVisibility();
+    applyLanguage(localStorage.getItem('liteStart_language') || 'auto');
+  });
+
+  // 壁纸弹窗逻辑
+  btnOpenBgModal?.addEventListener('click', () => {
+    popoverSettings?.classList.remove('active');
+    modalWallpaper?.classList.add('active');
+    renderWallpaper();
+    applyLanguage(localStorage.getItem('liteStart_language') || 'auto');
+  });
+
+  btnCloseWallpaperModal?.addEventListener('click', () => {
+    modalWallpaper?.classList.remove('active');
+  });
+
+  btnUploadWallpaper?.addEventListener('click', () => {
+    inputWallpaperFile?.click();
+  });
+
+  inputWallpaperFile?.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const isVideo = file.type.startsWith('video/');
+
+    try {
+      // 图片先压缩，视频直接用原文件（不做压缩）
+      let blob = file;
+      if (!isVideo) {
+        blob = await compressImage(file, { maxWidth: 2560, quality: 0.85 });
+      }
+
+      const ok = await saveWallpaperData({ type: isVideo ? 'video' : 'image', blob });
+      if (ok) {
+        // 释放旧 blob URL，生成新的 blob URL 供当前会话渲染
+        revokeBlobUrl(customWallpaperData?.url);
+        customWallpaperData = {
+          type: isVideo ? 'video' : 'image',
+          url: URL.createObjectURL(blob)
+        };
+        applyBackgroundState();
+      } else {
+        alert('壁纸保存失败，请重试。');
+      }
+    } catch (err) {
+      console.error('壁纸处理失败:', err);
+      alert('壁纸处理失败，请重试或选择其他图片。');
+    }
+  });
+
+  btnRemoveWallpaper?.addEventListener('click', async () => {
+    revokeBlobUrl(customWallpaperData?.url);
+    customWallpaperData = null;
+    await saveWallpaperData(null);
+    applyBackgroundState();
+  });
+
+
+  // ===== 在线壁纸功能 =====
+  const btnBingWallpaper = document.getElementById('btn-bing-wallpaper');
+  const btnCustomUrlWallpaper = document.getElementById('btn-custom-url-wallpaper');
+  const modalOnlineWallpaper = document.getElementById('modal-online-wallpaper');
+  const onlineWallpaperForm = document.getElementById('online-wallpaper-form');
+  const inputOnlineUrl = document.getElementById('input-online-url');
+  const containerOnlineUrl = document.getElementById('container-online-url');
+  const tipOnlineUrl = document.getElementById('tip-online-url');
+  const btnOnlineCancel = document.getElementById('btn-online-cancel');
+
+  // 必应每日壁纸
+  btnBingWallpaper?.addEventListener('click', async () => {
+    const result = await fetchBingWallpaper();
+    if (result) {
+      revokeBlobUrl(customWallpaperData?.url);
+      customWallpaperData = {
+        type: 'bing_daily',
+        url: result.url,
+        title: result.title,
+        copyright: result.copyright,
+        fetchDate: getTodayStr()
+      };
+      saveWallpaperData(customWallpaperData);
+      if (!bgEnabled) {
+        bgEnabled = true;
+        Storage.set('ntp_bg_enabled', true);
+      }
+      applyBackgroundState();
+      if (toggleBgSwitch) toggleBgSwitch.checked = true;
+      if (toggleBgModalSwitch) toggleBgModalSwitch.checked = true;
+      applyLanguage(localStorage.getItem('liteStart_language') || 'auto');
+    } else {
+      alert('获取必应壁纸失败，请检查网络。');
+    }
+  });
+
+
+  // 自定义URL - 打开弹窗
+  btnCustomUrlWallpaper?.addEventListener('click', () => {
+    // 如果当前正在使用自定义链接背景（非 Bing、非本地 data URL），预填当前链接
+    const curUrl = customWallpaperData?.url || '';
+    // 排除必应壁纸 + 排除本地上传的 data: URL，剩下的 http(s) 链接即为自定义链接
+    const isCustomUrl = customWallpaperData?.type !== 'bing_daily' &&
+      (curUrl.startsWith('http://') || curUrl.startsWith('https://'));
+    inputOnlineUrl.value = isCustomUrl ? curUrl : '';
+    containerOnlineUrl?.classList.remove('error');
+    tipOnlineUrl?.classList.remove('active');
+    modalOnlineWallpaper?.classList.add('active');
+    setTimeout(() => inputOnlineUrl?.focus(), 50);
+  });
+
+  // 关闭自定义URL弹窗
+  function closeOnlineModal() {
+    modalOnlineWallpaper?.classList.remove('active');
+    containerOnlineUrl?.classList.remove('error');
+    tipOnlineUrl?.classList.remove('active');
+  }
+
+  btnOnlineCancel?.addEventListener('click', closeOnlineModal);
+
+  // 表单提交
+  onlineWallpaperForm?.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const url = sanitizeInput(inputOnlineUrl.value.trim());
+  containerOnlineUrl?.classList.remove('error');
+  tipOnlineUrl?.classList.remove('active');
+
+  if (!url) {
+    containerOnlineUrl?.classList.add('error');
+    tipOnlineUrl?.classList.add('active');
+    inputOnlineUrl?.focus();
+    return;
+  }
+
+  // 简单URL格式校验
+  try {
+    new URL(url);
+  } catch (_) {
+    containerOnlineUrl?.classList.add('error');
+    tipOnlineUrl?.classList.add('active');
+    inputOnlineUrl?.focus();
+    return;
+  }
+
+  // 判断类型（根据文件扩展名）
+  const isVideo = /\.(mp4|webm|ogg|mov|avi|mkv)$/i.test(url);
+  revokeBlobUrl(customWallpaperData?.url);
+  customWallpaperData = { type: isVideo ? 'video' : 'image', url: url };
+  saveWallpaperData(customWallpaperData);
+  if (!bgEnabled) {
+    bgEnabled = true;
+    Storage.set('ntp_bg_enabled', true);
+  }
+  applyBackgroundState();
+  if (toggleBgSwitch) toggleBgSwitch.checked = true;
+  if (toggleBgModalSwitch) toggleBgModalSwitch.checked = true;
+  applyLanguage(localStorage.getItem('liteStart_language') || 'auto');
+  closeOnlineModal();
+});
+
+// 输入时清除错误状态
+inputOnlineUrl?.addEventListener('input', () => {
+  containerOnlineUrl?.classList.remove('error');
+  tipOnlineUrl?.classList.remove('active');
+});
+
+
+  // 布局切换-------------
+  function applyLayout(layoutVal) {
+    if (!layoutVal) return;
+
+    // 「关闭」：只隐藏搜索栏，不改动 data-layout 与预设卡片
+    if (layoutVal === 'hidden') {
+      searchVisible = false;
+      Storage.set('ntp_search_visible', false);
+      applySearchVisibility();
+      return;
+    }
+
+    // 正常切换布局；如果之前是隐藏状态，则顺手把搜索栏恢复
+    document.body.setAttribute('data-layout', layoutVal);
+    Storage.set('ntp_layout', layoutVal);
+    updateLayoutPresetUI(layoutVal);
+
+    if (!searchVisible) {
+      searchVisible = true;
+      Storage.set('ntp_search_visible', true);
+    }
+    applySearchVisibility();
+    refreshCustomSelects();
+  }
+
+  // 应用搜索栏可见性（使用 visibility，保留网格占位，避免其他元素位移）
+  function applySearchVisibility() {
+    if (searchVisible) {
+      document.body.removeAttribute('data-search-hidden');
+    } else {
+      document.body.setAttribute('data-search-hidden', 'true');
+    }
+    // 同步下拉显示文本
+    if (selectLayout) {
+      selectLayout.value = searchVisible
+        ? (document.body.getAttribute('data-layout') || 'focused')
+        : 'hidden';
+    }
+    refreshCustomSelects();
+  }
+
+  // 应用标题（Logo）显示
+  function applyLogoVisibility() {
+    if (logoContainer) {
+      logoContainer.style.display = showLogo ? '' : 'none';
+    }
+  }
+
+  if (selectLayout) selectLayout.value = savedLayout;
+
+  // 初始化搜索栏可见性与标题显示
+  applySearchVisibility();
+  applyLogoVisibility();
+
+  // 初始化更新布局预设卡片选中状态
+  function updateLayoutPresetUI(currentLayout) {
+    document.querySelectorAll('.preset-card').forEach(card => {
+      if (card.dataset.layoutVal === currentLayout) {
+        card.classList.add('active');
+      } else {
+        card.classList.remove('active');
+      }
+    });
+  }
+  updateLayoutPresetUI(savedLayout);
+
+  // 布局卡片点击监听
+  document.querySelectorAll('.preset-card').forEach(card => {
+    card.addEventListener('click', () => {
+      applyLayout(card.dataset.layoutVal);
+    });
+  });
+
+  // 弹窗内「搜索框位置」下拉框监听
+  selectLayout?.addEventListener('change', (e) => {
+    applyLayout(e.target.value);
+  });
+
+  // 关闭布局页内所有已展开的自定义下拉
+  function closeLayoutDropdowns() {
+    document.querySelectorAll('.custom-select-dropdown.active').forEach(dd => {
+      dd.classList.remove('active');
+      clearDropdownInlineStyles(dd);
+      if (dd._display) dd._display.classList.remove('active');
+    });
+  }
+
+  // ===== 设置悬浮窗分页：主设置页 ←→ 页面布局页（横向左移切换）=====
+
+  // 切回主设置页（原布局页左移出、主页面左移进入）
+  function closeLayoutModal() {
+    popoverSettings?.removeAttribute('data-page');
+    closeLayoutDropdowns();
+  }
+
+  // 切到「页面布局」页：设置悬浮窗内容左移一页
+  function openLayoutPage() {
+    closeLayoutDropdowns();
+    // 同步为当前实际布局
+    if (selectLayout) {
+      selectLayout.value = searchVisible
+        ? (document.body.getAttribute('data-layout') || 'focused')
+        : 'hidden';
+    }
+    popoverSettings?.setAttribute('data-page', 'layout');
+    applyLanguage(localStorage.getItem('liteStart_language') || 'auto');
+  }
+
+  // 「编辑页面布局」按钮：不再弹出独立窗口，改为在设置悬浮窗内左移切换
+  btnOpenLayoutModal?.addEventListener('click', openLayoutPage);
+
+  // 布局页左上角「返回」
+  document.getElementById('btn-layout-back')?.addEventListener('click', closeLayoutModal);
+
+  // ===== 布局微调：三元素间距 / 对齐 / 垂直偏移 =====
+  const rangeGapTitle = document.getElementById('range-gap-title');
+  const rangeGapLinks = document.getElementById('range-gap-links');
+  const rangeOffsetX = document.getElementById('range-offset-x');
+  const rangeOffsetY = document.getElementById('range-offset-y');
+  const valueGapTitle = document.getElementById('value-gap-title');
+  const valueGapLinks = document.getElementById('value-gap-links');
+  const valueOffsetX = document.getElementById('value-offset-x');
+  const valueOffsetY = document.getElementById('value-offset-y');
+  const selectLayoutAlign = document.getElementById('select-layout-align');
+  const selectSearchShape = document.getElementById('select-search-shape');
+  const selectLinksShape = document.getElementById('select-links-shape');
+
+  // 三个可缩放元素的大小滑块（百分比，100 = 原大小）
+  const rangeSizeLogo = document.getElementById('range-size-logo');
+  const rangeSizeSearch = document.getElementById('range-size-search');
+  const rangeSizeLinks = document.getElementById('range-size-links');
+  const valueSizeLogo = document.getElementById('value-size-logo');
+  const valueSizeSearch = document.getElementById('value-size-search');
+  const valueSizeLinks = document.getElementById('value-size-links');
+
+  // 各控件的出厂默认值：重置按钮回到这里（间距类默认不是 0，所以不能一律归零）
+  const LAYOUT_DEFAULTS = {
+    'range-gap-title': 72,
+    'range-gap-links': 64,
+    'range-offset-x': 0,
+    'range-offset-y': 0,
+    'range-size-logo': 100,
+    'range-size-search': 100,
+    'range-size-links': 100
+  };
+
+  let layoutGapTitle = Storage.get('ntp_layout_gap_title', LAYOUT_DEFAULTS['range-gap-title']);
+  let layoutGapLinks = Storage.get('ntp_layout_gap_links', LAYOUT_DEFAULTS['range-gap-links']);
+  let layoutOffsetX = Storage.get('ntp_layout_offset_x', LAYOUT_DEFAULTS['range-offset-x']);
+  let layoutOffsetY = Storage.get('ntp_layout_offset_y', LAYOUT_DEFAULTS['range-offset-y']);
+  let layoutAlign = Storage.get('ntp_layout_align', 'center');
+  let layoutScaleLogo = Storage.get('ntp_layout_scale_logo', 100);
+  let layoutScaleSearch = Storage.get('ntp_layout_scale_search', 100);
+  let layoutScaleLinks = Storage.get('ntp_layout_scale_links', 100);
+  let searchShape = Storage.get('ntp_search_shape', 'round');
+  let linksShape = Storage.get('ntp_links_shape', 'round');
+
+  // 把可能被改坏/越界的存量值收敛回滑块范围
+  function clampToSlider(input, value) {
+    if (!input) return value;
+    const min = Number(input.min), max = Number(input.max);
+    const v = Number(value);
+    if (!Number.isFinite(v)) return Number(input.value) || 0;
+    return Math.min(Number.isFinite(max) ? max : v, Math.max(Number.isFinite(min) ? min : v, v));
+  }
+  layoutScaleLogo = clampToSlider(rangeSizeLogo, layoutScaleLogo);
+  layoutScaleSearch = clampToSlider(rangeSizeSearch, layoutScaleSearch);
+  layoutScaleLinks = clampToSlider(rangeSizeLinks, layoutScaleLinks);
+  if (searchShape !== 'square') searchShape = 'round';
+  if (linksShape !== 'square') linksShape = 'round';
+
+  // 对齐取值 -> #inner 的 justify-items
+  const LAYOUT_ALIGN_VALUES = { left: 'start', center: 'center', right: 'end' };
+  // 标题/快速链接与搜索框左右边界之间留的视觉间距（像素）
+  const LAYOUT_ALIGN_GAP = 16;
+
+  // 搜索框的布局矩形（视口坐标）。
+  // 先临时摘掉 transform 再量 —— getBoundingClientRect 给的是缩放后的视觉宽度，
+  // 那样「元素大小」一改基准线就会跟着动。
+  function measureSearchBoxRect() {
+    if (!searchContainer) return null;
+    const inlineTransform = searchContainer.style.transform;
+    searchContainer.style.transform = 'none';
+    const rect = searchContainer.getBoundingClientRect();
+    searchContainer.style.transform = inlineTransform;
+    return rect;
+  }
+
+  // 对齐内缩量：两侧对称，写成 padding 只加在「标题」和「快速链接」自己身上，
+  // 不动 #inner 的 padding —— 否则网格内容区会被压缩，比它更宽的搜索框会溢出、位移。
+  // 靠左：两个元素的左端 = 搜索框左边 + GAP；靠右：右端 = 搜索框右边 - GAP。
+  function layoutAlignInsets() {
+    const zero = { left: 0, right: 0 };
+    if (layoutAlign === 'center') return zero;
+    const rect = measureSearchBoxRect();
+    if (!rect) return zero;
+    const viewportWidth = document.documentElement.clientWidth;
+    if (layoutAlign === 'left') {
+      return { left: Math.max(0, Math.round(rect.left + LAYOUT_ALIGN_GAP)), right: 0 };
+    }
+    return { left: 0, right: Math.max(0, Math.round(viewportWidth - rect.right + LAYOUT_ALIGN_GAP)) };
+  }
+
+  // 把间距/对齐/偏移/大小写入 CSS 变量（#inner 网格与 展望 布局均引用这些变量）
+  function applyLayoutTuning() {
+    const rootStyle = document.documentElement.style;
+    rootStyle.setProperty('--layout-gap-title', layoutGapTitle + 'px');
+    rootStyle.setProperty('--layout-gap-links', layoutGapLinks + 'px');
+    rootStyle.setProperty('--layout-offset-x', layoutOffsetX + 'px');
+    rootStyle.setProperty('--layout-offset-y', layoutOffsetY + 'px');
+    rootStyle.setProperty('--layout-align', LAYOUT_ALIGN_VALUES[layoutAlign] || 'center');
+    // 对齐内缩只写在这两个元素自己的 padding 上（搜索框位置恒定不变）
+    const alignInsets = layoutAlignInsets();
+    rootStyle.setProperty('--layout-align-inset-left', alignInsets.left + 'px');
+    rootStyle.setProperty('--layout-align-inset-right', alignInsets.right + 'px');
+    // 标题/快速链接贴哪一侧；居中时不贴边
+    rootStyle.setProperty('--layout-align-edge',
+      layoutAlign === 'left' ? 'start' : (layoutAlign === 'right' ? 'end' : 'center'));
+    // 供 CSS 判断是否需要把搜索框按回居中（靠左/靠右时它不跟着走）
+    document.body.setAttribute('data-align-mode', layoutAlign);
+    // 元素大小（百分比 -> 倍数）
+    rootStyle.setProperty('--layout-scale-logo', String(layoutScaleLogo / 100));
+    rootStyle.setProperty('--layout-scale-search', String(layoutScaleSearch / 100));
+    rootStyle.setProperty('--layout-scale-links', String(layoutScaleLinks / 100));
+    // 缩放基点跟随对齐方式：靠左/靠右时以那一侧为基点，
+    // 否则放大后元素会被推离对齐基准线（左端对齐就不再是左端对齐）
+    rootStyle.setProperty('--layout-scale-origin',
+      layoutAlign === 'left' ? 'left center' : (layoutAlign === 'right' ? 'right center' : 'center center'));
+    // 搜索框形状
+    rootStyle.setProperty('--search-radius', searchShape === 'square' ? '8px' : '22px');
+    // 快速链接图标形状
+    rootStyle.setProperty('--quicklink-radius', linksShape === 'square' ? '10px' : '50%');
+
+    if (valueGapTitle) valueGapTitle.textContent = layoutGapTitle + 'px';
+    if (valueGapLinks) valueGapLinks.textContent = layoutGapLinks + 'px';
+    if (valueOffsetX) valueOffsetX.textContent = layoutOffsetX + 'px';
+    if (valueOffsetY) valueOffsetY.textContent = layoutOffsetY + 'px';
+    if (valueSizeLogo) valueSizeLogo.textContent = layoutScaleLogo + '%';
+    if (valueSizeSearch) valueSizeSearch.textContent = layoutScaleSearch + '%';
+    if (valueSizeLinks) valueSizeLinks.textContent = layoutScaleLinks + '%';
+  }
+
+  // 控件初始值回填
+  if (rangeGapTitle) rangeGapTitle.value = layoutGapTitle;
+  if (rangeGapLinks) rangeGapLinks.value = layoutGapLinks;
+  if (rangeOffsetX) rangeOffsetX.value = layoutOffsetX;
+  if (rangeOffsetY) rangeOffsetY.value = layoutOffsetY;
+  if (rangeSizeLogo) rangeSizeLogo.value = layoutScaleLogo;
+  if (rangeSizeSearch) rangeSizeSearch.value = layoutScaleSearch;
+  if (rangeSizeLinks) rangeSizeLinks.value = layoutScaleLinks;
+  if (selectLayoutAlign) selectLayoutAlign.value = layoutAlign;
+  if (selectSearchShape) selectSearchShape.value = searchShape;
+  if (selectLinksShape) selectLinksShape.value = linksShape;
+  applyLayoutTuning();
+
+  // 窗口尺寸变化时重算对齐基准（搜索框宽度随断点变化）
+  let layoutTuningResizeQueued = false;
+  window.addEventListener('resize', () => {
+    if (layoutTuningResizeQueued) return;
+    layoutTuningResizeQueued = true;
+    requestAnimationFrame(() => {
+      layoutTuningResizeQueued = false;
+      applyLayoutTuning();
+    });
+  });
+
+  // ===== 滑块统一接线：拖动即时生效并保存 =====
+  // 变量名用 setter 指定，因为下面这些值是 let 绑定，不能通过对象属性改写
+  const LAYOUT_SLIDERS = [
+    { input: rangeGapTitle, key: 'ntp_layout_gap_title', unit: 'px', set: v => { layoutGapTitle = v; } },
+    { input: rangeGapLinks, key: 'ntp_layout_gap_links', unit: 'px', set: v => { layoutGapLinks = v; } },
+    { input: rangeOffsetX, key: 'ntp_layout_offset_x', unit: 'px', set: v => { layoutOffsetX = v; } },
+    { input: rangeOffsetY, key: 'ntp_layout_offset_y', unit: 'px', set: v => { layoutOffsetY = v; } },
+    { input: rangeSizeLogo, key: 'ntp_layout_scale_logo', unit: '%', set: v => { layoutScaleLogo = v; } },
+    { input: rangeSizeSearch, key: 'ntp_layout_scale_search', unit: '%', set: v => { layoutScaleSearch = v; } },
+    { input: rangeSizeLinks, key: 'ntp_layout_scale_links', unit: '%', set: v => { layoutScaleLinks = v; } }
+  ];
+
+  LAYOUT_SLIDERS.forEach(({ input, key, set }) => {
+    input?.addEventListener('input', (e) => {
+      set(Number(e.target.value));
+      Storage.set(key, Number(e.target.value));
+      applyLayoutTuning();
+    });
+  });
+
+  // 把某个滑块拨到指定值（滑块本身、状态变量、存储一起改）
+  function setLayoutSliderValue(id, value) {
+    const cfg = LAYOUT_SLIDERS.find(s => s.input && s.input.id === id);
+    if (!cfg) return;
+    cfg.input.value = value;
+    cfg.set(value);
+    Storage.set(cfg.key, value);
+    applyLayoutTuning();
+    // 让滑块有一下高亮反馈，提示"这里被点了"
+    cfg.input.focus({ preventScroll: true });
+  }
+
+  // 方形圆角重置按钮：回到该控件的出厂默认值
+  document.querySelectorAll('.mini-btn[data-reset-slider]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-reset-slider');
+      if (LAYOUT_DEFAULTS[id] === undefined) return;
+      setLayoutSliderValue(id, LAYOUT_DEFAULTS[id]);
+    });
+  });
+
+  // 调大 / 调小按钮：按滑块自己的 step 走一格
+  document.querySelectorAll('.mini-btn[data-size-step]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const input = document.getElementById(btn.getAttribute('data-size-target'));
+      if (!input) return;
+      const dir = Number(btn.getAttribute('data-size-step')) || 0;
+      const step = Number(input.step) || 5;
+      const min = Number(input.min), max = Number(input.max);
+      let next = Number(input.value) + dir * step;
+      next = Math.min(max, Math.max(min, next));
+      setLayoutSliderValue(input.id, next);
+    });
+  });
+
+  // 元素对齐（左端对齐 / 居中 / 右端对齐）
+  selectLayoutAlign?.addEventListener('change', (e) => {
+    layoutAlign = e.target.value;
+    Storage.set('ntp_layout_align', layoutAlign);
+    applyLayoutTuning();
+  });
+
+  // 搜索框形状（圆形 / 方形）
+  selectSearchShape?.addEventListener('change', (e) => {
+    searchShape = e.target.value === 'square' ? 'square' : 'round';
+    Storage.set('ntp_search_shape', searchShape);
+    applyLayoutTuning();
+  });
+
+  // 快速链接形状（圆形 / 方形）
+  selectLinksShape?.addEventListener('change', (e) => {
+    linksShape = e.target.value === 'square' ? 'square' : 'round';
+    Storage.set('ntp_links_shape', linksShape);
+    applyLayoutTuning();
+  });
+
+  // 背景模糊滑块：拖动即时生效并保存
+  rangeBgBlur?.addEventListener('input', (e) => {
+    bgBlur = Math.min(BG_BLUR_MAX, Math.max(0, Number(e.target.value) || 0));
+    Storage.set('ntp_bg_blur', bgBlur);
+    applyBgBlur();
+  });
+
+
+  // ===== 搜索引擎图标：更换 / 恢复原版 =====
+  // 这几个元素在上面（setLogo 之前）已经取过，这里不再重复声明
+
+  // 当前引擎是否用着自定义图标；顺带控制"更换/恢复"按钮的显隐
+  function updateEngineIconButtons(engine) {
+    // 自定义引擎的图标由上面的"编辑自定义搜索引擎"弹窗负责，这里隐藏
+    const isCustomEngine = engine === 'custom';
+    if (engineIconActions) engineIconActions.style.display = isCustomEngine ? 'none' : 'flex';
+    if (btnChangeEngineIcon) btnChangeEngineIcon.style.display = isCustomEngine ? 'none' : 'inline-flex';
+    if (btnResetEngineIcon) {
+      const canReset = !isCustomEngine && Boolean(customEngineLogos[engine]);
+      btnResetEngineIcon.style.display = canReset ? 'inline-flex' : 'none';
+    }
+  }
+
+  // 保存/删除图标后统一刷新首页 Logo 与按钮状态
+  function applyEngineIconChange(engine) {
+    Storage.set('ntp_engine_logos', customEngineLogos);
+    if (selectEngine && selectEngine.value === engine) setLogo(engine);
+    updateEngineIconButtons(engine);
+  }
+
+  btnChangeEngineIcon?.addEventListener('click', () => {
+    inputQuickEngineLogo?.click();
+  });
+
+  inputQuickEngineLogo?.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      inputQuickEngineLogo.value = '';
+      return;
+    }
+    const engine = selectEngine ? selectEngine.value : 'bing';
+    try {
+      // 标题类图片：压到 600px 宽并存 PNG，保留透明通道
+      customEngineLogos[engine] = await compressLogoImage(file, { maxWidth: 600 });
+      applyEngineIconChange(engine);
+    } catch (err) {
+      console.error('搜索引擎图标处理失败:', err);
+    }
+    inputQuickEngineLogo.value = '';
+  });
+
+  btnResetEngineIcon?.addEventListener('click', () => {
+    const engine = selectEngine ? selectEngine.value : 'bing';
+    if (customEngineLogos[engine]) {
+      delete customEngineLogos[engine];
+      applyEngineIconChange(engine);
+    }
+  });
+
+
+  // 设置面板切换监听
+  selectEngine?.addEventListener('change', (e) => {
+    const val = e.target.value;
+    setLogo(val);
+    updateEngineEditButton(val);
+    updateForceBingCNRow(val);
+    updateEngineIconButtons(val);
+    Storage.set('ntp_engine', val);
+    if (val === 'custom' && (!customEngineConfig.url || customEngineConfig.url === 'https://duckduckgo.com/?q=%s')) {
+      openCustomEngineModal();
+    }
+  });
+
+  toggleForceBingCN?.addEventListener('change', (e) => {
+    forceBingCN = e.target.checked;
+    Storage.set('ntp_force_bing_cn', forceBingCN);
+    applyLanguage(localStorage.getItem('liteStart_language') || 'auto'); 
+  });
+
+  btnEditEngine?.addEventListener('click', () => {
+    openCustomEngineModal();
+  });
+
+  toggleHistorySwitch?.addEventListener('change', (e) => {
+    historyEnabled = e.target.checked;
+    Storage.set('ntp_history_enabled', historyEnabled);
+    applyLanguage(localStorage.getItem('liteStart_language') || 'auto');
+    fetchAndShowSuggestions();
+  });
+
+  selectQuicklinks?.addEventListener('change', (e) => {
+    const val = e.target.value;
+    quicklinksElem?.setAttribute('rows', val);
+    Storage.set('ntp_quicklinks', val);
+    // 行数变化会改变每行/总数上限，强制重建一次
+    renderQuicklinks(true);
+  });
+
+    // 时间开关事件
+  const toggleTimeCapsuleSwitch = document.getElementById('toggle-time-capsule-switch');
+  const statusTimeCapsuleText = document.getElementById('status-time-capsule');
+
+  if (toggleTimeCapsuleSwitch) {
+    toggleTimeCapsuleSwitch.checked = showTimeCapsule;
+    // 初始状态文字
+    const savedLang = localStorage.getItem('liteStart_language') || 'auto';
+    const dict = i18nData[getResolvedLanguageCode(savedLang)] || i18nData['zh-CN'];
+    if (statusTimeCapsuleText) {
+      statusTimeCapsuleText.innerText = showTimeCapsule ? dict.on : dict.off;
+    }
+
+    toggleTimeCapsuleSwitch.addEventListener('change', (e) => {
+      showTimeCapsule = e.target.checked;
+      Storage.set('ntp_show_time_capsule', showTimeCapsule);
+      applyLanguage(localStorage.getItem('liteStart_language') || 'auto');
+      applyTimeCapsuleVisibility();
+    });
+  }
+
+  // 菜单按钮开关事件
+  const toggleMenuButtonSwitch = document.getElementById('toggle-menu-button-switch');
+  const statusMenuButtonText = document.getElementById('status-menu-button');
+
+  if (toggleMenuButtonSwitch) {
+    toggleMenuButtonSwitch.checked = showMenuButton;
+    const savedLang = localStorage.getItem('liteStart_language') || 'auto';
+    const dict = i18nData[getResolvedLanguageCode(savedLang)] || i18nData['zh-CN'];
+    if (statusMenuButtonText) {
+      statusMenuButtonText.innerText = showMenuButton ? dict.on : dict.off;
+    }
+
+    toggleMenuButtonSwitch.addEventListener('change', (e) => {
+      showMenuButton = e.target.checked;
+      Storage.set('ntp_show_menu_button', showMenuButton);
+      applyLanguage(localStorage.getItem('liteStart_language') || 'auto');
+      applyMenuButtonVisibility();
+    });
+  }
+
+    // 显示标题开关事件
+  if (toggleLogoSwitch) {
+    toggleLogoSwitch.checked = showLogo;
+
+    toggleLogoSwitch.addEventListener('change', (e) => {
+      showLogo = e.target.checked;
+      Storage.set('ntp_show_logo', showLogo);
+      applyLogoVisibility();
+      applyLanguage(localStorage.getItem('liteStart_language') || 'auto');
+    });
+  }
+
+
+  // 如果初始状态是开启，启动定时器并显示
+  if (showTimeCapsule) {
+    applyTimeCapsuleVisibility();
+  }
+  // 应用菜单按钮初始可见性
+  applyMenuButtonVisibility();
+  
+  // 自定义搜索引擎对话框逻辑
+  // 刷新弹窗内标题图片预览区
+  function updateEngineLogoPreview() {
+    if (!engineLogoImg || !engineLogoEmpty) return;
+    if (tempEngineLogo) {
+      engineLogoImg.src = tempEngineLogo;
+      engineLogoImg.style.display = 'block';
+      engineLogoEmpty.style.display = 'none';
+      if (btnRemoveEngineLogo) btnRemoveEngineLogo.style.display = 'inline-flex';
+    } else {
+      engineLogoImg.removeAttribute('src');
+      engineLogoImg.style.display = 'none';
+      engineLogoEmpty.style.display = 'block';
+      if (btnRemoveEngineLogo) btnRemoveEngineLogo.style.display = 'none';
+    }
+  }
+
+  // 打开/重置自定义搜索引擎编辑弹窗
+  function openCustomEngineModal() {
+    if (inputEngineName) inputEngineName.value = customEngineConfig.name || '';
+    if (inputEngineUrl) inputEngineUrl.value = customEngineConfig.url || '';
+    // 恢复已保存的标题图片到临时变量
+    tempEngineLogo = customEngineConfig.logo || '';
+    updateEngineLogoPreview();
+    containerEngineName?.classList.remove('error');
+    containerEngineUrl?.classList.remove('error');
+    tipEngineName?.classList.remove('active');
+    tipEngineUrl?.classList.remove('active');
+    customEngineModal?.classList.add('active');
+    setTimeout(() => inputEngineName?.focus(), 50);
+  }
+
+  // 关闭自定义搜索引擎编辑弹窗
+  function closeCustomEngineModal() {
+    customEngineModal?.classList.remove('active');
+  }
+
+  btnEngineCancel?.addEventListener('click', closeCustomEngineModal);
+
+  // ===== 自定义标题图片：选择 / 删除 =====
+  btnUploadEngineLogo?.addEventListener('click', () => {
+    inputEngineLogoFile?.click();
+  });
+
+  inputEngineLogoFile?.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      inputEngineLogoFile.value = '';
+      return;
+    }
+    try {
+      const dataUrl = await compressLogoImage(file, { maxWidth: 600 });
+      tempEngineLogo = dataUrl;
+      updateEngineLogoPreview();
+    } catch (err) {
+      console.error('标题图片处理失败:', err);
+    }
+    inputEngineLogoFile.value = '';
+  });
+
+  btnRemoveEngineLogo?.addEventListener('click', () => {
+    tempEngineLogo = '';
+    updateEngineLogoPreview();
+  });
+
+  customEngineForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let name = sanitizeInput(inputEngineName.value.trim());
+    let url = sanitizeInput(inputEngineUrl.value.trim());
+    let hasError = false;
+
+    containerEngineName?.classList.remove('error');
+    containerEngineUrl?.classList.remove('error');
+    tipEngineName?.classList.remove('active');
+    tipEngineUrl?.classList.remove('active');
+
+    if (!name) {
+      containerEngineName?.classList.add('error');
+      tipEngineName?.classList.add('active');
+      inputEngineName?.focus();
+      hasError = true;
+    }
+
+    if (!url) {
+      containerEngineUrl?.classList.add('error');
+      tipEngineUrl?.classList.add('active');
+      if (!hasError) inputEngineUrl?.focus();
+      hasError = true;
+    } else if (!url.includes('%s')) {
+      containerEngineUrl?.classList.add('error');
+      tipEngineUrl?.classList.add('active');
+      if (!hasError) inputEngineUrl?.focus();
+      hasError = true;
+    }
+
+    if (hasError) return;
+
+    customEngineConfig = { name, url, logo: tempEngineLogo || '' };
+    Storage.set('ntp_custom_engine_config', customEngineConfig);
+    // 如果当前选中的就是自定义引擎，立即刷新首页 Logo
+    if (selectEngine && selectEngine.value === 'custom') {
+      setLogo('custom');
+    }
+    closeCustomEngineModal();
+  });
+
+  // B2.快速链接列表管理
+  let quicklinksList = Storage.get('ntp_quicklinks_list', []);
+
+
+  //=====快捷方式自适应计算--开始=====
+
+  // 单个快捷方式项的宽度
+  const QUICKLINK_ITEM_WIDTH = 80;
+  // 项与项之间的间距
+  const QUICKLINK_GAP = 16;
+  // 页面左右各保留的安全边距
+  const QUICKLINK_SIDE_MARGIN = 16;
+  // 每行最多显示的项数
+  const QUICKLINK_MAX_COLUMNS_ONE_ROW = 10;
+  const QUICKLINK_MAX_COLUMNS_TWO_ROWS = 12;
+
+  // 当前生效的列数；仅当它发生变化时才需要重建 DOM
+  let quicklinksColumns = 0;
+  let quicklinksLastRenderKey = '';
+
+  // 由列数反推容器内容宽度：n*80 + (n-1)*16
+  function quicklinksWidthForColumns(cols) {
+    return cols * QUICKLINK_ITEM_WIDTH + Math.max(0, cols - 1) * QUICKLINK_GAP;
+  }
+
+  // 当前视口宽度下，单行最多能放多少项
+  // 只读视口宽度、不读取布局，避免 resize 期间反复强制重排
+  function quicklinksAvailableColumns() {
+    if (!quicklinksElem) return 0;
+    const maxColumns = Math.max(QUICKLINK_MAX_COLUMNS_ONE_ROW, QUICKLINK_MAX_COLUMNS_TWO_ROWS);
+    // 可用宽度受「视口 - 两侧安全边距」与「每行项数上限」共同约束
+    const availableWidth = Math.min(
+      document.documentElement.clientWidth - QUICKLINK_SIDE_MARGIN * 2,
+      quicklinksWidthForColumns(maxColumns)
+    );
+    // 反推列数：cols*80 + (cols-1)*16 <= availableWidth
+    return Math.max(1, Math.min(
+      maxColumns,
+      Math.floor((availableWidth + QUICKLINK_GAP) / (QUICKLINK_ITEM_WIDTH + QUICKLINK_GAP))
+    ));
+  }
+
+  // 当前设置下每行允许的列数
+  function quicklinksColumnsPerRow(rowsValue) {
+    const available = quicklinksAvailableColumns();
+    if (rowsValue === '2') return Math.min(available, QUICKLINK_MAX_COLUMNS_TWO_ROWS);
+    return Math.min(available, QUICKLINK_MAX_COLUMNS_ONE_ROW);
+  }
+
+  // 记录一次渲染，便于在浏览器控制台核对重建次数（Debug 用）
+  window.__qlDebug = { renders: 0, columns: 0, lastRows: null };
+  //=====快捷方式自适应计算--结束=====
+
+  
+  // 创建快速链接项（图标 + 标题 + 编辑按钮 + 拖拽事件）
+  function createQuicklinkNode(item) {
+    const linkElem = document.createElement('a');
+    linkElem.href = item.url;
+    linkElem.className = 'quicklink-item';
+    linkElem.setAttribute('data-id', item.id);
+
+    const safeTitle = sanitizeInput(item.title);
+    const initialChar = (safeTitle || 'W').charAt(0).toUpperCase();
+    const faviconUrl = getFaviconUrl(item.url);
+
+    let iconContent = '';
+    if (faviconUrl) {
+      iconContent = `<img src="${faviconUrl}" alt="${safeTitle}" loading="lazy" 
+                        onerror="this.onerror=null; this.parentNode.innerText='${initialChar}';">`;
+    } else {
+      iconContent = initialChar;
+    }
+
+    linkElem.innerHTML = `
+      <div class="quicklink-icon">${iconContent}</div>
+      <span class="quicklink-title">${safeTitle}</span>
+      <button type="button" class="quicklink-edit-btn" title="编辑快速链接">
+        <svg width="14" height="14" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 8a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0zm5 0a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0zm5 0a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0z"/>
+        </svg>
+      </button>
+    `;
+
+    // 拖拽事件
+    linkElem.draggable = true;
+    linkElem.addEventListener('dragstart', onDragStart);
+    linkElem.addEventListener('dragend', onDragEnd);
+    linkElem.addEventListener('dragover', onDragOver);
+    linkElem.addEventListener('dragenter', onDragEnter);
+    linkElem.addEventListener('dragleave', onDragLeave);
+    linkElem.addEventListener('drop', onDrop);
+
+    const editBtn = linkElem.querySelector('.quicklink-edit-btn');
+    editBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      openEditModal(item);
+    });
+
+    return linkElem;
+  }
+
+  // 创建"添加"按钮项
+  function createQuicklinkAddNode() {
+    const addElem = document.createElement('div');
+    addElem.className = 'quicklink-item quicklink-add-btn';
+    addElem.innerHTML = `
+      <div class="quicklink-icon quicklink-add-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+        </svg>
+      </div>
+      <span class="quicklink-title" data-i18n="addlink">添加</span>
+    `;
+    addElem.addEventListener('click', () => openAddModal());
+    return addElem;
+  }
+
+  // 只同步"添加"按钮的文案；语言切换时无需整页重扫，也不用重建列表
+  function syncQuicklinksLanguage() {
+    if (!quicklinksElem) return;
+    const label = quicklinksElem.querySelector('.quicklink-add-btn .quicklink-title');
+    if (!label) return;
+    const dict = window._i18nDict
+      || i18nData[getResolvedLanguageCode(localStorage.getItem('liteStart_language') || 'auto')]
+      || i18nData['zh-CN'];
+    if (dict && dict.addlink !== undefined) label.textContent = dict.addlink;
+  }
+
+  // 渲染快速链接列表
+  // 仅在「列数 / 行数设置 / 数据」变化时重建 DOM，窗口缩放不会引发无谓的重排
+  function renderQuicklinks(force) {
+    if (!quicklinksElem) return;
+
+    const rows = quicklinksElem.getAttribute('rows') || '0';
+    const perRow = quicklinksColumnsPerRow(rows);
+    quicklinksColumns = perRow;
+
+    // 关闭快速链接：清空内容并退出
+    if (rows === '0') {
+      quicklinksElem.textContent = '';
+      quicklinksElem.style.removeProperty('--quicklinks-content-width');
+      quicklinksLastRenderKey = 'off';
+      window.__qlDebug.columns = perRow;
+      window.__qlDebug.lastRows = rows;
+      return;
+    }
+
+    const maxItems = perRow * parseInt(rows, 10);
+    // 本次真正要渲染的项数（已达到上限时不再显示"添加"按钮）
+    const shownLinks = quicklinksList.slice(0, maxItems);
+    const visibleCount = shownLinks.length + (quicklinksList.length < maxItems ? 1 : 0);
+    // 容器内容宽度按"最后一行实际有多少项"计算，因此左右都不会残留空档
+    const contentWidth = quicklinksWidthForColumns(Math.min(perRow, Math.max(1, visibleCount)));
+    const renderKey = [rows, perRow, quicklinksList.length, quicklinksList.map(i => i.id).join(',')].join('|');
+    const widthChanged = quicklinksElem.style.getPropertyValue('--quicklinks-content-width') !== contentWidth + 'px';
+
+    if (!force && renderKey === quicklinksLastRenderKey && !widthChanged) return;
+    quicklinksLastRenderKey = renderKey;
+    quicklinksElem.style.setProperty('--quicklinks-content-width', contentWidth + 'px');
+
+    // 整体重建：链接项在前，"添加"按钮在末尾
+    const fragment = document.createDocumentFragment();
+    shownLinks.forEach(item => {
+      fragment.appendChild(createQuicklinkNode(item));
+    });
+    // 未超出显示上限时才显示"添加"按钮
+    if (quicklinksList.length < maxItems) {
+      fragment.appendChild(createQuicklinkAddNode());
+    }
+
+    quicklinksElem.textContent = '';
+    quicklinksElem.appendChild(fragment);
+    syncQuicklinksLanguage();
+
+    window.__qlDebug.renders += 1;
+    window.__qlDebug.columns = perRow;
+    window.__qlDebug.lastRows = rows;
+  }
+
+  // 窗口尺寸变化：合并到下一帧处理，并且只在列数真正变化时才重建 DOM
+  let quicklinksResizeQueued = false;
+  window.addEventListener('resize', () => {
+    if (quicklinksResizeQueued) return;
+    quicklinksResizeQueued = true;
+    requestAnimationFrame(() => {
+      quicklinksResizeQueued = false;
+      if (!quicklinksElem) return;
+      const rows = quicklinksElem.getAttribute('rows');
+      if (rows === '0') return;
+      if (quicklinksColumnsPerRow(rows) !== quicklinksColumns) renderQuicklinks();
+    });
+  });
+
+
+  // ========== 拖拽事件处理函数 ==========
+function onDragStart(e) {
+  const item = e.currentTarget;
+  const id = item.dataset.id;
+  if (!id) {
+    e.preventDefault();
+    return;
+  }
+  draggedId = id;
+  e.dataTransfer.effectAllowed = 'move';
+  // 给被拖拽元素添加样式
+  item.classList.add('dragging');
+}
+
+function onDragEnd(e) {
+  const item = e.currentTarget;
+  item.classList.remove('dragging');
+  // 清理所有高亮
+  document.querySelectorAll('.quicklink-item.drag-over').forEach(el => {
+    el.classList.remove('drag-over');
+  });
+  draggedId = null;
+}
+
+function onDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+}
+
+function onDragEnter(e) {
+  e.preventDefault();
+  const target = e.currentTarget;
+  const targetId = target.dataset.id;
+  // 只有快速链接（有 data-id）且不是被拖拽自身时，才高亮
+  if (targetId && targetId !== draggedId) {
+    target.classList.add('drag-over');
+  }
+}
+
+function onDragLeave(e) {
+  const target = e.currentTarget;
+  target.classList.remove('drag-over');
+}
+
+function onDrop(e) {
+  e.preventDefault();
+  const target = e.currentTarget;
+  target.classList.remove('drag-over');
+
+  const targetId = target.dataset.id;
+  if (!targetId || !draggedId || targetId === draggedId) {
+    return;
+  }
+
+  // 查找两个元素在数组中的位置
+  const draggedIndex = quicklinksList.findIndex(item => item.id === draggedId);
+  const targetIndex = quicklinksList.findIndex(item => item.id === targetId);
+
+  if (draggedIndex === -1 || targetIndex === -1) {
+    return;
+  }
+
+  // 交换位置（将 draggedItem 移动到 targetIndex 位置）
+  const [draggedItem] = quicklinksList.splice(draggedIndex, 1);
+  quicklinksList.splice(targetIndex, 0, draggedItem);
+
+  // 持久化并重新渲染
+  Storage.set('ntp_quicklinks_list', quicklinksList);
+  renderQuicklinks();
+}
+// ========== 拖拽事件处理函数结束 ==========
+
+
+  // B3.自定义校验与 Modal 对话框逻辑
+  // 清除表单中所有的错误高亮状态
+  function clearErrors() {
+    containerName?.classList.remove('error');
+    containerUrl?.classList.remove('error');
+    tipName?.classList.remove('active');
+    tipUrl?.classList.remove('active');
+  }
+
+  // 显示名称字段的错误提示
+  function showNameError() {
+    containerName?.classList.add('error');
+    tipName?.classList.add('active');
+  }
+
+  // 显示URL字段的错误提示
+  function showUrlError() {
+    containerUrl?.classList.add('error');
+    tipUrl?.classList.add('active');
+  }
+
+  inputName?.addEventListener('input', () => {
+    containerName?.classList.remove('error');
+    tipName?.classList.remove('active');
+  });
+
+  inputUrl?.addEventListener('input', () => {
+    containerUrl?.classList.remove('error');
+    tipUrl?.classList.remove('active');
+  });
+
+  // 打开"添加快速链接"弹窗，清空表单并隐藏删除按钮
+  function openAddModal() {
+    currentEditingId = null;
+    if (inputName) inputName.value = '';
+    if (inputUrl) inputUrl.value = '';
+    clearErrors();
+    if (btnDelete) btnDelete.style.display = 'none';
+    modalOverlay?.classList.add('active');
+    setTimeout(() => inputName?.focus(), 50);
+  }
+
+  // 打开"编辑快速链接"弹窗，填充当前数据并显示删除按钮
+  function openEditModal(item) {
+    currentEditingId = item.id;
+    if (inputName) inputName.value = item.title;
+    if (inputUrl) inputUrl.value = item.url;
+    clearErrors();
+    if (btnDelete) btnDelete.style.display = 'inline-flex';
+    modalOverlay?.classList.add('active');
+    setTimeout(() => inputName?.focus(), 50);
+  }
+
+  // 关闭快速链接编辑弹窗，清空编辑状态
+  function closeModal() {
+    modalOverlay?.classList.remove('active');
+    currentEditingId = null;
+    clearErrors();
+  }
+
+  btnCancel?.addEventListener('click', closeModal);
+
+  btnDelete?.addEventListener('click', () => {
+    if (currentEditingId) {
+      quicklinksList = quicklinksList.filter(item => item.id !== currentEditingId);
+      Storage.set('ntp_quicklinks_list', quicklinksList);
+      renderQuicklinks();
+      closeModal();
+    }
+  });
+
+  modalForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    clearErrors();
+
+    const title = sanitizeInput(inputName.value.trim());
+    let url = sanitizeInput(inputUrl.value.trim());
+    let hasError = false;
+
+    if (!title) {
+      showNameError();
+      inputName.focus();
+      hasError = true;
+    }
+
+    if (!url) {
+      showUrlError();
+      if (!hasError) inputUrl.focus();
+      hasError = true;
+    } else {
+      const domain = getDomain(url);
+      if (!domain) {
+        showUrlError();
+        if (!hasError) inputUrl.focus();
+        hasError = true;
+      }
+    }
+
+    if (hasError) return;
+
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = 'https://' + url;
+    }
+
+    if (currentEditingId) {
+      const itemIndex = quicklinksList.findIndex(item => item.id === currentEditingId);
+      if (itemIndex !== -1) {
+        quicklinksList[itemIndex] = { ...quicklinksList[itemIndex], title, url };
+      }
+    } else {
+      const newItem = {
+        id: Date.now().toString(),
+        title,
+        url
+      };
+      quicklinksList.push(newItem);
+    }
+
+    Storage.set('ntp_quicklinks_list', quicklinksList);
+    renderQuicklinks();
+    closeModal();
+  });
+
+  renderQuicklinks();
+
+  // B4.搜索框历史记录与搜索建议词条
+  clearHistoryBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    searchHistory = [];
+    Storage.set('ntp_search_history', []);
+    fetchAndShowSuggestions();
+  });
+
+  // 将搜索关键词存入历史记录（去重、限长50条）
+  function saveSearchHistory(query) {
+    if (!historyEnabled || !query) return;
+    const safeQuery = sanitizeInput(query);
+    searchHistory = searchHistory.filter(item => item.toLowerCase() !== safeQuery.toLowerCase());
+    searchHistory.unshift(safeQuery);
+    if (searchHistory.length > 50) {
+      searchHistory.pop();
+    }
+    Storage.set('ntp_search_history', searchHistory);
+  }
+
+  const historySvgIcon = `<svg width="18" height="18" viewBox="0 0 24 24"><path d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6a7 7 0 1 1 7 7 7.07 7.07 0 0 1-6-3.37l-1.44 1.44A8.95 8.95 0 0 0 13 21a9 9 0 0 0 0-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>`;
+  const searchSvgIcon = `<svg width="18" height="18" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>`;
+
+  // 关闭搜索联想下拉面板，重置选中索引
+  function closeSuggestions() {
+    searchContainer?.classList.remove('suggestions-open');
+    selectedSuggestionIndex = -1;
+  }
+
+  // 渲染搜索联想下拉列表，合并历史记录与在线建议词条
+  function renderSuggestions(historyItems, suggestionItems) {
+    if (!suggestionList) return;
+    suggestionList.innerHTML = '';
+    selectedSuggestionIndex = -1;
+
+    const totalItems = [];
+
+    historyItems.forEach(item => {
+      totalItems.push({ text: item, isHistory: true });
+    });
+
+    suggestionItems.forEach(item => {
+      if (!totalItems.some(i => i.text.toLowerCase() === item.toLowerCase())) {
+        totalItems.push({ text: item, isHistory: false });
+      }
+    });
+
+    if (totalItems.length === 0) {
+      closeSuggestions();
+      return;
+    }
+
+    totalItems.forEach((itemObj) => {
+      const li = document.createElement('li');
+      li.className = 'suggestion-item' + (itemObj.isHistory ? ' history' : '');
+      li.innerHTML = `${itemObj.isHistory ? historySvgIcon : searchSvgIcon}<span class="suggestion-text">${sanitizeInput(itemObj.text)}</span>`;
+      
+      li.addEventListener('click', () => {
+        if (searchInput) searchInput.value = decodeInput(itemObj.text);
+        doSearch(itemObj.text);
+      });
+
+      suggestionList.appendChild(li);
+    });
+
+    if (suggestionsFooter) {
+      suggestionsFooter.style.display = historyItems.length > 0 ? 'block' : 'none';
+    }
+
+    searchContainer?.classList.add('suggestions-open');
+  }
+
+  // 扩展专用的异步 Fetch 搜索
+  async function fetchSearchSuggestions(engine, query) {
+    try {
+      if (engine === 'baidu' || engine === 'bing') {
+        const response = await fetch(`https://suggestion.baidu.com/su?wd=${encodeURIComponent(query)}&p=3`);
+        const buffer = await response.arrayBuffer();
+        const decoder = new TextDecoder('gbk'); // 百度联想词通常返回 GBK 编码
+        const text = decoder.decode(buffer);
+        const match = text.match(/s:\[(.*?)\]/);
+        if (match && match[1]) {
+          return match[1].split(',').map(item => item.replace(/^"|"$/g, '').trim()).filter(Boolean);
+        }
+      } else if (engine === 'google') {
+        const response = await fetch(`https://suggestqueries.google.com/complete/search?client=chrome&q=${encodeURIComponent(query)}`);
+        const data = await response.json();
+        if (Array.isArray(data) && Array.isArray(data[1])) {
+          return data[1];
+        }
+      } 
+    } catch (e) {
+      console.warn('获取搜索联想建议词条失败:', e);
+    }
+    return [];
+  }
+
+  // 获取搜索联想建议：匹配历史记录 + 异步请求搜索引擎建议
+  async function fetchAndShowSuggestions() {
+    if (!searchInput) return;
+    const query = searchInput.value.trim();
+
+    let matchedHistory = [];
+    if (historyEnabled) {
+      if (query) {
+        matchedHistory = searchHistory.filter(h => h.toLowerCase().includes(query.toLowerCase())).slice(0, 5);
+      } else {
+        matchedHistory = searchHistory.slice(0, 5);
+      }
+    }
+
+    if (!query) {
+      if (matchedHistory.length > 0) {
+        renderSuggestions(matchedHistory, []);
+      } else {
+        closeSuggestions();
+      }
+      return;
+    }
+
+    const engine = selectEngine ? selectEngine.value : 'bing';
+    let fetchedSuggestions = [];
+
+    if (engine !== 'custom') {
+      fetchedSuggestions = await fetchSearchSuggestions(engine, query);
+    }
+
+    renderSuggestions(matchedHistory, fetchedSuggestions.slice(0, 8));
+  }
+
+  // 通用防抖工具函数：延迟执行高频触发的函数调用
+  function debounce(fn, delay) {
+    let timer = null;
+    return function(...args) {
+      clearTimeout(timer);
+      timer = setTimeout(() => fn.apply(this, args), delay);
+    };
+  }
+
+  const debouncedFetchSuggestions = debounce(fetchAndShowSuggestions, 150);
+
+  fakebox?.addEventListener('click', () => {
+    searchInput?.focus();
+  });
+
+  searchInput?.addEventListener('focus', () => {
+    fetchAndShowSuggestions();
+  });
+
+
+searchInput?.addEventListener('input', () => {
+  const fakebox = document.getElementById('fakebox');
+  if (searchInput.value.trim() !== '') {
+    fakebox?.classList.add('has-value');
+  } else {
+    fakebox?.classList.remove('has-value');
+  }
+  debouncedFetchSuggestions();
+});
+
+  searchInput?.addEventListener('keydown', (e) => {
+    if (!suggestionList) return;
+    const items = suggestionList.querySelectorAll('.suggestion-item');
+    
+    if (e.key === 'ArrowDown') {
+      if (items.length > 0) {
+        e.preventDefault();
+        if (selectedSuggestionIndex < items.length - 1) {
+          selectedSuggestionIndex++;
+        } else {
+          selectedSuggestionIndex = 0;
+        }
+        updateSuggestionSelection(items);
+      }
+    } else if (e.key === 'ArrowUp') {
+      if (items.length > 0) {
+        e.preventDefault();
+        if (selectedSuggestionIndex > 0) {
+          selectedSuggestionIndex--;
+        } else {
+          selectedSuggestionIndex = items.length - 1;
+        }
+        updateSuggestionSelection(items);
+      }
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (selectedSuggestionIndex >= 0 && items[selectedSuggestionIndex]) {
+        const text = items[selectedSuggestionIndex].querySelector('.suggestion-text').textContent;
+        if (searchInput) searchInput.value = text;
+        doSearch(text);
+      } else {
+        doSearch(searchInput.value.trim());
+      }
+    } else if (e.key === 'Escape') {
+      closeSuggestions();
+    }
+  });
+
+  // 更新联想列表中键盘选中项的高亮状态
+  function updateSuggestionSelection(items) {
+    items.forEach((item, index) => {
+      if (index === selectedSuggestionIndex) {
+        item.classList.add('selected');
+        if (searchInput) searchInput.value = item.querySelector('.suggestion-text').textContent;
+      } else {
+        item.classList.remove('selected');
+      }
+    });
+  }
+
+  // 执行搜索逻辑
+  function doSearch(queryText = searchInput ? searchInput.value.trim() : '') {
+    const query = queryText;
+    if (query) {
+      saveSearchHistory(query);
+      closeSuggestions();
+
+      const engine = selectEngine ? selectEngine.value : 'bing';
+      let targetUrl;
+
+      if (engine === 'custom' && customEngineConfig.url) {
+        targetUrl = customEngineConfig.url.replace('%s', encodeURIComponent(query));
+      } else {
+        let baseUrl = engineSearchUrls[engine] || engineSearchUrls.bing;
+        if (engine === 'bing' && forceBingCN) {
+          baseUrl = bingCNSearchUrl;
+        }
+        targetUrl = baseUrl + encodeURIComponent(query);
+      }
+      window.location.href = targetUrl;
+    }
+  }
+
+  // 语言选择与应用初始化
+  const savedLang = localStorage.getItem('liteStart_language') || 'auto';
+  if (selectLanguage) {
+    selectLanguage.value = savedLang;
+    selectLanguage.addEventListener('change', (e) => {
+      const val = e.target.value;
+      localStorage.setItem('liteStart_language', val);
+      applyLanguage(val);
+      translateSourceLabel(); // 语言切换后同步翻译来源标签
+      renderWallpaper();      // 同步刷新壁纸类型标题（该文本由脚本写入，不随 data-i18n 自动更新）
+    });
+  }
+
+  // 初始化应用全页翻译
+  applyLanguage(savedLang);
+  translateSourceLabel(); // 初始化时翻译来源标签
+
+  // 初始化自定义下拉组件
+  initCustomSelects();
+
+  // 打开新标签页后默认聚焦搜索输入框（聚焦会同时展开历史记录/联想列表）
+  if (searchVisible) searchInput?.focus();
+});
